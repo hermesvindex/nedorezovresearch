@@ -1,11 +1,11 @@
 <!doctype html>
-<!-- generated: 2026-03-11 14:46:32 MSK | bootstrap: /Users/zakharnedorezov/Desktop/Инвестиции/portfolio_manager/portfolio_manager_interactive/assets/bootstrap.js | bootstrap_updated: 2026-03-11 14:11:42 MSK -->
+<!-- generated: 2026-03-11 17:53:07 MSK | bootstrap: /Users/zakharnedorezov/Desktop/Инвестиции/portfolio_manager/portfolio_manager_interactive/assets/bootstrap.js | bootstrap_updated: 2026-03-11 14:11:42 MSK -->
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Markowitz Portfolio Constructor</title>
-  <meta name="markowitz-build-date" content="2026-03-11 14:46:32 MSK" />
+  <meta name="markowitz-build-date" content="2026-03-11 17:53:07 MSK" />
   <meta name="markowitz-bootstrap-path" content="/Users/zakharnedorezov/Desktop/Инвестиции/portfolio_manager/portfolio_manager_interactive/assets/bootstrap.js" />
   <meta name="markowitz-bootstrap-updated" content="2026-03-11 14:11:42 MSK" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -889,7 +889,7 @@
 
     <section class="panel chart-box" id="chartPanel">
       <h2>Efficient Frontier</h2>
-      <p class="section-lead">На графике должно быть именно облако допустимых портфелей с нормальной выпуклой верхней границей, а не тонкая прямая или перекошенная ерунда. Сверху выделены defense, core и best.</p>
+      <p class="section-lead">На графике показано облако допустимых портфелей для выбранного набора инструментов, эффективная граница и выделенные режимы Defense, Core и Best.</p>
       <div id="frontierPlot"></div>
       <div class="stale-overlay">
         <div>
@@ -1544,7 +1544,7 @@
       const allocated = state.result && !state.dirty ? state.result.best.analysis.spent : null;
       const classes = new Set(holdings.map(row => row.category)).size;
       els.heroKpis.innerHTML = [
-        ['Бюджет модели', `<input id="budgetInput" type="text" inputmode="numeric" value="${new Intl.NumberFormat('ru-RU').format(state.budget)}" />`, 'Измени сумму и пересчитай модель.'],
+        ['Бюджет модели', `<input id="budgetInput" type="text" inputmode="numeric" value="${new Intl.NumberFormat('ru-RU').format(state.budget)}" />`, 'Текущая сумма для расчёта рекомендаций.'],
         ['Текущий состав', `${holdings.length} активов`, `${classes} классов активов в списке.`],
         ['Распределено', allocated != null ? formatRub(allocated) : '—', allocated != null ? `Свободно ${formatRub(state.budget - allocated)}.` : 'Появится после расчёта модели.'],
         ['Статус графика', state.dirty ? 'Нужно обновить' : 'Актуален', state.dirty ? 'Состав менялся после расчёта.' : 'Frontier синхронизирована с текущим списком.']
@@ -1631,7 +1631,7 @@
       const positions = [...best.analysis.rows].sort((a, b) => b.amount - a.amount);
       els.heroBestMode.textContent = best.title;
       els.heroBestText.textContent = `Доходность ${formatPct(best.analysis.ret)}, волатильность ${formatPct(best.analysis.vol)}, Sharpe ${best.analysis.sharpe.toFixed(2)}.`;
-      els.summaryLead.textContent = `Лучший портфель по Sharpe с cap ${Math.round(MAX_WEIGHT * 100)}% на один актив и бюджетом ${formatRub(state.budget)}.`;
+      els.summaryLead.textContent = `Лучший портфель по Sharpe с максимальной долей одного актива ${Math.round(MAX_WEIGHT * 100)}% и бюджетом ${formatRub(state.budget)}.`;
       els.summaryGrid.innerHTML = [
         ['Лучшая модель', best.title],
         ['Ожидаемая доходность', formatPct(best.analysis.ret)],
