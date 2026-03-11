@@ -1,0 +1,1783 @@
+<!doctype html>
+<!-- generated: 2026-03-11 14:46:32 MSK | bootstrap: /Users/zakharnedorezov/Desktop/Инвестиции/portfolio_manager/portfolio_manager_interactive/assets/bootstrap.js | bootstrap_updated: 2026-03-11 14:11:42 MSK -->
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Markowitz Portfolio Constructor</title>
+  <meta name="markowitz-build-date" content="2026-03-11 14:46:32 MSK" />
+  <meta name="markowitz-bootstrap-path" content="/Users/zakharnedorezov/Desktop/Инвестиции/portfolio_manager/portfolio_manager_interactive/assets/bootstrap.js" />
+  <meta name="markowitz-bootstrap-updated" content="2026-03-11 14:11:42 MSK" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="../portfolio_manager/portfolio_manager_interactive/assets/bootstrap.js"></script>
+  <style>
+    :root {
+      --bg:#f3efe8;
+      --surface:#fcfbf8;
+      --surface-2:rgba(255,255,255,.76);
+      --line:rgba(30,40,44,.11);
+      --ink:#1d2629;
+      --muted:#667379;
+      --hero:#140706;
+      --hero-2:#31100d;
+      --accent:#ff7a2f;
+      --accent-2:#ffb347;
+      --accent-3:#ff4d2d;
+      --ok:#3f6f67;
+      --danger:#9a4d40;
+      --shadow:0 18px 46px rgba(30,40,44,.1);
+      --radius:28px;
+    }
+    * { box-sizing:border-box; }
+    html, body { margin:0; }
+    body {
+      font-family:"Inter","Segoe UI",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 12% 2%, rgba(110,146,171,.18), transparent 18%),
+        radial-gradient(circle at 86% 14%, rgba(210,163,85,.16), transparent 16%),
+        linear-gradient(180deg, #f7f3ed 0%, #ece5d8 100%);
+      overflow-x:hidden;
+    }
+    .page {
+      width:min(1480px, calc(100vw - 28px));
+      margin:0 auto;
+      padding:14px 0 40px;
+      display:grid;
+      gap:18px;
+    }
+    .hero,
+    .panel {
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .hero {
+      position:relative;
+      overflow:hidden;
+      padding:28px;
+      color:#f5f1e8;
+      background:
+        radial-gradient(circle at 18% 78%, rgba(255,122,47,.24), transparent 20%),
+        radial-gradient(circle at 34% 86%, rgba(255,77,45,.18), transparent 24%),
+        radial-gradient(circle at 74% 34%, rgba(255,179,71,.1), transparent 18%),
+        linear-gradient(140deg, #070304, #140706 42%, #24100d 74%, #0d0606 100%);
+    }
+    .hero::before {
+      content:"";
+      position:absolute;
+      inset:-14%;
+      background:
+        radial-gradient(circle at 18% 88%, rgba(255,122,47,.92) 0 3%, rgba(255,122,47,.42) 3% 9%, transparent 18%),
+        radial-gradient(circle at 28% 78%, rgba(255,179,71,.82) 0 2.4%, rgba(255,179,71,.34) 2.4% 8%, transparent 18%),
+        radial-gradient(circle at 40% 72%, rgba(255,77,45,.74) 0 1.8%, rgba(255,77,45,.28) 1.8% 6%, transparent 14%),
+        radial-gradient(circle at 72% 28%, rgba(255,122,47,.56) 0 1.6%, rgba(255,122,47,.16) 1.6% 5.5%, transparent 13%),
+        linear-gradient(rgba(10,4,4,.3), rgba(10,4,4,.42));
+      filter:blur(34px) saturate(1.18);
+      transform:scale(1.16);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .hero::after {
+      content:"";
+      position:absolute;
+      inset:-8%;
+      background:
+        conic-gradient(from 210deg at 16% 90%,
+          transparent 0deg 8deg,
+          rgba(255,205,120,.58) 8deg 9deg,
+          transparent 9deg 13deg,
+          rgba(255,120,58,.5) 13deg 14deg,
+          transparent 14deg 20deg,
+          rgba(255,233,186,.45) 20deg 21deg,
+          transparent 21deg 360deg),
+        conic-gradient(from 246deg at 22% 84%,
+          transparent 0deg 16deg,
+          rgba(255,82,44,.46) 16deg 17deg,
+          transparent 17deg 24deg,
+          rgba(255,190,110,.42) 24deg 25deg,
+          transparent 25deg 360deg),
+        conic-gradient(from 198deg at 74% 26%,
+          transparent 0deg 10deg,
+          rgba(255,132,62,.22) 10deg 10.8deg,
+          transparent 10.8deg 360deg);
+      filter:blur(8px);
+      opacity:.72;
+      pointer-events:none;
+    }
+    .hero-grid,
+    .hero-kpis {
+      position:relative;
+      z-index:1;
+    }
+    .hero-grid {
+      display:grid;
+      grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+      gap:22px;
+      align-items:start;
+    }
+    .eyebrow {
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(245,241,232,.68);
+      margin-bottom:12px;
+    }
+    h1 {
+      margin:0;
+      font-size:clamp(42px,5.2vw,78px);
+      line-height:.92;
+      letter-spacing:-.06em;
+      font-weight:800;
+      max-width:820px;
+    }
+    .lead {
+      margin:16px 0 0;
+      max-width:760px;
+      font-size:16px;
+      line-height:1.62;
+      color:rgba(245,241,232,.82);
+      font-weight:500;
+    }
+    .hero-side {
+      display:grid;
+      gap:12px;
+    }
+    .hero-card {
+      background:linear-gradient(180deg, rgba(255,115,54,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,171,111,.16);
+      border-radius:22px;
+      padding:18px;
+      backdrop-filter:blur(10px);
+    }
+    .hero-card .k {
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:rgba(245,241,232,.66);
+    }
+    .hero-card .v {
+      margin-top:8px;
+      font-size:32px;
+      line-height:1;
+      font-weight:800;
+    }
+    .hero-card .s {
+      margin-top:8px;
+      font-size:14px;
+      line-height:1.5;
+      color:rgba(245,241,232,.78);
+      font-weight:500;
+    }
+    .hero-kpis {
+      margin-top:20px;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+    .hero-kpi {
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,130,58,.08), rgba(255,255,255,.03));
+      border:1px solid rgba(255,172,111,.14);
+      padding:16px;
+    }
+    .hero-kpi span {
+      display:block;
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(245,241,232,.62);
+      font-weight:500;
+    }
+    .hero-kpi strong {
+      display:block;
+      margin-top:8px;
+      font-size:26px;
+      letter-spacing:-.04em;
+      font-weight:700;
+    }
+    .hero-kpi input {
+      display:block;
+      width:100%;
+      margin-top:8px;
+      height:46px;
+      padding:0 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,190,140,.24);
+      background:rgba(255,255,255,.08);
+      color:#f5f1e8;
+      font:inherit;
+      font-size:26px;
+      letter-spacing:-.04em;
+      font-weight:700;
+      outline:none;
+    }
+    .hero-kpi input::placeholder {
+      color:rgba(245,241,232,.54);
+    }
+    .hero-kpi input:focus {
+      border-color:rgba(255,190,140,.42);
+      box-shadow:0 0 0 4px rgba(255,145,90,.1);
+    }
+    .hero-kpi small {
+      display:block;
+      margin-top:8px;
+      line-height:1.45;
+      color:rgba(245,241,232,.72);
+      font-size:13px;
+      font-weight:500;
+    }
+    .panel {
+      padding:22px;
+      background:var(--surface-2);
+      border:1px solid rgba(255,255,255,.52);
+      backdrop-filter:blur(12px);
+    }
+    .panel h2 {
+      margin:0;
+      font-size:28px;
+      line-height:1.02;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+    .section-lead {
+      margin:8px 0 0;
+      max-width:860px;
+      color:var(--muted);
+      line-height:1.58;
+      font-weight:500;
+    }
+    .toolbar {
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:flex-end;
+    }
+    .field {
+      display:grid;
+      gap:8px;
+    }
+    .field.grow {
+      flex:1 1 320px;
+      min-width:260px;
+    }
+    .field label {
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:500;
+    }
+    .field input {
+      width:100%;
+      height:48px;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      font:inherit;
+      color:var(--ink);
+      background:#fffdfa;
+      outline:none;
+    }
+    .field input:focus {
+      border-color:rgba(107,140,162,.42);
+      box-shadow:0 0 0 4px rgba(107,140,162,.1);
+    }
+    .btn {
+      height:48px;
+      border:none;
+      border-radius:16px;
+      padding:0 16px;
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn.primary {
+      background:linear-gradient(135deg, #2a4051, #48657b);
+      color:#f7f4ef;
+    }
+    .btn.secondary {
+      background:#f0ebe2;
+      color:#304752;
+      border:1px solid rgba(48,71,82,.12);
+    }
+    .btn.warn {
+      background:#fff1eb;
+      color:var(--danger);
+      border:1px solid rgba(154,77,64,.14);
+    }
+    .btn.ghost {
+      background:#fff;
+      color:#2e4457;
+      border:1px solid rgba(46,68,87,.12);
+    }
+    .status-line {
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+      font-weight:500;
+    }
+    .grid {
+      display:grid;
+      grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
+      gap:18px;
+      align-items:start;
+    }
+    .card {
+      border-radius:24px;
+      overflow:hidden;
+      background:var(--surface);
+      border:1px solid var(--line);
+    }
+    .card-head {
+      padding:18px 18px 12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-end;
+    }
+    .card-head h3 {
+      margin:0;
+      font-size:24px;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+    .card-head span {
+      color:var(--muted);
+      font-size:13px;
+      font-weight:500;
+    }
+    .table-wrap {
+      overflow:auto;
+      width:100%;
+    }
+    table {
+      width:100%;
+      min-width:980px;
+      border-collapse:collapse;
+    }
+    th, td {
+      padding:12px 10px;
+      border-bottom:1px solid rgba(29,38,41,.08);
+      text-align:center;
+      vertical-align:top;
+      font-size:14px;
+      font-weight:500;
+    }
+    th {
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      white-space:nowrap;
+      font-weight:600;
+    }
+    td:first-child, th:first-child { text-align:left; }
+    .num {
+      white-space:nowrap;
+      font-variant-numeric:tabular-nums;
+    }
+    .asset-cell {
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      min-width:220px;
+    }
+    .asset-dot {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      margin-top:5px;
+      flex:0 0 auto;
+    }
+    .asset-title {
+      line-height:1.2;
+      font-weight:700;
+    }
+    .asset-sub {
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:500;
+    }
+    .tiny-btn {
+      width:34px;
+      height:34px;
+      border:none;
+      border-radius:12px;
+      background:#f8e3dc;
+      color:var(--danger);
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .model-stack {
+      display:grid;
+      gap:12px;
+      padding:0 18px 18px;
+    }
+    .model-card {
+      display:grid;
+      grid-template-columns:140px minmax(0,1fr);
+      gap:14px;
+      align-items:start;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(245,242,236,.92));
+    }
+    .model-card.best {
+      border-color:rgba(208,100,70,.28);
+      box-shadow:0 10px 24px rgba(208,100,70,.08);
+    }
+    .model-label {
+      font-size:32px;
+      line-height:.92;
+      letter-spacing:-.06em;
+      font-weight:800;
+    }
+    .model-label.defense { color:#4a6f95; }
+    .model-label.core { color:#9f7b37; }
+    .model-label.best { color:#b0563d; }
+    .model-copy {
+      color:var(--muted);
+      line-height:1.48;
+      font-size:14px;
+      font-weight:500;
+    }
+    .metric-grid {
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:10px;
+    }
+    .metric {
+      padding:10px 12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.74);
+      border:1px solid rgba(29,38,41,.08);
+      min-width:0;
+    }
+    .metric .k {
+      color:var(--muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:500;
+    }
+    .metric .v {
+      margin-top:6px;
+      font-size:18px;
+      letter-spacing:-.03em;
+      font-weight:700;
+      overflow-wrap:anywhere;
+    }
+    .summary-grid {
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:12px;
+    }
+    .summary-card {
+      padding:14px;
+      border-radius:20px;
+      background:var(--surface);
+      border:1px solid var(--line);
+    }
+    .summary-card .k {
+      color:var(--muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:500;
+    }
+    .summary-card .v {
+      margin-top:8px;
+      font-size:22px;
+      line-height:1.06;
+      letter-spacing:-.04em;
+      font-weight:700;
+      overflow-wrap:anywhere;
+    }
+    .mix-grid {
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+    .mix-card {
+      padding:16px;
+      border-radius:22px;
+      background:var(--surface);
+      border:1px solid var(--line);
+    }
+    .mix-card h3 {
+      margin:0;
+      font-size:22px;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+    .mix-list {
+      margin-top:14px;
+      display:grid;
+      gap:10px;
+    }
+    .mix-row {
+      display:grid;
+      grid-template-columns:minmax(110px,.52fr) minmax(0,1fr) auto;
+      gap:10px;
+      align-items:center;
+      font-weight:500;
+    }
+    .bar {
+      height:10px;
+      border-radius:999px;
+      background:#ddd4c4;
+      overflow:hidden;
+    }
+    .bar span {
+      display:block;
+      height:100%;
+      border-radius:999px;
+    }
+    .chart-box {
+      position:relative;
+      min-height:540px;
+    }
+    #frontierPlot {
+      height:540px;
+    }
+    .stale-overlay {
+      position:absolute;
+      inset:0;
+      display:none;
+      place-items:center;
+      padding:24px;
+      text-align:center;
+      border-radius:24px;
+      background:rgba(225,225,225,.42);
+      backdrop-filter:blur(3px) saturate(.72);
+      color:#4c585d;
+    }
+    .stale-overlay strong {
+      display:block;
+      margin-bottom:8px;
+      font-size:22px;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+    .is-stale .stale-overlay { display:grid; }
+    .is-stale #frontierPlot { opacity:.24; filter:grayscale(.6); }
+    .search-launch {
+      position:fixed;
+      right:18px;
+      top:18px;
+      z-index:40;
+      width:56px;
+      height:56px;
+      border:none;
+      border-radius:18px;
+      background:linear-gradient(135deg, #d06446, #be8154);
+      color:#fff;
+      font-size:20px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 16px 30px rgba(208,100,70,.25);
+    }
+    .drawer {
+      position:fixed;
+      inset:0;
+      z-index:50;
+      display:none;
+      background:rgba(21,27,31,.28);
+      backdrop-filter:blur(4px);
+    }
+    .drawer.open { display:block; }
+    .drawer-panel {
+      position:absolute;
+      right:0;
+      top:0;
+      height:100%;
+      width:min(460px, 96vw);
+      background:#fffaf3;
+      border-left:1px solid var(--line);
+      box-shadow:-20px 0 40px rgba(24,34,38,.16);
+      padding:16px;
+      overflow:auto;
+    }
+    .drawer-head {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .drawer-head h3 {
+      margin:0;
+      font-size:24px;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+    .drawer-head p {
+      margin:6px 0 0;
+      color:var(--muted);
+      line-height:1.5;
+      font-size:13px;
+      font-weight:500;
+    }
+    .search-input {
+      margin-top:14px;
+      width:100%;
+      height:48px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:0 14px;
+      font:inherit;
+      background:#fff;
+      outline:none;
+    }
+    .search-input:focus {
+      border-color:rgba(107,140,162,.42);
+      box-shadow:0 0 0 4px rgba(107,140,162,.1);
+    }
+    .search-results {
+      margin-top:12px;
+      display:grid;
+      gap:8px;
+    }
+    .result-item {
+      padding:14px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid rgba(29,38,41,.08);
+      cursor:pointer;
+    }
+    .result-item:hover,
+    .result-item.active {
+      border-color:rgba(107,140,162,.28);
+      background:#fbfcff;
+    }
+    .result-main {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .result-title {
+      font-weight:700;
+      line-height:1.25;
+    }
+    .result-meta {
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+      font-weight:500;
+    }
+    .result-price {
+      white-space:nowrap;
+      font-size:13px;
+      font-weight:700;
+    }
+    .selected-card {
+      margin-top:14px;
+      padding:16px;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid rgba(29,38,41,.08);
+      display:grid;
+      gap:12px;
+    }
+    .selected-card.inline {
+      cursor:default;
+    }
+    .selected-card h4 {
+      margin:0;
+      font-size:20px;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+    .selected-card .sub {
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+      font-weight:500;
+    }
+    .selected-grid {
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    .mini {
+      padding:10px 12px;
+      border-radius:14px;
+      background:#faf7f0;
+      border:1px solid rgba(29,38,41,.08);
+    }
+    .mini .k {
+      color:var(--muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:500;
+    }
+    .mini .v {
+      margin-top:6px;
+      font-weight:700;
+      line-height:1.2;
+      overflow-wrap:anywhere;
+    }
+    .drawer-actions {
+      display:grid;
+      grid-template-columns:1fr 110px auto;
+      gap:10px;
+      align-items:end;
+    }
+    .empty {
+      padding:32px 20px;
+      text-align:center;
+      color:var(--muted);
+      font-weight:500;
+    }
+    @media (max-width: 1220px) {
+      .hero-grid,
+      .grid,
+      .mix-grid,
+      .drawer-actions {
+        grid-template-columns:1fr;
+      }
+      .hero-kpis,
+      .summary-grid,
+      .metric-grid {
+        grid-template-columns:repeat(2, minmax(0,1fr));
+      }
+      .model-card {
+        grid-template-columns:1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .page {
+        width:min(100vw - 16px, 1480px);
+        padding:8px 0 24px;
+      }
+      .hero,
+      .panel {
+        padding:18px;
+      }
+      h1 { font-size:44px; }
+      .hero-kpis,
+      .summary-grid,
+      .mix-grid,
+      .metric-grid,
+      .selected-grid {
+        grid-template-columns:1fr;
+      }
+      table { min-width:920px; }
+      #frontierPlot { height:430px; }
+      .chart-box { min-height:430px; }
+      .search-launch {
+        right:12px;
+        top:12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="search-launch" id="openSearchBtn" title="Поиск">+</button>
+
+  <div class="drawer" id="searchDrawer">
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <div>
+          <h3>Поиск активов</h3>
+          <p>По тикеру, ISIN и названию. База та же, что у `portfolio_manager_interactive`.</p>
+        </div>
+        <button class="btn ghost" id="closeSearchBtn">Закрыть</button>
+      </div>
+      <input class="search-input" id="searchInput" type="text" placeholder="Например: Газпром, ERGD, RU000A..." />
+      <div class="search-results" id="searchResults"></div>
+      <div class="selected-card" id="selectedCard">
+        <div class="empty">Выбери инструмент из выдачи и добавь его в список. Лоты появятся только после расчёта модели.</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Markowitz Portfolio Constructor</div>
+          <h1>Конструктор портфеля по Марковицу</h1>
+          <p class="lead">Базовый состав загружается сразу. Можно менять лоты, удалять активы, очищать весь портфель и добавлять новые бумаги через боковой поиск. После расчёта обновляется frontier и лучший портфель.</p>
+        </div>
+        <div class="hero-side">
+          <div class="hero-card">
+            <div class="k">Лучший режим сейчас</div>
+            <div class="v" id="heroBestMode">Загрузка...</div>
+            <div class="s" id="heroBestText">Собираю стартовый расчёт.</div>
+          </div>
+          <div class="hero-card">
+            <div class="k">Ограничения модели</div>
+            <div class="s">В одном активе не больше 25% капитала. Это режет концентрационный риск и не позволяет модели загонять почти весь портфель в один инструмент.</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-kpis" id="heroKpis"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Состав портфеля и расчёт</h2>
+      <p class="section-lead">Поиск активов вынесен в отдельный drawer. В таблице можно менять лоты прямо на месте. Любое изменение делает frontier устаревшей до следующего пересчёта.</p>
+      <div class="toolbar">
+        <button class="btn ghost" id="openSearchInlineBtn">Открыть поиск активов</button>
+        <button class="btn warn" id="clearBtn">Очистить портфель</button>
+        <button class="btn primary" id="calcBtn">Рассчитать по Марковицу</button>
+      </div>
+      <div class="status-line" id="statusLine"></div>
+
+      <div class="grid" style="margin-top:18px;">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Текущий состав</h3>
+              <span id="tableMeta">Загрузка...</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Актив</th>
+                  <th>Удалить</th>
+                  <th>Класс</th>
+                  <th>Цена лота</th>
+                  <th>Лоты</th>
+                  <th>Сумма</th>
+                  <th>Вес</th>
+                  <th>Exp. return</th>
+                  <th>Vol</th>
+                </tr>
+              </thead>
+              <tbody id="portfolioBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Модели Марковица</h3>
+              <span>Три режима в вертикальном стеке: defense, core и best.</span>
+            </div>
+          </div>
+          <div class="model-stack" id="modelStack"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Лучший портфель</h2>
+      <p class="section-lead" id="summaryLead">После расчёта покажу лучший портфель по Sharpe с учётом caps и округления до целых лотов.</p>
+      <div class="summary-grid" id="summaryGrid"></div>
+      <div class="mix-grid" id="mixGrid"></div>
+    </section>
+
+    <section class="panel chart-box" id="chartPanel">
+      <h2>Efficient Frontier</h2>
+      <p class="section-lead">На графике должно быть именно облако допустимых портфелей с нормальной выпуклой верхней границей, а не тонкая прямая или перекошенная ерунда. Сверху выделены defense, core и best.</p>
+      <div id="frontierPlot"></div>
+      <div class="stale-overlay">
+        <div>
+          <strong>Портфель изменён</strong>
+          Пересчитай модель, чтобы вернуть актуальную frontier.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'markowitz_constructor_state_v4';
+    const DEFAULT_BUDGET_RUB = 1_000_000;
+    const MAX_WEIGHT = 0.25;
+    const bootstrap = window.__PMI_BOOTSTRAP__ || {};
+    const colors = bootstrap.colors || {};
+    const catalog = Array.isArray(bootstrap.catalog) ? bootstrap.catalog.filter(item => item && item.available && Number(item.entry_lot_cost_rub) > 0) : [];
+    const bySecid = Object.fromEntries(catalog.map(item => [item.secid, item]));
+    const byIsin = Object.fromEntries(catalog.filter(item => item.isin).map(item => [String(item.isin).toUpperCase(), item]));
+    const CATEGORY_FALLBACK = {
+      'Акции':'#d06446',
+      'Рублёвые облигации':'#5d7e97',
+      'Валютные облигации':'#4f847a',
+      'Драгоценные металлы':'#b58333',
+      'Денежный рынок':'#7d8768',
+      'Прочее':'#909899'
+    };
+    const BASE_TEMPLATE = [
+      { id:'RU000A105BY1', weight:0.08 },
+      { id:'RU000A10AXW4', weight:0.08 },
+      { id:'RU000A10C3M0', weight:0.07 },
+      { id:'SU26230RMFS1', weight:0.08 },
+      { id:'SU26238RMFS4', weight:0.08 },
+      { id:'SU26248RMFS3', weight:0.08 },
+      { id:'SBER', weight:0.10 },
+      { id:'NVTK', weight:0.08 },
+      { id:'LKOH', weight:0.08 },
+      { id:'YDEX', weight:0.08 },
+      { id:'T', weight:0.07 },
+      { id:'VTBR', weight:0.05 },
+      { id:'AKGD', weight:0.08 },
+      { id:'AKMM', weight:0.07 }
+    ];
+    const SUGGESTED_SECIDS = [
+      ...BASE_TEMPLATE.map(entry => entry.id),
+      'GAZP', 'ROSN', 'GMKN', 'PLZL', 'RUAL', 'X5', 'SIBN', 'TATN', 'MOEX', 'LQDT',
+      'SBGB', 'TMOS', 'TRUR', 'TGLD'
+    ];
+
+    const initialBudget = loadBudget();
+    const state = {
+      budget: initialBudget,
+      portfolio: loadPortfolio(initialBudget),
+      result: null,
+      dirty: false,
+      query: '',
+      highlightedIndex: 0,
+      selectedSecid: null
+    };
+
+    const els = {
+      heroBestMode: document.getElementById('heroBestMode'),
+      heroBestText: document.getElementById('heroBestText'),
+      heroKpis: document.getElementById('heroKpis'),
+      statusLine: document.getElementById('statusLine'),
+      tableMeta: document.getElementById('tableMeta'),
+      portfolioBody: document.getElementById('portfolioBody'),
+      modelStack: document.getElementById('modelStack'),
+      summaryLead: document.getElementById('summaryLead'),
+      summaryGrid: document.getElementById('summaryGrid'),
+      mixGrid: document.getElementById('mixGrid'),
+      chartPanel: document.getElementById('chartPanel'),
+      searchDrawer: document.getElementById('searchDrawer'),
+      openSearchBtn: document.getElementById('openSearchBtn'),
+      openSearchInlineBtn: document.getElementById('openSearchInlineBtn'),
+      closeSearchBtn: document.getElementById('closeSearchBtn'),
+      searchInput: document.getElementById('searchInput'),
+      searchResults: document.getElementById('searchResults'),
+      selectedCard: document.getElementById('selectedCard'),
+      clearBtn: document.getElementById('clearBtn'),
+      calcBtn: document.getElementById('calcBtn')
+    };
+
+    function formatRub(value, digits = 0) {
+      return `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits:digits, maximumFractionDigits:digits }).format(value || 0)} руб.`;
+    }
+
+    function formatPct(value, digits = 1) {
+      return `${Number(value || 0).toFixed(digits)}%`;
+    }
+
+    function normalizeCategory(item) {
+      if (!item) return 'Прочее';
+      if (item.category === 'Облигации валютные') return 'Валютные облигации';
+      if (item.is_ofz || /ОФЗ/i.test(item.secname || '') || /ОФЗ/i.test(item.shortname || '') || item.category === 'Облигации в рублях') return 'Рублёвые облигации';
+      if (item.category === 'Денежный рынок') return 'Денежный рынок';
+      if (item.category === 'Драгоценные металлы') return 'Драгоценные металлы';
+      if (item.category === 'Акции') return 'Акции';
+      return item.category || 'Прочее';
+    }
+
+    function itemColor(item) {
+      return colors[item.category] || CATEGORY_FALLBACK[normalizeCategory(item)] || '#929999';
+    }
+
+    function clipReturn(value, category) {
+      const limits = {
+        'Акции':[10, 24],
+        'Рублёвые облигации':[10, 16],
+        'Валютные облигации':[9, 17],
+        'Драгоценные металлы':[8, 18],
+        'Денежный рынок':[12, 15],
+        'Прочее':[8, 18]
+      };
+      const [low, high] = limits[category] || [8, 20];
+      return Math.min(high, Math.max(low, Number(value || 0)));
+    }
+
+    function clipVol(value, category) {
+      const limits = {
+        'Акции':[16, 32],
+        'Рублёвые облигации':[5, 14],
+        'Валютные облигации':[4, 13],
+        'Драгоценные металлы':[12, 24],
+        'Денежный рынок':[0.5, 2.5],
+        'Прочее':[6, 20]
+      };
+      const [low, high] = limits[category] || [4, 24];
+      return Math.min(high, Math.max(low, Number(value || 0)));
+    }
+
+    function defaultPortfolio(budget) {
+      const rows = BASE_TEMPLATE.map(entry => {
+        const item = bySecid[entry.id];
+        if (!item) return null;
+        const lotCost = Number(item.entry_lot_cost_rub || 0);
+        const lots = Math.floor((budget * entry.weight) / lotCost);
+        return lots > 0 ? { secid:item.secid, lots } : null;
+      }).filter(Boolean);
+      return rebalanceToBudget(rows, budget);
+    }
+
+    function loadBudget() {
+      try {
+        const raw = localStorage.getItem(`${STORAGE_KEY}_budget`);
+        const parsed = Number(raw);
+        return parsed > 0 ? Math.round(parsed) : DEFAULT_BUDGET_RUB;
+      } catch (error) {
+        return DEFAULT_BUDGET_RUB;
+      }
+    }
+
+    function loadPortfolio(budget) {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultPortfolio(budget).map(row => ({ secid: row.secid }));
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return defaultPortfolio(budget).map(row => ({ secid: row.secid }));
+        const restored = parsed
+          .filter(row => row && bySecid[row.secid])
+          .map(row => ({ secid:row.secid }));
+        return restored.length ? restored : defaultPortfolio(budget).map(row => ({ secid: row.secid }));
+      } catch (error) {
+        return defaultPortfolio(budget).map(row => ({ secid: row.secid }));
+      }
+    }
+
+    function savePortfolio() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.portfolio));
+      localStorage.setItem(`${STORAGE_KEY}_budget`, String(state.budget));
+    }
+
+    function rebalanceToBudget(rows, budget = state.budget) {
+      const normalized = rows
+        .filter(row => row && bySecid[row.secid] && Number(row.lots) > 0)
+        .map(row => ({ secid:row.secid, lots:Math.max(1, Math.round(Number(row.lots) || 1)) }));
+      const lotCost = secid => Number(bySecid[secid]?.entry_lot_cost_rub || 0);
+      let total = normalized.reduce((sum, row) => sum + row.lots * lotCost(row.secid), 0);
+      const ordered = [...normalized].sort((a, b) => lotCost(b.secid) - lotCost(a.secid));
+      let guard = 0;
+      while (total > budget && guard < 5000) {
+        const candidate = ordered.find(row => row.lots > 1);
+        if (!candidate) break;
+        candidate.lots -= 1;
+        total -= lotCost(candidate.secid);
+        guard += 1;
+      }
+      return ordered.filter(row => row.lots > 0);
+    }
+
+    function holdingsFromPortfolio(rows = state.portfolio) {
+      return rows.map(row => {
+        const item = bySecid[row.secid];
+        if (!item) return null;
+        const category = normalizeCategory(item);
+        return {
+          secid:item.secid,
+          title:item.title || item.secname || item.shortname || item.secid,
+          subtitle:[item.secid, item.isin].filter(Boolean).join(' • '),
+          category,
+          color:itemColor(item),
+          lotCost:Number(item.entry_lot_cost_rub || 0),
+          expReturn:clipReturn(item.annual_return, category),
+          vol:clipVol(item.annual_vol, category),
+          item
+        };
+      }).filter(Boolean).sort((a, b) => b.lotCost - a.lotCost);
+    }
+
+    function computeSearchResults(query) {
+      const q = String(query || '').trim().toLowerCase();
+      if (!q) {
+        const picks = [];
+        for (const secid of SUGGESTED_SECIDS) {
+          const item = bySecid[secid] || byIsin[String(secid).toUpperCase()];
+          if (item && !picks.some(existing => existing.secid === item.secid)) picks.push(item);
+        }
+        const liquidTail = [...catalog]
+          .filter(item => !picks.some(existing => existing.secid === item.secid))
+          .sort((a, b) => (b.turnover_score || 0) - (a.turnover_score || 0))
+          .slice(0, 12);
+        return [...picks, ...liquidTail].slice(0, 18);
+      }
+      const tokens = q.split(/\s+/).filter(Boolean);
+      const ranked = [];
+      for (const item of catalog) {
+        const hay = item.search_blob || '';
+        if (!tokens.every(token => hay.includes(token))) continue;
+        let score = 0;
+        if (item.secid.toLowerCase().startsWith(q)) score += 120;
+        if ((item.isin || '').toLowerCase().startsWith(q)) score += 110;
+        if ((item.shortname || '').toLowerCase().startsWith(q)) score += 80;
+        if ((item.secname || '').toLowerCase().startsWith(q)) score += 75;
+        if ((item.title || '').toLowerCase().includes(q)) score += 50;
+        score += Math.log10((item.turnover_score || 0) + 1) * 6;
+        ranked.push({ item, score });
+      }
+      ranked.sort((a, b) => b.score - a.score);
+      return ranked.slice(0, 18).map(entry => entry.item);
+    }
+
+    function openSearch() {
+      els.searchDrawer.classList.add('open');
+      requestAnimationFrame(() => els.searchInput.focus());
+      renderSearch();
+    }
+
+    function closeSearch() {
+      els.searchDrawer.classList.remove('open');
+    }
+
+    function renderSearch() {
+      const results = computeSearchResults(state.query);
+      if (!results.length) {
+        els.searchResults.innerHTML = `<div class="empty">Ничего не найдено. Попробуй тикер, ISIN или часть названия.</div>`;
+        return;
+      }
+      const isSuggestMode = !String(state.query || '').trim();
+      state.highlightedIndex = Math.min(state.highlightedIndex, results.length - 1);
+      els.searchResults.innerHTML = `
+        <div class="result-meta" style="padding:0 2px 6px 2px;">${isSuggestMode ? 'Стартовые подсказки и ликвидные инструменты' : `Найдено: ${results.length}`}</div>
+        ${results.map((item, idx) => {
+        const active = idx === state.highlightedIndex ? 'result-item active' : 'result-item';
+        const meta = [
+          item.secid,
+          item.isin || '',
+          normalizeCategory(item),
+          item.currency ? `валюта ${item.currency}` : '',
+          item.sector_ru || item.etf_company || ''
+        ].filter(Boolean).join(' · ');
+        const price = Number(item.entry_lot_cost_rub || 0);
+        const isSelected = state.selectedSecid === item.secid;
+        return `
+          <div class="${active}" data-secid="${item.secid}">
+            <div class="result-main">
+              <div class="result-title">${item.title || item.secname || item.shortname || item.secid}</div>
+              <div class="result-price">${formatRub(price, 2)}</div>
+            </div>
+            <div class="result-meta">${meta}</div>
+            ${isSelected ? renderInlineSelectedCard(item) : ''}
+          </div>
+        `;
+      }).join('')}`;
+      els.searchResults.querySelectorAll('.result-item').forEach(node => {
+        node.onmousedown = event => {
+          event.preventDefault();
+          selectInstrument(node.dataset.secid);
+        };
+      });
+      bindInlineSelectedCard();
+    }
+
+    function selectInstrument(secid) {
+      state.selectedSecid = secid;
+      renderSearch();
+      renderSelectedCard();
+    }
+
+    function renderInlineSelectedCard(item) {
+      const category = normalizeCategory(item);
+      const expReturn = clipReturn(item.annual_return, category);
+      const vol = clipVol(item.annual_vol, category);
+      return `
+        <div class="selected-card inline" data-inline-card="${item.secid}" style="margin-top:12px;">
+          <div>
+            <h4>${item.title || item.secname || item.shortname || item.secid}</h4>
+            <div class="sub">${[item.secid, item.isin || '', category].filter(Boolean).join(' • ')}</div>
+          </div>
+        <div class="selected-grid">
+          <div class="mini"><div class="k">Цена лота</div><div class="v">${formatRub(Number(item.entry_lot_cost_rub || 0), 2)}</div></div>
+          <div class="mini"><div class="k">Лот</div><div class="v">${item.lotsize || 1} шт.</div></div>
+          <div class="mini"><div class="k">Exp. return</div><div class="v">${formatPct(expReturn)}</div></div>
+          <div class="mini"><div class="k">Vol</div><div class="v">${formatPct(vol)}</div></div>
+        </div>
+        <div class="drawer-actions">
+          <div></div>
+          <button class="btn secondary" data-inline-cancel="${item.secid}">Отмена</button>
+          <button class="btn primary" data-inline-add="${item.secid}">Добавить</button>
+        </div>
+        </div>
+      `;
+    }
+
+    function bindInlineSelectedCard() {
+      const selected = state.selectedSecid ? bySecid[state.selectedSecid] : null;
+      if (!selected) return;
+      const card = document.querySelector(`[data-inline-card="${selected.secid}"]`);
+      if (card) {
+        ['mousedown', 'click'].forEach(eventName => {
+          card.addEventListener(eventName, event => {
+            event.stopPropagation();
+          });
+        });
+      }
+      const cancelBtn = document.querySelector(`[data-inline-cancel="${selected.secid}"]`);
+      if (cancelBtn) {
+        ['mousedown', 'click'].forEach(eventName => {
+          cancelBtn.addEventListener(eventName, event => {
+            event.stopPropagation();
+          });
+        });
+        cancelBtn.onclick = event => {
+          event.stopPropagation();
+          state.selectedSecid = null;
+          renderSearch();
+          renderSelectedCard();
+        };
+      }
+      const addBtn = document.querySelector(`[data-inline-add="${selected.secid}"]`);
+      if (addBtn) {
+        ['mousedown', 'click'].forEach(eventName => {
+          addBtn.addEventListener(eventName, event => {
+            event.stopPropagation();
+          });
+        });
+        addBtn.onclick = event => {
+          event.stopPropagation();
+          const exists = state.portfolio.some(row => row.secid === selected.secid);
+          if (!exists) state.portfolio.push({ secid:selected.secid });
+          savePortfolio();
+          state.dirty = true;
+          els.statusLine.textContent = `Добавлен ${selected.secid}. Лоты будут рассчитаны после запуска модели.`;
+          state.selectedSecid = null;
+          closeSearch();
+          renderSelectedCard();
+          render();
+        };
+      }
+    }
+
+    function renderSelectedCard() {
+      const item = bySecid[state.selectedSecid];
+      if (!item) {
+        els.selectedCard.innerHTML = `<div class="empty">Выбери инструмент из выдачи и добавь его в список. Лоты появятся только после расчёта модели.</div>`;
+        return;
+      }
+      const category = normalizeCategory(item);
+      const expReturn = clipReturn(item.annual_return, category);
+      const vol = clipVol(item.annual_vol, category);
+      els.selectedCard.innerHTML = `
+        <div>
+          <h4>${item.title || item.secname || item.shortname || item.secid}</h4>
+          <div class="sub">${[item.secid, item.isin || '', category].filter(Boolean).join(' • ')}</div>
+        </div>
+        <div class="selected-grid">
+          <div class="mini"><div class="k">Цена лота</div><div class="v">${formatRub(Number(item.entry_lot_cost_rub || 0), 2)}</div></div>
+          <div class="mini"><div class="k">Лот</div><div class="v">${item.lotsize || 1} шт.</div></div>
+          <div class="mini"><div class="k">Exp. return</div><div class="v">${formatPct(expReturn)}</div></div>
+          <div class="mini"><div class="k">Vol</div><div class="v">${formatPct(vol)}</div></div>
+        </div>
+        <div class="drawer-actions">
+          <div></div>
+          <button class="btn secondary" id="drawerCancelBtn">Отмена</button>
+          <button class="btn primary" id="drawerAddBtn">Добавить</button>
+        </div>
+      `;
+      document.getElementById('drawerCancelBtn').onclick = () => {
+        state.selectedSecid = null;
+        renderSelectedCard();
+      };
+      document.getElementById('drawerAddBtn').onclick = () => {
+        const exists = state.portfolio.some(row => row.secid === item.secid);
+        if (!exists) state.portfolio.push({ secid:item.secid });
+        savePortfolio();
+        state.dirty = true;
+        els.statusLine.textContent = `Добавлен ${item.secid}. Лоты будут рассчитаны после запуска модели.`;
+        state.selectedSecid = null;
+        renderSelectedCard();
+        closeSearch();
+        render();
+      };
+    }
+
+    function correlation(a, b) {
+      if (a.secid === b.secid) return 1;
+      if (a.category === b.category) {
+        if (a.category === 'Акции') return 0.58;
+        if (a.category === 'Рублёвые облигации') return 0.8;
+        if (a.category === 'Валютные облигации') return 0.68;
+        if (a.category === 'Драгоценные металлы') return 0.42;
+        if (a.category === 'Денежный рынок') return 0.2;
+      }
+      const pair = [a.category, b.category].sort().join('|');
+      const map = {
+        'Акции|Денежный рынок':0.02,
+        'Акции|Драгоценные металлы':-0.12,
+        'Акции|Валютные облигации':0.14,
+        'Акции|Рублёвые облигации':0.04,
+        'Денежный рынок|Драгоценные металлы':0.01,
+        'Денежный рынок|Валютные облигации':0.1,
+        'Денежный рынок|Рублёвые облигации':0.14,
+        'Драгоценные металлы|Валютные облигации':-0.05,
+        'Драгоценные металлы|Рублёвые облигации':-0.06,
+        'Валютные облигации|Рублёвые облигации':0.44
+      };
+      return map[pair] ?? 0.1;
+    }
+
+    function covarianceMatrix(assets) {
+      return assets.map(a => assets.map(b => correlation(a, b) * (a.vol / 100) * (b.vol / 100)));
+    }
+
+    function expectedReturn(weights, assets) {
+      return weights.reduce((sum, weight, idx) => sum + weight * assets[idx].expReturn, 0);
+    }
+
+    function portfolioVol(weights, cov) {
+      let variance = 0;
+      for (let i = 0; i < weights.length; i += 1) {
+        for (let j = 0; j < weights.length; j += 1) {
+          variance += weights[i] * weights[j] * cov[i][j];
+        }
+      }
+      return Math.sqrt(Math.max(variance, 0)) * 100;
+    }
+
+    function boundedRandomWeights(size, cap = MAX_WEIGHT) {
+      let remaining = 1;
+      const weights = Array(size).fill(0);
+      const order = Array.from({ length:size }, (_, idx) => idx).sort(() => Math.random() - 0.5);
+      for (let i = 0; i < order.length; i += 1) {
+        const idx = order[i];
+        const left = order.length - i - 1;
+        const minLeft = Math.max(0, remaining - left * cap);
+        const maxHere = Math.min(cap, remaining);
+        const value = i === order.length - 1
+          ? remaining
+          : minLeft + Math.random() * Math.max(0, maxHere - minLeft);
+        weights[idx] = value;
+        remaining -= value;
+      }
+      const sum = weights.reduce((acc, value) => acc + value, 0) || 1;
+      return weights.map(value => value / sum);
+    }
+
+    function capAndNormalize(weights, cap = MAX_WEIGHT) {
+      const out = weights.map(value => Math.max(0, value));
+      let guard = 0;
+      while (guard < 50) {
+        let over = 0;
+        let free = 0;
+        const freeIdx = [];
+        for (let i = 0; i < out.length; i += 1) {
+          if (out[i] > cap) {
+            over += out[i] - cap;
+            out[i] = cap;
+          } else {
+            free += cap - out[i];
+            freeIdx.push(i);
+          }
+        }
+        if (over <= 1e-9 || !freeIdx.length) break;
+        const freeSum = freeIdx.reduce((sum, idx) => sum + Math.max(1e-9, cap - out[idx]), 0);
+        freeIdx.forEach(idx => {
+          out[idx] += over * ((cap - out[idx]) / freeSum);
+        });
+        guard += 1;
+      }
+      const sum = out.reduce((acc, value) => acc + value, 0) || 1;
+      return out.map(value => value / sum);
+    }
+
+    function blendWeights(a, b, t) {
+      return capAndNormalize(a.map((value, idx) => value * (1 - t) + b[idx] * t));
+    }
+
+    function jitterWeights(base, strength = 0.03) {
+      const perturbed = base.map(value => Math.max(0, value + (Math.random() - 0.5) * strength));
+      return capAndNormalize(perturbed);
+    }
+
+    function extremeWeights(assets, mode = 'high') {
+      const sorted = [...assets]
+        .map((asset, idx) => ({ idx, score:mode === 'high' ? asset.expReturn : asset.expReturn - asset.vol * 0.45 }))
+        .sort((a, b) => mode === 'high' ? b.score - a.score : a.score - b.score);
+      const weights = Array(assets.length).fill(0);
+      let remaining = 1;
+      for (const entry of sorted) {
+        if (remaining <= 1e-9) break;
+        const add = Math.min(MAX_WEIGHT, remaining);
+        weights[entry.idx] = add;
+        remaining -= add;
+      }
+      return capAndNormalize(weights);
+    }
+
+    function pointFromWeights(weights, assets, cov) {
+      const ret = expectedReturn(weights, assets);
+      const vol = portfolioVol(weights, cov);
+      const sharpe = vol > 0 ? (ret - 12) / vol : 0;
+      return { weights, ret, vol, sharpe };
+    }
+
+    function lotsFromWeights(weights, assets) {
+      const targetRub = weights.map(weight => weight * state.budget);
+      const lots = targetRub.map((value, idx) => Math.max(0, Math.floor(value / assets[idx].lotCost)));
+      let spent = lots.reduce((sum, count, idx) => sum + count * assets[idx].lotCost, 0);
+      let guard = 0;
+      while (guard < 2000) {
+        let bestIdx = -1;
+        let bestScore = -Infinity;
+        for (let i = 0; i < assets.length; i += 1) {
+          const cost = assets[i].lotCost;
+          if (spent + cost > state.budget) continue;
+          const currentWeight = (lots[i] * cost) / state.budget;
+          const nextWeight = ((lots[i] + 1) * cost) / state.budget;
+          if (nextWeight > MAX_WEIGHT + 0.015) continue;
+          const score = Math.abs(weights[i] - currentWeight) - Math.abs(weights[i] - nextWeight);
+          if (score > bestScore) {
+            bestScore = score;
+            bestIdx = i;
+          }
+        }
+        if (bestIdx === -1) break;
+        lots[bestIdx] += 1;
+        spent += assets[bestIdx].lotCost;
+        guard += 1;
+      }
+      return lots;
+    }
+
+    function analyzeLots(lots, assets) {
+      const rows = assets.map((asset, idx) => ({
+        ...asset,
+        lots:lots[idx],
+        amount:lots[idx] * asset.lotCost
+      })).filter(row => row.lots > 0);
+      const spent = rows.reduce((sum, row) => sum + row.amount, 0);
+      const weights = rows.map(row => spent > 0 ? row.amount / spent : 0);
+      const cov = covarianceMatrix(rows);
+      const ret = expectedReturn(weights, rows);
+      const vol = portfolioVol(weights, cov);
+      const sharpe = vol > 0 ? (ret - 12) / vol : 0;
+      const categories = Object.entries(rows.reduce((acc, row) => {
+        acc[row.category] = (acc[row.category] || 0) + row.amount;
+        return acc;
+      }, {})).map(([category, amount]) => ({
+        category,
+        amount,
+        weight:spent > 0 ? amount / spent : 0,
+        color:CATEGORY_FALLBACK[category] || '#909899'
+      })).sort((a, b) => b.amount - a.amount);
+      return { rows, spent, cash:Math.max(0, state.budget - spent), ret, vol, sharpe, categories };
+    }
+
+    function computeFrontier(holdings) {
+      const cov = covarianceMatrix(holdings);
+      const exploratory = [];
+      const trials = Math.max(4500, holdings.length * 550);
+      for (let i = 0; i < trials; i += 1) {
+        exploratory.push(pointFromWeights(boundedRandomWeights(holdings.length), holdings, cov));
+      }
+
+      const defenseSeed = exploratory.reduce((best, point) => point.vol < best.vol ? point : best, exploratory[0]);
+      const highWeights = extremeWeights(holdings, 'high');
+      const lowWeights = extremeWeights(holdings, 'low');
+      const highSeed = pointFromWeights(highWeights, holdings, cov);
+      const lowSeed = pointFromWeights(lowWeights, holdings, cov);
+
+      const cloud = [];
+      for (let step = 0; step < 130; step += 1) {
+        const t = step / 129;
+        const upperBase = blendWeights(defenseSeed.weights, highSeed.weights, Math.pow(t, 0.82));
+        const lowerBase = blendWeights(defenseSeed.weights, lowSeed.weights, Math.pow(t, 1.08));
+        for (let j = 0; j < 28; j += 1) {
+          cloud.push(pointFromWeights(jitterWeights(upperBase, 0.012 + t * 0.045), holdings, cov));
+          cloud.push(pointFromWeights(jitterWeights(lowerBase, 0.014 + t * 0.035), holdings, cov));
+          const bridge = blendWeights(lowerBase, upperBase, Math.random());
+          cloud.push(pointFromWeights(jitterWeights(bridge, 0.01 + t * 0.03), holdings, cov));
+        }
+      }
+      cloud.push(...exploratory.slice(0, Math.min(1600, exploratory.length)));
+
+      const bins = new Map();
+      cloud.forEach(point => {
+        const key = Math.round(point.vol * 3) / 3;
+        const current = bins.get(key);
+        if (!current || point.ret > current.ret) bins.set(key, point);
+      });
+      const frontier = Array.from(bins.values()).sort((a, b) => a.vol - b.vol);
+      const defense = frontier[0] || cloud.reduce((best, point) => point.vol < best.vol ? point : best, cloud[0]);
+      const best = cloud.reduce((current, point) => point.sharpe > current.sharpe ? point : current, cloud[0]);
+      const coreTarget = frontier[Math.floor(frontier.length * 0.5)] || cloud[Math.floor(cloud.length * 0.5)];
+      const core = cloud.reduce((current, point) => {
+        const pointScore = Math.abs(point.vol - coreTarget.vol) + Math.abs(point.ret - coreTarget.ret);
+        const bestScore = Math.abs(current.vol - coreTarget.vol) + Math.abs(current.ret - coreTarget.ret);
+        return pointScore < bestScore ? point : current;
+      }, cloud[0]);
+
+      const models = [
+        { key:'defense', title:'Defense', labelClass:'defense', description:'Самый низкий риск в допустимой области.', point:defense, color:'#4a6f95' },
+        { key:'core', title:'Core', labelClass:'core', description:'Срединный режим без экстремума по доходности.', point:core, color:'#9f7b37' },
+        { key:'best', title:'Best', labelClass:'best', description:'Лучшее отношение доходности к риску.', point:best, color:'#b0563d' }
+      ];
+
+      models.forEach(model => {
+        const lots = lotsFromWeights(model.point.weights, holdings);
+        model.analysis = analyzeLots(lots, holdings);
+      });
+
+      return { cloud, frontier, models, best:models[2] };
+    }
+
+    function markDirty(message) {
+      state.dirty = true;
+      savePortfolio();
+      els.statusLine.textContent = message;
+      render();
+    }
+
+    function renderHero(holdings) {
+      const allocated = state.result && !state.dirty ? state.result.best.analysis.spent : null;
+      const classes = new Set(holdings.map(row => row.category)).size;
+      els.heroKpis.innerHTML = [
+        ['Бюджет модели', `<input id="budgetInput" type="text" inputmode="numeric" value="${new Intl.NumberFormat('ru-RU').format(state.budget)}" />`, 'Измени сумму и пересчитай модель.'],
+        ['Текущий состав', `${holdings.length} активов`, `${classes} классов активов в списке.`],
+        ['Распределено', allocated != null ? formatRub(allocated) : '—', allocated != null ? `Свободно ${formatRub(state.budget - allocated)}.` : 'Появится после расчёта модели.'],
+        ['Статус графика', state.dirty ? 'Нужно обновить' : 'Актуален', state.dirty ? 'Состав менялся после расчёта.' : 'Frontier синхронизирована с текущим списком.']
+      ].map(([k, v, s]) => `<div class="hero-kpi"><span>${k}</span>${String(v).includes('budgetInput') ? v : `<strong>${v}</strong>`}<small>${s}</small></div>`).join('');
+      const budgetInput = document.getElementById('budgetInput');
+      if (budgetInput) {
+        budgetInput.onchange = () => {
+          const numeric = Number(String(budgetInput.value).replace(/\s+/g, '').replace(/[^\d]/g, ''));
+          if (!(numeric > 0)) {
+            budgetInput.value = new Intl.NumberFormat('ru-RU').format(state.budget);
+            return;
+          }
+          state.budget = Math.round(numeric);
+          savePortfolio();
+          state.dirty = true;
+          els.statusLine.textContent = `Бюджет модели обновлён: ${formatRub(state.budget)}. Пересчитай модель.`;
+          render();
+        };
+      }
+    }
+
+    function renderTable(holdings) {
+      const bestRows = state.result && !state.dirty
+        ? Object.fromEntries(state.result.best.analysis.rows.map(row => [row.secid, row]))
+        : {};
+      els.tableMeta.textContent = holdings.length
+        ? (state.result && !state.dirty
+          ? `${holdings.length} позиций, распределение на ${formatRub(state.result.best.analysis.spent)}`
+          : `${holdings.length} позиций, лоты появятся после расчёта`)
+        : 'Портфель пуст';
+      if (!holdings.length) {
+        els.portfolioBody.innerHTML = `<tr><td colspan="9" class="empty">Портфель пуст. Добавь активы через поиск и пересчитай модель.</td></tr>`;
+        return;
+      }
+      els.portfolioBody.innerHTML = holdings.map(row => `
+        <tr>
+          <td>
+            <div class="asset-cell">
+              <span class="asset-dot" style="background:${row.color};"></span>
+              <div>
+                <div class="asset-title">${row.title}</div>
+                <div class="asset-sub">${row.subtitle}</div>
+              </div>
+            </div>
+          </td>
+          <td><button class="tiny-btn" data-remove="${row.secid}">×</button></td>
+          <td>${row.category}</td>
+          <td class="num">${formatRub(row.lotCost, 2)}</td>
+          <td class="num">${bestRows[row.secid] ? bestRows[row.secid].lots : '—'}</td>
+          <td class="num">${bestRows[row.secid] ? formatRub(bestRows[row.secid].amount) : '—'}</td>
+          <td class="num">${bestRows[row.secid] && state.result.best.analysis.spent > 0 ? formatPct((bestRows[row.secid].amount / state.result.best.analysis.spent) * 100) : '—'}</td>
+          <td class="num">${formatPct(row.expReturn)}</td>
+          <td class="num">${formatPct(row.vol)}</td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('[data-remove]').forEach(button => {
+        button.onclick = () => {
+          state.portfolio = state.portfolio.filter(row => row.secid !== button.dataset.remove);
+          markDirty(`Удалён ${button.dataset.remove}.`);
+        };
+      });
+    }
+
+    function renderModels(result) {
+      els.modelStack.innerHTML = result.models.map(model => `
+        <article class="model-card ${model.key === result.best.key ? 'best' : ''}">
+          <div class="model-label ${model.labelClass}">${model.title}</div>
+          <div>
+            <div class="model-copy">${model.description}</div>
+            <div class="metric-grid">
+              <div class="metric"><div class="k">Доход</div><div class="v">${formatPct(model.analysis.ret)}</div></div>
+              <div class="metric"><div class="k">Вол.</div><div class="v">${formatPct(model.analysis.vol)}</div></div>
+              <div class="metric"><div class="k">Sharpe</div><div class="v">${model.analysis.sharpe.toFixed(2)}</div></div>
+              <div class="metric"><div class="k">Инвест.</div><div class="v">${formatRub(model.analysis.spent)}</div></div>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderSummary(result) {
+      const best = result.best;
+      const positions = [...best.analysis.rows].sort((a, b) => b.amount - a.amount);
+      els.heroBestMode.textContent = best.title;
+      els.heroBestText.textContent = `Доходность ${formatPct(best.analysis.ret)}, волатильность ${formatPct(best.analysis.vol)}, Sharpe ${best.analysis.sharpe.toFixed(2)}.`;
+      els.summaryLead.textContent = `Лучший портфель по Sharpe с cap ${Math.round(MAX_WEIGHT * 100)}% на один актив и бюджетом ${formatRub(state.budget)}.`;
+      els.summaryGrid.innerHTML = [
+        ['Лучшая модель', best.title],
+        ['Ожидаемая доходность', formatPct(best.analysis.ret)],
+        ['Ожидаемая волатильность', formatPct(best.analysis.vol)],
+        ['Sharpe ratio', best.analysis.sharpe.toFixed(2)],
+        ['Инвестировано', formatRub(best.analysis.spent)],
+        ['Свободный кэш', formatRub(best.analysis.cash)],
+        ['Позиций', `${best.analysis.rows.length}`],
+        ['Топ-позиция', positions[0]?.secid || '—']
+      ].map(([k, v]) => `<div class="summary-card"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+      els.mixGrid.innerHTML = `
+        <div class="mix-card">
+          <h3>Топ позиций</h3>
+          <div class="mix-list">
+            ${positions.slice(0, 7).map(row => {
+              const weight = best.analysis.spent > 0 ? row.amount / best.analysis.spent : 0;
+              return `<div class="mix-row"><div>${row.secid}</div><div class="bar"><span style="width:${(weight * 100).toFixed(2)}%;background:${row.color};"></span></div><div>${formatPct(weight * 100)}</div></div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="mix-card">
+          <h3>По классам активов</h3>
+          <div class="mix-list">
+            ${best.analysis.categories.map(row => `<div class="mix-row"><div>${row.category}</div><div class="bar"><span style="width:${(row.weight * 100).toFixed(2)}%;background:${row.color};"></span></div><div>${formatPct(row.weight * 100)}</div></div>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderChart(result) {
+      const traces = [
+        {
+          x:result.cloud.map(point => point.vol / 100),
+          y:result.cloud.map(point => point.ret / 100),
+          type:'scattergl',
+          mode:'markers',
+          name:'Портфели',
+          marker:{
+            size:7,
+            color:result.cloud.map(point => point.sharpe),
+            colorscale:'Viridis',
+            opacity:.82,
+            showscale:true,
+            colorbar:{ title:'Sharpe', thickness:16 }
+          },
+          hovertemplate:'Return %{y:.2%}<br>Volatility %{x:.2%}<br>Sharpe %{marker.color:.2f}<extra></extra>'
+        },
+        ...result.models.map(model => ({
+          x:[model.analysis.vol / 100],
+          y:[model.analysis.ret / 100],
+          type:'scatter',
+          mode:'markers+text',
+          text:[model.title],
+          textposition:'top center',
+          name:model.title,
+          marker:{ size:12, color:model.color, line:{ color:'#fff', width:2 } },
+          hovertemplate:`${model.title}<br>Return %{y:.2%}<br>Volatility %{x:.2%}<extra></extra>`
+        }))
+      ];
+
+      Plotly.newPlot('frontierPlot', traces, {
+        paper_bgcolor:'rgba(0,0,0,0)',
+        plot_bgcolor:'rgba(236,236,244,.9)',
+        margin:{ l:66, r:34, t:16, b:58 },
+        xaxis:{ title:'Volatility', tickformat:'.0%', gridcolor:'rgba(31,41,37,.08)', zeroline:false },
+        yaxis:{ title:'Return', tickformat:'.0%', gridcolor:'rgba(31,41,37,.08)', zeroline:false },
+        legend:{ orientation:'h', y:-0.14 }
+      }, { responsive:true, displayModeBar:false });
+    }
+
+    function compute() {
+      const holdings = holdingsFromPortfolio();
+      if (!holdings.length) {
+        state.result = null;
+        state.dirty = true;
+        render();
+        return;
+      }
+      state.result = computeFrontier(holdings);
+      state.dirty = false;
+      savePortfolio();
+      els.statusLine.textContent = `Модель обновлена для ${holdings.length} активов. Бюджет ${formatRub(state.budget)}, максимум на один инструмент ${Math.round(MAX_WEIGHT * 100)}%.`;
+      render();
+    }
+
+    function render() {
+      const holdings = holdingsFromPortfolio();
+      renderHero(holdings);
+      renderTable(holdings);
+      els.chartPanel.classList.toggle('is-stale', state.dirty);
+      if (state.result) {
+        renderModels(state.result);
+        renderSummary(state.result);
+        renderChart(state.result);
+      } else {
+        els.modelStack.innerHTML = `<div class="empty">Нет расчёта. Добавь активы и нажми «Рассчитать по Марковицу».</div>`;
+        els.summaryGrid.innerHTML = '';
+        els.mixGrid.innerHTML = '';
+        Plotly.newPlot('frontierPlot', [], {
+          paper_bgcolor:'rgba(0,0,0,0)',
+          plot_bgcolor:'rgba(236,236,244,.9)',
+          margin:{ l:66, r:34, t:16, b:58 },
+          xaxis:{ title:'Volatility', tickformat:'.0%', gridcolor:'rgba(31,41,37,.08)', zeroline:false },
+          yaxis:{ title:'Return', tickformat:'.0%', gridcolor:'rgba(31,41,37,.08)', zeroline:false },
+          annotations:[{ x:0.5, y:0.5, xref:'paper', yref:'paper', showarrow:false, text:'После расчёта здесь появится frontier', font:{ size:18, color:'#68757b' } }]
+        }, { responsive:true, displayModeBar:false });
+      }
+    }
+
+    els.openSearchBtn.onclick = openSearch;
+    els.openSearchInlineBtn.onclick = openSearch;
+    els.closeSearchBtn.onclick = closeSearch;
+    els.searchDrawer.onclick = event => {
+      if (event.target === els.searchDrawer) closeSearch();
+    };
+    els.searchInput.oninput = event => {
+      state.query = event.target.value;
+      state.highlightedIndex = 0;
+      renderSearch();
+    };
+    els.searchInput.onkeydown = event => {
+      const results = computeSearchResults(state.query);
+      if (!results.length) return;
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        state.highlightedIndex = Math.min(state.highlightedIndex + 1, results.length - 1);
+        renderSearch();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        state.highlightedIndex = Math.max(state.highlightedIndex - 1, 0);
+        renderSearch();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        selectInstrument(results[state.highlightedIndex].secid);
+      }
+    };
+    els.clearBtn.onclick = () => {
+      state.portfolio = [];
+      markDirty('Портфель очищен.');
+    };
+    els.calcBtn.onclick = compute;
+
+    state.result = computeFrontier(holdingsFromPortfolio());
+    els.statusLine.textContent = `Загружен базовый портфель. Бюджет модели: ${formatRub(state.budget)}.`;
+    render();
+    renderSelectedCard();
+  </script>
+</body>
+</html>
