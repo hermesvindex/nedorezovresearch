@@ -1,0 +1,1161 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ДОМ.РФ 001Р-05R · Карточка актива</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg-a: #edf3f7;
+      --bg-b: #faf7ef;
+      --bg-c: #f6fbf7;
+      --ink: #101215;
+      --muted: rgba(16, 18, 21, .62);
+      --faint: rgba(16, 18, 21, .42);
+      --line: rgba(255, 255, 255, .72);
+      --glass: rgba(255, 255, 255, .56);
+      --glass-strong: rgba(255, 255, 255, .76);
+      --shadow: 0 28px 86px rgba(25, 34, 48, .17);
+      --radius: 30px;
+      --accent: #0ea56b;
+      --accent-soft: rgba(14, 165, 107, .16);
+      --panel: rgba(255,255,255,.55);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(71, 115, 135, .14), transparent 31%),
+        linear-gradient(230deg, rgba(199, 139, 79, .18), transparent 36%),
+        linear-gradient(165deg, var(--bg-a) 0%, var(--bg-b) 48%, var(--bg-c) 100%);
+      padding: clamp(16px, 3vw, 42px);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.42) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.45), transparent 72%);
+    }
+    .shell {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .asset-switcher {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,.82);
+      border-radius: 22px;
+      background: rgba(255,255,255,.42);
+      backdrop-filter: blur(28px) saturate(170%);
+      box-shadow: 0 16px 46px rgba(32, 42, 64, .11);
+    }
+    .switch-group, .range-group, .mode-group { display: flex; gap: 7px; flex-wrap: wrap; }
+    button {
+      border: 0;
+      min-height: 38px;
+      border-radius: 15px;
+      padding: 0 14px;
+      font: 700 13px/1 system-ui, sans-serif;
+      color: rgba(16,18,21,.72);
+      background: rgba(255,255,255,.58);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75), 0 8px 20px rgba(20,32,56,.08);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, color .18s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    button.active {
+      color: #fff;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent), #0b1f16 6%), color-mix(in srgb, var(--accent), #ffffff 18%));
+    }
+    .card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.78);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.76), rgba(255,255,255,.44)),
+        linear-gradient(220deg, color-mix(in srgb, var(--accent), white 88%), rgba(255,255,255,.26));
+      backdrop-filter: blur(36px) saturate(180%);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.88);
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,.72), transparent 26%),
+        linear-gradient(145deg, var(--accent-soft), transparent 36%);
+      pointer-events: none;
+    }
+    .content {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: clamp(18px, 3vw, 34px);
+      padding: clamp(18px, 3vw, 34px);
+    }
+    .topline {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .logo {
+      width: 74px;
+      height: 74px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: var(--accent);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 16px 38px color-mix(in srgb, var(--accent), transparent 72%);
+    }
+    .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .logo-fallback { color: #fff; font-weight: 900; font-size: 22px; }
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 58px);
+      line-height: .92;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin-top: 10px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .chips { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 14px; }
+    .chip {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0 11px;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(16,18,21,.7);
+      background: rgba(255,255,255,.58);
+      border: 1px solid rgba(255,255,255,.74);
+    }
+    .chip.tint { color: color-mix(in srgb, var(--accent), #052515 38%); background: var(--accent-soft); }
+    .price-panel {
+      margin-top: clamp(22px, 4vw, 44px);
+      display: grid;
+      grid-template-columns: .84fr 1.16fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .quote {
+      min-height: 142px;
+      padding: 20px;
+      border-radius: 24px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+    }
+    .quote-value { font-size: clamp(30px, 5vw, 58px); line-height: .92; font-weight: 900; letter-spacing: 0; white-space: nowrap; }
+    .quote-rub { margin-top: 8px; color: var(--muted); font-size: 18px; font-weight: 750; }
+    .delta { margin-top: 12px; font-size: 17px; font-weight: 850; color: #6a7077; }
+    .delta.positive { color: #04884f; }
+    .delta.negative { color: #c5203d; }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .metric {
+      min-height: 66px;
+      min-width: 0;
+      padding: 13px 14px;
+      border-radius: 19px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.68);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+      overflow: hidden;
+    }
+    .metric.hot { background: rgba(255,255,255,.50); }
+    .metric-value { font-size: 22px; line-height: 1.05; font-weight: 900; color: rgba(16,18,21,.90); overflow-wrap: normal; word-break: normal; hyphens: none; }
+    .metric-value.text { font-size: 18px; line-height: 1.1; overflow-wrap: normal; word-break: normal; }
+    .metric-value.long { font-size: 16px; line-height: 1.13; }
+    .metric-value.date { font-size: 17px; font-weight: 780; color: var(--muted); }
+    .metric-label { margin-top: 4px; color: var(--muted); font-size: 12px; line-height: 1.12; }
+    .metric-note { margin-top: 5px; color: var(--faint); font-size: 11px; line-height: 1.15; overflow-wrap: normal; word-break: normal; hyphens: none; }
+    .returns-grid {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .return-pill {
+      min-width: 0;
+      border-radius: 15px;
+      padding: 10px 11px;
+      background: rgba(255,255,255,.46);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.66);
+    }
+    .return-label { color: var(--muted); font-size: 11px; font-weight: 780; line-height: 1; }
+    .return-value { margin-top: 5px; font-size: 15px; line-height: 1; font-weight: 900; color: #6a7077; white-space: nowrap; }
+    .return-value.positive { color: #04884f; }
+    .return-value.negative { color: #c5203d; }
+    .return-note { margin-top: 5px; color: var(--faint); font-size: 10px; font-weight: 720; line-height: 1; white-space: nowrap; }
+    .chart-panel {
+      margin-top: 18px;
+      padding: 14px 14px 10px;
+      border-radius: 26px;
+      background: rgba(255,255,255,.48);
+      border: 1px solid rgba(255,255,255,.66);
+    }
+    .detail-cta {
+      display: none;
+      margin-top: 14px;
+    }
+    .detail-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 999px;
+      background: #101827;
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 18px 34px rgba(16,24,39,.18);
+    }
+    .detail-link:hover {
+      background: #1f2a3d;
+    }
+    #chart { height: 354px; width: 100%; }
+    .chart-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .chart-toolbar .range-group { justify-content: flex-end; }
+    .chart-toolbar .range-group button { padding: 0 10px; }
+    .side {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .tile, .section {
+      border-radius: 21px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.68);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+    .tile { min-height: 83px; min-width: 0; padding: 15px; overflow: hidden; }
+    .tile strong {
+      display: block;
+      max-width: 100%;
+      font-size: 19px;
+      line-height: 1.08;
+      overflow-wrap: anywhere;
+      word-break: normal;
+      text-wrap: balance;
+    }
+    .tile strong.fit {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: clamp(13px, var(--fit-size, 19px), 19px);
+    }
+    .tile strong.money { white-space: nowrap; overflow-wrap: normal; }
+    .tile-date { display: inline-block; margin-left: 5px; color: var(--muted); font-size: 13px; font-weight: 780; white-space: nowrap; vertical-align: baseline; }
+    .tile-date.solo { margin-left: 0; font-size: 16px; }
+    .tile span { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.15; }
+    .section { padding: 16px; }
+    .section h2 { margin: 0 0 12px; font-size: 16px; line-height: 1; }
+    .desc { color: rgba(16,18,21,.72); font-size: 13px; line-height: 1.46; }
+    .formula {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--accent-soft), white 42%);
+      color: rgba(16,18,21,.72);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .formula strong { color: color-mix(in srgb, var(--accent), #071c12 44%); font-size: 15px; }
+    .cashflow { display: grid; gap: 8px; max-height: 420px; overflow: auto; padding-right: 3px; }
+    .flow-row {
+      min-height: 46px;
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 11px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.45);
+    }
+    .flow-date, .flow-note { color: var(--muted); font-size: 12px; }
+    .flow-row.past { opacity: .72; }
+    .flow-main { min-width: 0; }
+    .flow-title { font-size: 13px; font-weight: 850; color: rgba(16,18,21,.74); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .flow-value { font-size: 14px; font-weight: 850; text-align: right; white-space: nowrap; }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(16,18,21,.07);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    details.coupon-history {
+      margin-top: 4px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.34);
+      border: 1px solid rgba(255,255,255,.58);
+      overflow: hidden;
+    }
+    details.coupon-history summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-weight: 850;
+      font-size: 12px;
+      list-style: none;
+    }
+    details.coupon-history summary span:last-child { color: var(--muted); font-weight: 760; }
+    details.coupon-history summary:focus { outline: none; }
+    details.coupon-history summary:focus-visible { box-shadow: inset 0 0 0 2px rgba(16,18,21,.12); }
+    details.coupon-history summary::-webkit-details-marker { display: none; }
+    .coupon-table {
+      display: grid;
+      gap: 6px;
+      max-height: 290px;
+      overflow: auto;
+      padding: 0 10px 10px;
+    }
+    .footer-note {
+      color: var(--faint);
+      font-size: 12px;
+      padding: 0 clamp(18px, 3vw, 34px) clamp(18px, 3vw, 28px);
+      position: relative;
+    }
+    body.in-drawer {
+      padding: 0;
+      background:
+        linear-gradient(135deg, rgba(71, 115, 135, .12), transparent 35%),
+        linear-gradient(145deg, var(--bg-a), var(--bg-b), var(--bg-c));
+    }
+    body.in-drawer::before { display: none; }
+    body.in-drawer .shell { width: 100%; }
+    body.in-drawer .asset-switcher { display: none; }
+    body.in-drawer .card {
+      border-radius: 0;
+      min-height: 100vh;
+      border: 0;
+      box-shadow: none;
+    }
+    body.in-drawer .content {
+      grid-template-columns: 1fr;
+      padding: 14px;
+      gap: 14px;
+    }
+    body.in-drawer .metric-grid { grid-template-columns: 1fr 1fr; }
+    body.in-drawer .chart-panel { margin-top: 14px; }
+    body.in-drawer #chart { height: 290px; }
+    body.in-drawer .footer-note { padding: 0 14px 18px; }
+    @media (max-width: 980px) {
+      .content { grid-template-columns: 1fr; }
+      .side { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      body { padding: 10px; }
+      .asset-switcher { border-radius: 19px; }
+      .content { padding: 14px; gap: 16px; }
+      .topline { grid-template-columns: auto 1fr; }
+      .logo { width: 62px; height: 62px; border-radius: 18px; }
+      .price-panel, .tiles { grid-template-columns: 1fr; }
+      .metric-grid { grid-template-columns: 1fr 1fr; }
+      .returns-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .chart-toolbar .range-group { justify-content: flex-start; }
+      #chart { height: 316px; }
+      .flow-row { grid-template-columns: 82px minmax(0, 1fr) auto; }
+      button { flex: 1 1 auto; }
+    }
+    @media (max-width: 640px), (max-height: 760px) {
+      body.in-drawer .content { padding: 12px; gap: 12px; }
+      body.in-drawer #chart { height: 270px; }
+      body.in-drawer .footer-note { padding: 0 12px 16px; }
+    }
+  
+
+    :root {
+      --bg-a: #F2F2F2 !important;
+      --bg-b: #FFFFFF !important;
+      --ink: #111111 !important;
+      --muted: rgba(43,43,43,.62) !important;
+      --faint: rgba(43,43,43,.42) !important;
+      --line: rgba(17,17,17,.10) !important;
+      --glass: rgba(255,255,255,.62) !important;
+      --glass-strong: rgba(255,255,255,.82) !important;
+      --radius: 28px !important;
+    }
+    body {
+      background:
+        linear-gradient(rgba(255,255,255,.34) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.30) 1px, transparent 1px),
+        radial-gradient(circle at 16% 8%, color-mix(in srgb, var(--accent), transparent 88%), transparent 27%),
+        radial-gradient(circle at 84% 4%, rgba(138,138,138,.18), transparent 24%),
+        linear-gradient(180deg, #F2F2F2 0%, #FFFFFF 46%, #D9D9D9 100%) !important;
+      background-size: 112px 112px, 112px 112px, auto, auto, auto !important;
+    }
+    .card,
+    .asset-switcher,
+    .quote,
+    .metric,
+    .return-pill,
+    .chart-panel,
+    .side-card,
+    .flow-row,
+    .scenario-card,
+    .section-card,
+    .chip,
+    button,
+    .detail-link {
+      border-radius: var(--radius) !important;
+      border-color: rgba(17,17,17,.10) !important;
+    }
+    .card {
+      background:
+        radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--accent), transparent 88%), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.86), rgba(242,242,242,.66)) !important;
+      box-shadow: 0 24px 70px rgba(17,17,17,.12), inset 0 1px 0 rgba(255,255,255,.86) !important;
+    }
+    .logo {
+      border-radius: var(--radius) !important;
+      background: var(--accent) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.34), 0 16px 38px color-mix(in srgb, var(--accent), transparent 76%) !important;
+    }
+    button.active,
+    .detail-link {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent), #111111 8%), color-mix(in srgb, var(--accent), #111111 22%)) !important;
+      color: #FFFFFF !important;
+    }
+    .chip.tint {
+      color: color-mix(in srgb, var(--accent), #111111 36%) !important;
+      background: var(--accent-soft) !important;
+    }
+
+  
+
+  
+    /* bondsmap asset second pass fixes */
+    .asset-switcher,
+    .footer-note,
+    body.in-drawer .asset-switcher,
+    body.in-drawer .footer-note {
+      display: none !important;
+    }
+
+  
+    /* bondsmap asset drawer recovery */
+    html,
+    body.in-drawer {
+      background: #FFFFFF !important;
+      height: auto !important;
+      min-height: 100% !important;
+      overflow: auto !important;
+      overscroll-behavior: contain !important;
+    }
+    body.in-drawer {
+      padding: 0 !important;
+    }
+    body.in-drawer::before {
+      display: none !important;
+    }
+    body.in-drawer .shell {
+      width: 100% !important;
+      min-height: 100% !important;
+      gap: 0 !important;
+    }
+    body.in-drawer .asset-switcher,
+    body.in-drawer .footer-note,
+    .footer-note {
+      display: none !important;
+      height: 0 !important;
+      max-height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+    }
+    body.in-drawer .card {
+      min-height: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+      background: #FFFFFF !important;
+      border-radius: var(--radius) !important;
+      overflow: visible !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+    }
+    body.in-drawer .card::before {
+      display: none !important;
+    }
+    body.in-drawer .content {
+      position: relative !important;
+      z-index: 1 !important;
+      padding-bottom: 0 !important;
+    }
+
+  
+    /* bondsmap asset drawer recovery v2 */
+    html.drawer-mode,
+    html.drawer-mode body,
+    body.in-drawer {
+      padding: 0 !important;
+      height: auto !important;
+      min-height: 100% !important;
+      background: #FFFFFF !important;
+      overflow: auto !important;
+      overscroll-behavior: contain !important;
+    }
+    html.drawer-mode body::before,
+    body.in-drawer::before { display: none !important; }
+    html.drawer-mode body .shell,
+    body.in-drawer .shell {
+      width: 100% !important;
+      min-height: 100% !important;
+      gap: 0 !important;
+    }
+    html.drawer-mode body .asset-switcher,
+    html.drawer-mode body .footer-note,
+    body.in-drawer .asset-switcher,
+    body.in-drawer .footer-note,
+    .footer-note {
+      display: none !important;
+      height: 0 !important;
+      max-height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+    }
+    html.drawer-mode body .card,
+    body.in-drawer .card {
+      min-height: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+      background: #FFFFFF !important;
+      border-radius: var(--radius) !important;
+      overflow: visible !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+    }
+    html.drawer-mode body .card::before,
+    body.in-drawer .card::before { display: none !important; }
+    html.drawer-mode body .content,
+    body.in-drawer .content {
+      position: relative !important;
+      z-index: 1 !important;
+      padding-bottom: 0 !important;
+    }
+
+  </style>
+<script>try{if(new URLSearchParams(location.search).get("drawer")==="1"){document.documentElement.classList.add("drawer-mode");}}catch(error){}</script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="asset-switcher">
+      <div class="switch-group" id="assetButtons"></div>
+    </nav>
+
+    <article class="card" id="assetCard">
+      <div class="content">
+        <section>
+          <div class="topline">
+            <div class="logo" id="logo"></div>
+            <div>
+              <h1 id="title"></h1>
+              <div class="subtitle" id="subtitle"></div>
+              <div class="chips" id="chips"></div>
+            </div>
+          </div>
+
+          <div class="price-panel">
+            <div class="quote">
+              <div class="quote-value" id="price"></div>
+              <div class="quote-rub" id="dirtyPrice"></div>
+              <div class="delta" id="delta"></div>
+            </div>
+            <div class="metric-grid" id="metrics"></div>
+            <div class="returns-grid" id="periodReturns"></div>
+          </div>
+
+          <div class="chart-panel">
+            <div class="chart-toolbar">
+              <div class="mode-group" id="modeButtons">
+                <button data-mode="price" class="active">Цена</button>
+                <button data-mode="yield">Доходность</button>
+              </div>
+              <div class="range-group" id="rangeButtons">
+                <button data-range="D">День</button>
+                <button data-range="W">Неделя</button>
+                <button data-range="1M">1М</button>
+                <button data-range="3M">3М</button>
+                <button data-range="6M">6М</button>
+                <button data-range="YTD">YTD</button>
+                <button data-range="1Y">Год</button>
+                <button data-range="3Y">3Г</button>
+                <button data-range="5Y">5Л</button>
+                <button data-range="ALL" class="active">Всё</button>
+              </div>
+            </div>
+            <div id="chart"></div>
+          </div>
+          <div class="detail-cta" id="detailCta"></div>
+        </section>
+
+        <aside class="side">
+          <div class="tiles" id="tiles"></div>
+          <section class="section">
+            <h2>Описание</h2>
+            <div class="desc" id="description"></div>
+          </section>
+          <section class="section">
+            <h2 id="cashflowTitle">Денежный поток</h2>
+            <div class="cashflow" id="cashflow"></div>
+          </section>
+        </aside>
+      </div>
+      <div class="footer-note" id="footerNote"></div>
+    </article>
+  </main>
+
+  <script>
+    const ASSETS = [{"assetType":"bond","secid":"RU000A1004W6","title":"ДОМ.РФ 001Р-05R","subtitle":"ДОМ.РФ ПАО 001Р-05R","isin":"RU000A1004W6","board":"TQCB","class":"Корпоративные","couponType":"Флоатер","isCurrencyBond":false,"issuer":"ДОМ.РФ","logo":"../assets/logos/RU000A1004W6.png","accent":"#8A5A44","asof":"2026-04-01","price":100.23,"dirtyPrice":1046.18,"accint":43.88,"priceDelta":-1.3699999999999903,"priceDeltaPct":-1.3484251968503842,"couponRate":15.4,"couponValue":61.74,"couponStatus":"known","couponFormula":"Купон привязан к рыночному процентному ориентиру.","couponFormulaShort":"Плавающий купон","couponBenchmark":"денежный рынок","couponSpread":null,"couponSourceNote":"Формула и ближайшие купоны собраны из локальной базы moex_library/moex_bonds; прогнозные купоны считаются по базовому макросценарию.","keyRate":{"date":"2026-06-08","value":14.5},"currentYield":12.319741494562507,"ytm":-0.646849,"duration":0.4,"rating":"AAA","faceValue":1000.0,"currency":"RUB","issueDate":"2019-03-01","maturityDate":"2029-02-16","nextCouponDate":"2026-08-21","frequency":2.0,"yearsToMaturity":2.6940451745379876,"avgTurnover":85816.43898305084,"annualCoupon":123.480769,"description":"Биржевые облигации 05 выпуска ПАО \"ДОМ.РФ\", Рег№ 4B02-05-00739-A-001P","issuerDescription":"Акционерное общество \"ДОМ.РФ\" - финансовый институт развития в жилищной сфере. Создан в 1997 году постановлением Правительства РФ для содействия проведению государственной жилищной политики. 100% акций компании принадлежит государству в лице Росимущества.","history":[{"date":"2019-11-25","price":101.6,"turnover":0,"volume":0,"yield":6.83},{"date":"2019-11-26","price":101.6,"turnover":1015.0,"volume":1.0,"yield":7.19},{"date":"2019-11-27","price":101.6,"turnover":0,"volume":0,"yield":7.19},{"date":"2019-11-28","price":101.6,"turnover":0,"volume":0,"yield":7.19},{"date":"2019-11-29","price":101.6,"turnover":0,"volume":0,"yield":7.18},{"date":"2019-12-02","price":101.6,"turnover":0,"volume":0,"yield":7.17},{"date":"2019-12-03","price":101.6,"turnover":0,"volume":0,"yield":7.17},{"date":"2019-12-04","price":101.6,"turnover":0,"volume":0,"yield":7.17},{"date":"2019-12-05","price":101.6,"turnover":0,"volume":0,"yield":7.17},{"date":"2019-12-06","price":101.6,"turnover":0,"volume":0,"yield":7.16},{"date":"2019-12-09","price":101.6,"turnover":0,"volume":0,"yield":7.15},{"date":"2019-12-10","price":101.62,"turnover":2043000.0,"volume":2000.0,"yield":6.58},{"date":"2019-12-11","price":101.62,"turnover":0,"volume":0,"yield":6.57},{"date":"2019-12-12","price":101.62,"turnover":2038.0,"volume":2.0,"yield":6.79},{"date":"2019-12-13","price":101.83,"turnover":13279500.0,"volume":13000.0,"yield":6.56},{"date":"2019-12-16","price":101.83,"turnover":0,"volume":0,"yield":6.55},{"date":"2019-12-17","price":101.83,"turnover":0,"volume":0,"yield":6.55},{"date":"2019-12-18","price":101.83,"turnover":0,"volume":0,"yield":6.54},{"date":"2019-12-19","price":101.83,"turnover":0,"volume":0,"yield":6.54},{"date":"2019-12-20","price":102.24,"turnover":18615025.0,"volume":18161.0,"yield":6.22},{"date":"2019-12-23","price":102.24,"turnover":0,"volume":0,"yield":6.21},{"date":"2019-12-24","price":102.24,"turnover":0,"volume":0,"yield":6.2},{"date":"2019-12-25","price":102.24,"turnover":0,"volume":0,"yield":6.19},{"date":"2019-12-26","price":102.24,"turnover":0,"volume":0,"yield":6.19},{"date":"2019-12-27","price":102.24,"turnover":0,"volume":0,"yield":6.19},{"date":"2019-12-30","price":102.24,"turnover":0,"volume":0,"yield":6.17},{"date":"2020-01-03","price":102.24,"turnover":0,"volume":0,"yield":6.15},{"date":"2020-01-06","price":102.24,"turnover":0,"volume":0,"yield":6.13},{"date":"2020-01-08","price":102.24,"turnover":0,"volume":0,"yield":6.12},{"date":"2020-01-09","price":102.24,"turnover":0,"volume":0,"yield":6.12},{"date":"2020-01-10","price":102.24,"turnover":0,"volume":0,"yield":6.11},{"date":"2020-01-13","price":102.24,"turnover":0,"volume":0,"yield":6.1},{"date":"2020-01-14","price":102.24,"turnover":0,"volume":0,"yield":6.09},{"date":"2020-01-15","price":102.24,"turnover":0,"volume":0,"yield":6.09},{"date":"2020-01-16","price":102.24,"turnover":0,"volume":0,"yield":6.08},{"date":"2020-01-17","price":102.24,"turnover":0,"volume":0,"yield":6.07},{"date":"2020-01-20","price":102.24,"turnover":0,"volume":0,"yield":6.06},{"date":"2020-01-21","price":102.24,"turnover":0,"volume":0,"yield":6.05},{"date":"2020-01-22","price":102.24,"turnover":0,"volume":0,"yield":6.05},{"date":"2020-01-23","price":102.24,"turnover":0,"volume":0,"yield":6.04},{"date":"2020-01-24","price":102.24,"turnover":0,"volume":0,"yield":6.03},{"date":"2020-01-27","price":102.31,"turnover":5111000.0,"volume":5000.0,"yield":6.29},{"date":"2020-01-28","price":102.32,"turnover":5112000.0,"volume":5000.0,"yield":6.27},{"date":"2020-01-29","price":102.32,"turnover":3022.5,"volume":3.0,"yield":7.75},{"date":"2020-01-30","price":102.32,"turnover":2065.0,"volume":2.0,"yield":5.27},{"date":"2020-01-31","price":102.32,"turnover":10325.0,"volume":10.0,"yield":5.26},{"date":"2020-02-03","price":102.32,"turnover":0,"volume":0,"yield":5.24},{"date":"2020-02-04","price":102.35,"turnover":3097.5,"volume":3.0,"yield":5.23},{"date":"2020-02-05","price":102.35,"turnover":7230.0,"volume":7.0,"yield":5.22},{"date":"2020-02-06","price":102.35,"turnover":0,"volume":0,"yield":5.22},{"date":"2020-02-07","price":102.35,"turnover":0,"volume":0,"yield":5.21},{"date":"2020-02-10","price":102.19,"turnover":56303730.0,"volume":55100.0,"yield":6.26},{"date":"2020-02-11","price":102.19,"turnover":352454705.0,"volume":344898.0,"yield":6.18},{"date":"2020-02-12","price":102.25,"turnover":0,"volume":0,"yield":6.18},{"date":"2020-02-13","price":102.25,"turnover":3067.5,"volume":3.0,"yield":6.17},{"date":"2020-02-14","price":102.25,"turnover":1022.5,"volume":1.0,"yield":6.17},{"date":"2020-02-17","price":102.25,"turnover":4910067.0,"volume":4802.0,"yield":6.15},{"date":"2020-02-18","price":102.25,"turnover":7008226.0,"volume":6854.0,"yield":6.14},{"date":"2020-02-19","price":102.25,"turnover":1033.5,"volume":1.0,"yield":5.01},{"date":"2020-02-20","price":102.25,"turnover":0,"volume":0,"yield":5.0},{"date":"2020-02-21","price":102.25,"turnover":0,"volume":0,"yield":4.99},{"date":"2020-02-25","price":102.25,"turnover":0,"volume":0,"yield":4.96},{"date":"2020-02-26","price":102.26,"turnover":119627.0,"volume":116.0,"yield":6.36},{"date":"2020-02-27","price":102.26,"turnover":4106.9,"volume":4.0,"yield":6.35},{"date":"2020-02-28","price":102.26,"turnover":0,"volume":0,"yield":6.35},{"date":"2020-03-02","price":102.27,"turnover":11282.3,"volume":11.0,"yield":5.47},{"date":"2020-03-03","price":102.27,"turnover":1033.5,"volume":1.0,"yield":4.89},{"date":"2020-03-04","price":102.27,"turnover":0,"volume":0,"yield":4.88},{"date":"2020-03-05","price":102.27,"turnover":2066.0,"volume":2.0,"yield":4.92},{"date":"2020-03-06","price":102.27,"turnover":0,"volume":0,"yield":4.91},{"date":"2020-03-10","price":102.26,"turnover":17136.0,"volume":17.0,"yield":7.61},{"date":"2020-03-11","price":102.26,"turnover":0,"volume":0,"yield":7.61},{"date":"2020-03-12","price":102.26,"turnover":0,"volume":0,"yield":7.61},{"date":"2020-03-13","price":101.4,"turnover":191603412.0,"volume":188958.0,"yield":6.93},{"date":"2020-03-16","price":101.4,"turnover":6090.0,"volume":6.0,"yield":6.8},{"date":"2020-03-17","price":101.4,"turnover":1015.0,"volume":1.0,"yield":6.8},{"date":"2020-03-18","price":101.4,"turnover":0,"volume":0,"yield":6.79},{"date":"2020-03-19","price":101.4,"turnover":0,"volume":0,"yield":6.79},{"date":"2020-03-20","price":101.4,"turnover":0,"volume":0,"yield":6.78},{"date":"2020-03-23","price":101.4,"turnover":0,"volume":0,"yield":6.77},{"date":"2020-03-24","price":101.4,"turnover":0,"volume":0,"yield":6.76},{"date":"2020-03-25","price":101.13,"turnover":429297500.0,"volume":425000.0,"yield":7.31},{"date":"2020-03-26","price":101.13,"turnover":0,"volume":0,"yield":7.31},{"date":"2020-03-27","price":101.01,"turnover":1963.4,"volume":2.0,"yield":8.51},{"date":"2020-03-30","price":101.01,"turnover":1000.0,"volume":1.0,"yield":8.51},{"date":"2020-03-31","price":101.01,"turnover":1976.9,"volume":2.0,"yield":6.9},{"date":"2020-04-01","price":101.02,"turnover":2993.5,"volume":3.0,"yield":4.99},{"date":"2020-04-02","price":101.17,"turnover":126458000.0,"volume":125001.0,"yield":7.1},{"date":"2020-04-03","price":101.17,"turnover":0,"volume":0,"yield":7.1},{"date":"2020-04-06","price":101.2,"turnover":135841302.0,"volume":134204.0,"yield":7.03},{"date":"2020-04-07","price":101.2,"turnover":0,"volume":0,"yield":7.02},{"date":"2020-04-08","price":101.22,"turnover":2058.8,"volume":2.0,"yield":4.98},{"date":"2020-04-09","price":101.22,"turnover":0,"volume":0,"yield":4.97},{"date":"2020-04-10","price":101.22,"turnover":0,"volume":0,"yield":4.95},{"date":"2020-04-13","price":101.22,"turnover":4032.9,"volume":4.0,"yield":6.04},{"date":"2020-04-14","price":101.22,"turnover":0,"volume":0,"yield":6.04},{"date":"2020-04-15","price":101.22,"turnover":0,"volume":0,"yield":6.03},{"date":"2020-04-16","price":101.22,"turnover":0,"volume":0,"yield":6.02},{"date":"2020-04-17","price":101.22,"turnover":0,"volume":0,"yield":6.01},{"date":"2020-04-20","price":101.22,"turnover":2049.5,"volume":2.0,"yield":5.99},{"date":"2020-04-21","price":101.22,"turnover":0,"volume":0,"yield":5.98},{"date":"2020-04-22","price":101.22,"turnover":0,"volume":0,"yield":5.97},{"date":"2020-04-23","price":101.22,"turnover":0,"volume":0,"yield":5.97},{"date":"2020-04-24","price":101.22,"turnover":0,"volume":0,"yield":5.96},{"date":"2020-04-27","price":101.22,"turnover":0,"volume":0,"yield":5.93},{"date":"2020-04-28","price":101.22,"turnover":0,"volume":0,"yield":5.92},{"date":"2020-04-29","price":101.22,"turnover":0,"volume":0,"yield":5.92},{"date":"2020-04-30","price":101.22,"turnover":0,"volume":0,"yield":5.91},{"date":"2020-05-04","price":101.22,"turnover":0,"volume":0,"yield":5.87},{"date":"2020-05-05","price":101.22,"turnover":0,"volume":0,"yield":5.87},{"date":"2020-05-06","price":101.22,"turnover":0,"volume":0,"yield":5.86},{"date":"2020-05-07","price":101.22,"turnover":0,"volume":0,"yield":5.85},{"date":"2020-05-08","price":101.22,"turnover":0,"volume":0,"yield":5.84},{"date":"2020-05-12","price":101.22,"turnover":0,"volume":0,"yield":5.8},{"date":"2020-05-13","price":101.22,"turnover":0,"volume":0,"yield":5.79},{"date":"2020-05-14","price":101.22,"turnover":2001.4,"volume":2.0,"yield":8.39},{"date":"2020-05-15","price":101.22,"turnover":1040.0,"volume":1.0,"yield":3.17},{"date":"2020-05-18","price":101.22,"turnover":0,"volume":0,"yield":3.12},{"date":"2020-05-19","price":101.22,"turnover":0,"volume":0,"yield":3.1},{"date":"2020-05-20","price":101.22,"turnover":0,"volume":0,"yield":3.09},{"date":"2020-05-21","price":101.22,"turnover":0,"volume":0,"yield":3.07},{"date":"2020-05-22","price":101.22,"turnover":0,"volume":0,"yield":3.05},{"date":"2020-05-25","price":101.22,"turnover":1001.0,"volume":1.0,"yield":8.35},{"date":"2020-05-26","price":101.22,"turnover":3120.0,"volume":3.0,"yield":2.98},{"date":"2020-05-27","price":101.21,"turnover":100160.0,"volume":100.0,"yield":8.26},{"date":"2020-05-28","price":101.21,"turnover":33669.9,"volume":33.0,"yield":5.53},{"date":"2020-05-29","price":101.21,"turnover":0,"volume":0,"yield":5.52},{"date":"2020-06-01","price":101.21,"turnover":13238.1,"volume":13.0,"yield":5.15},{"date":"2020-06-02","price":101.21,"turnover":0,"volume":0,"yield":5.14},{"date":"2020-06-03","price":101.21,"turnover":0,"volume":0,"yield":5.12},{"date":"2020-06-04","price":101.21,"turnover":1019.9,"volume":1.0,"yield":5.59},{"date":"2020-06-05","price":101.21,"turnover":0,"volume":0,"yield":5.58},{"date":"2020-06-08","price":101.21,"turnover":0,"volume":0,"yield":5.55},{"date":"2020-06-09","price":101.21,"turnover":0,"volume":0,"yield":5.54},{"date":"2020-06-10","price":101.21,"turnover":0,"volume":0,"yield":5.53},{"date":"2020-06-11","price":101.21,"turnover":3065.7,"volume":3.0,"yield":5.23},{"date":"2020-06-15","price":101.21,"turnover":0,"volume":0,"yield":5.18},{"date":"2020-06-16","price":101.22,"turnover":297395.0,"volume":293.0,"yield":6.2},{"date":"2020-06-17","price":101.22,"turnover":0,"volume":0,"yield":6.19},{"date":"2020-06-18","price":101.22,"turnover":0,"volume":0,"yield":6.18},{"date":"2020-06-19","price":101.36,"turnover":52173.0,"volume":51.0,"yield":4.97},{"date":"2020-06-22","price":101.36,"turnover":0,"volume":0,"yield":4.91},{"date":"2020-06-23","price":101.36,"turnover":0,"volume":0,"yield":4.88},{"date":"2020-06-25","price":101.36,"turnover":0,"volume":0,"yield":4.87},{"date":"2020-06-26","price":101.36,"turnover":0,"volume":0,"yield":4.83},{"date":"2020-06-29","price":101.36,"turnover":0,"volume":0,"yield":4.81},{"date":"2020-06-30","price":101.36,"turnover":0,"volume":0,"yield":4.78},{"date":"2020-07-02","price":101.36,"turnover":0,"volume":0,"yield":4.77},{"date":"2020-07-03","price":101.36,"turnover":0,"volume":0,"yield":4.72},{"date":"2020-07-06","price":101.36,"turnover":1005.0,"volume":1.0,"yield":7.65},{"date":"2020-07-07","price":102.0,"turnover":4028038.5,"volume":3949.0,"yield":5.18},{"date":"2020-07-08","price":102.0,"turnover":0,"volume":0,"yield":5.16},{"date":"2020-07-09","price":102.0,"turnover":0,"volume":0,"yield":5.15},{"date":"2020-07-10","price":102.0,"turnover":0,"volume":0,"yield":5.11},{"date":"2020-07-13","price":102.0,"turnover":0,"volume":0,"yield":5.09},{"date":"2020-07-14","price":102.0,"turnover":1023.5,"volume":1.0,"yield":4.5},{"date":"2020-07-15","price":102.0,"turnover":0,"volume":0,"yield":4.48},{"date":"2020-07-16","price":102.0,"turnover":0,"volume":0,"yield":4.46},{"date":"2020-07-17","price":102.0,"turnover":0,"volume":0,"yield":4.41},{"date":"2020-07-20","price":102.0,"turnover":0,"volume":0,"yield":4.39},{"date":"2020-07-21","price":102.0,"turnover":0,"volume":0,"yield":4.38},{"date":"2020-07-22","price":102.0,"turnover":0,"volume":0,"yield":4.36},{"date":"2020-07-23","price":101.97,"turnover":20198.0,"volume":20.0,"yield":5.12},{"date":"2020-07-24","price":101.91,"turnover":15046.5,"volume":15.0,"yield":8.04},{"date":"2020-07-27","price":101.91,"turnover":0,"volume":0,"yield":8.04},{"date":"2020-07-28","price":101.91,"turnover":0,"volume":0,"yield":8.04},{"date":"2020-07-29","price":101.91,"turnover":14266.0,"volume":14.0,"yield":5.03},{"date":"2020-07-30","price":101.91,"turnover":48912.0,"volume":48.0,"yield":5.01},{"date":"2020-07-31","price":101.91,"turnover":0,"volume":0,"yield":4.96},{"date":"2020-08-03","price":101.91,"turnover":0,"volume":0,"yield":4.95},{"date":"2020-08-04","price":101.91,"turnover":0,"volume":0,"yield":4.93},{"date":"2020-08-05","price":101.86,"turnover":11020.0,"volume":11.0,"yield":4.82},{"date":"2020-08-06","price":101.85,"turnover":1000.2,"volume":1.0,"yield":8.47},{"date":"2020-08-07","price":101.86,"turnover":59135.5,"volume":58.0,"yield":4.75},{"date":"2020-08-10","price":101.86,"turnover":0,"volume":0,"yield":4.73},{"date":"2020-08-11","price":101.86,"turnover":0,"volume":0,"yield":4.72},{"date":"2020-08-12","price":101.86,"turnover":1020.0,"volume":1.0,"yield":4.6},{"date":"2020-08-13","price":101.86,"turnover":0,"volume":0,"yield":4.59},{"date":"2020-08-14","price":101.86,"turnover":0,"volume":0,"yield":4.53},{"date":"2020-08-17","price":101.86,"turnover":0,"volume":0,"yield":4.51},{"date":"2020-08-18","price":101.86,"turnover":0,"volume":0,"yield":4.49},{"date":"2020-08-19","price":101.73,"turnover":4004091.3,"volume":3936.0,"yield":5.0},{"date":"2020-08-20","price":101.73,"turnover":0,"volume":0,"yield":4.99},{"date":"2020-08-21","price":101.73,"turnover":0,"volume":0,"yield":4.93},{"date":"2020-08-24","price":101.73,"turnover":0,"volume":0,"yield":4.91},{"date":"2020-08-25","price":101.73,"turnover":10200.0,"volume":10.0,"yield":4.34},{"date":"2020-08-26","price":101.73,"turnover":7031.5,"volume":7.0,"yield":5.35},{"date":"2020-08-27","price":101.73,"turnover":50869079.9,"volume":50004.0,"yield":4.86},{"date":"2020-08-28","price":101.73,"turnover":6079.6,"volume":6.0,"yield":4.33},{"date":"2020-08-31","price":101.73,"turnover":3060.0,"volume":3.0,"yield":4.21},{"date":"2020-09-01","price":101.73,"turnover":0,"volume":0,"yield":4.18},{"date":"2020-09-02","price":101.73,"turnover":0,"volume":0,"yield":4.16},{"date":"2020-09-03","price":101.73,"turnover":0,"volume":0,"yield":4.13},{"date":"2020-09-04","price":101.73,"turnover":0,"volume":0,"yield":4.06},{"date":"2020-09-07","price":101.73,"turnover":0,"volume":0,"yield":4.03},{"date":"2020-09-08","price":101.73,"turnover":0,"volume":0,"yield":4.01},{"date":"2020-09-09","price":101.73,"turnover":0,"volume":0,"yield":3.98},{"date":"2020-09-10","price":101.73,"turnover":1017.5,"volume":1.0,"yield":4.51},{"date":"2020-09-11","price":101.73,"turnover":0,"volume":0,"yield":4.44},{"date":"2020-09-14","price":101.73,"turnover":0,"volume":0,"yield":4.41},{"date":"2020-09-15","price":101.73,"turnover":0,"volume":0,"yield":4.39},{"date":"2020-09-16","price":101.73,"turnover":0,"volume":0,"yield":4.36},{"date":"2020-09-17","price":101.73,"turnover":0,"volume":0,"yield":4.34},{"date":"2020-09-18","price":101.73,"turnover":0,"volume":0,"yield":4.26},{"date":"2020-09-21","price":101.73,"turnover":20360.0,"volume":20.0,"yield":4.12},{"date":"2020-09-22","price":101.73,"turnover":0,"volume":0,"yield":4.09},{"date":"2020-09-23","price":101.73,"turnover":0,"volume":0,"yield":4.06},{"date":"2020-09-24","price":101.73,"turnover":0,"volume":0,"yield":4.03},{"date":"2020-09-25","price":101.73,"turnover":106601.5,"volume":105.0,"yield":4.44},{"date":"2020-09-28","price":101.73,"turnover":1016.5,"volume":1.0,"yield":4.29},{"date":"2020-09-29","price":101.73,"turnover":0,"volume":0,"yield":4.26},{"date":"2020-09-30","price":101.73,"turnover":1016.0,"volume":1.0,"yield":4.36},{"date":"2020-10-01","price":101.73,"turnover":6078.2,"volume":6.0,"yield":4.33},{"date":"2020-10-02","price":101.35,"turnover":912844527.0,"volume":900686.0,"yield":4.63},{"date":"2020-10-05","price":101.35,"turnover":1015.5,"volume":1.0,"yield":4.35},{"date":"2020-10-06","price":101.35,"turnover":28197356.0,"volume":27830.0,"yield":4.92},{"date":"2020-10-07","price":101.35,"turnover":1012.0,"volume":1.0,"yield":5.22},{"date":"2020-10-08","price":101.35,"turnover":0,"volume":0,"yield":5.19},{"date":"2020-10-09","price":101.35,"turnover":0,"volume":0,"yield":5.12},{"date":"2020-10-12","price":101.29,"turnover":373765162.6,"volume":369005.0,"yield":4.85},{"date":"2020-10-13","price":101.29,"turnover":0,"volume":0,"yield":4.82},{"date":"2020-10-14","price":101.29,"turnover":0,"volume":0,"yield":4.8},{"date":"2020-10-15","price":101.29,"turnover":7074.0,"volume":7.0,"yield":4.46},{"date":"2020-10-16","price":101.29,"turnover":0,"volume":0,"yield":4.37},{"date":"2020-10-19","price":101.29,"turnover":0,"volume":0,"yield":4.34},{"date":"2020-10-20","price":101.29,"turnover":0,"volume":0,"yield":4.31},{"date":"2020-10-21","price":101.29,"turnover":7039.5,"volume":7.0,"yield":4.42},{"date":"2020-10-22","price":101.29,"turnover":0,"volume":0,"yield":4.39},{"date":"2020-10-23","price":101.29,"turnover":0,"volume":0,"yield":4.29},{"date":"2020-10-26","price":101.29,"turnover":8093.0,"volume":8.0,"yield":4.71},{"date":"2020-10-27","price":101.29,"turnover":1010.0,"volume":1.0,"yield":5.3},{"date":"2020-10-28","price":101.29,"turnover":0,"volume":0,"yield":5.28},{"date":"2020-10-29","price":101.29,"turnover":0,"volume":0,"yield":5.25},{"date":"2020-10-30","price":101.29,"turnover":0,"volume":0,"yield":5.17},{"date":"2020-11-02","price":101.29,"turnover":0,"volume":0,"yield":5.14},{"date":"2020-11-03","price":101.29,"turnover":0,"volume":0,"yield":5.08},{"date":"2020-11-05","price":101.29,"turnover":0,"volume":0,"yield":5.05},{"date":"2020-11-06","price":101.29,"turnover":4050.0,"volume":4.0,"yield":4.11},{"date":"2020-11-09","price":101.29,"turnover":16173.0,"volume":16.0,"yield":4.24},{"date":"2020-11-10","price":101.29,"turnover":0,"volume":0,"yield":4.2},{"date":"2020-11-11","price":101.29,"turnover":0,"volume":0,"yield":4.16},{"date":"2020-11-12","price":101.29,"turnover":6042.0,"volume":6.0,"yield":4.29},{"date":"2020-11-13","price":101.29,"turnover":0,"volume":0,"yield":4.18},{"date":"2020-11-16","price":101.29,"turnover":0,"volume":0,"yield":4.13},{"date":"2020-11-17","price":101.29,"turnover":0,"volume":0,"yield":4.09},{"date":"2020-11-18","price":101.29,"turnover":12113.5,"volume":12.0,"yield":4.61},{"date":"2020-11-19","price":101.29,"turnover":0,"volume":0,"yield":4.57},{"date":"2020-11-20","price":101.29,"turnover":0,"volume":0,"yield":4.45},{"date":"2020-11-23","price":101.29,"turnover":80800.0,"volume":80.0,"yield":4.41},{"date":"2020-11-24","price":101.29,"turnover":0,"volume":0,"yield":4.37},{"date":"2020-11-25","price":101.29,"turnover":0,"volume":0,"yield":4.32},{"date":"2020-11-26","price":101.29,"turnover":10035.4,"volume":10.0,"yield":3.67},{"date":"2020-11-27","price":101.29,"turnover":0,"volume":0,"yield":3.52},{"date":"2020-11-30","price":101.29,"turnover":0,"volume":0,"yield":3.46},{"date":"2020-12-01","price":101.29,"turnover":0,"volume":0,"yield":3.4},{"date":"2020-12-02","price":101.29,"turnover":0,"volume":0,"yield":3.34},{"date":"2020-12-03","price":101.29,"turnover":4036.0,"volume":4.0,"yield":4.38},{"date":"2020-12-04","price":101.29,"turnover":0,"volume":0,"yield":4.23},{"date":"2020-12-07","price":101.29,"turnover":4038.5,"volume":4.0,"yield":4.18},{"date":"2020-12-08","price":101.29,"turnover":0,"volume":0,"yield":4.13},{"date":"2020-12-09","price":101.29,"turnover":0,"volume":0,"yield":4.07},{"date":"2020-12-10","price":101.29,"turnover":4020.0,"volume":4.0,"yield":5.95},{"date":"2020-12-11","price":101.29,"turnover":0,"volume":0,"yield":5.85},{"date":"2020-12-14","price":101.29,"turnover":0,"volume":0,"yield":5.81},{"date":"2020-12-15","price":101.29,"turnover":21160.2,"volume":21.0,"yield":4.23},{"date":"2020-12-16","price":101.29,"turnover":0,"volume":0,"yield":4.17},{"date":"2020-12-17","price":101.29,"turnover":24648.4,"volume":25.0,"yield":5.17},{"date":"2020-12-18","price":101.29,"turnover":42305.5,"volume":42.0,"yield":4.2},{"date":"2020-12-21","price":101.29,"turnover":7122.4,"volume":7.0,"yield":4.13},{"date":"2020-12-22","price":101.29,"turnover":0,"volume":0,"yield":4.07},{"date":"2020-12-23","price":101.29,"turnover":0,"volume":0,"yield":4.01},{"date":"2020-12-24","price":101.29,"turnover":156929.8,"volume":156.0,"yield":4.81},{"date":"2020-12-25","price":101.29,"turnover":0,"volume":0,"yield":4.64},{"date":"2020-12-28","price":100.6,"turnover":116614.3,"volume":116.0,"yield":4.89},{"date":"2020-12-29","price":100.6,"turnover":1005.5,"volume":1.0,"yield":4.82},{"date":"2020-12-30","price":100.6,"turnover":0,"volume":0,"yield":4.5},{"date":"2021-01-04","price":100.6,"turnover":0,"volume":0,"yield":4.42},{"date":"2021-01-05","price":100.61,"turnover":1025.0,"volume":1.0,"yield":-8.7},{"date":"2021-01-06","price":100.61,"turnover":0,"volume":0,"yield":-9.33},{"date":"2021-01-08","price":100.61,"turnover":0,"volume":0,"yield":-10.37},{"date":"2021-01-11","price":100.46,"turnover":824694.5,"volume":821.0,"yield":4.63},{"date":"2021-01-12","price":100.46,"turnover":11049.5,"volume":11.0,"yield":4.55},{"date":"2021-01-13","price":100.46,"turnover":1004.5,"volume":1.0,"yield":4.46},{"date":"2021-01-14","price":100.45,"turnover":5017.5,"volume":5.0,"yield":5.25},{"date":"2021-01-15","price":100.45,"turnover":0,"volume":0,"yield":5.01},{"date":"2021-01-18","price":100.39,"turnover":1054573.8,"volume":1051.0,"yield":4.63},{"date":"2021-01-19","price":100.39,"turnover":0,"volume":0,"yield":4.53},{"date":"2021-01-20","price":100.39,"turnover":0,"volume":0,"yield":4.43},{"date":"2021-01-21","price":100.33,"turnover":50165000.0,"volume":50000.0,"yield":4.84},{"date":"2021-01-22","price":100.33,"turnover":0,"volume":0,"yield":4.51},{"date":"2021-01-25","price":100.33,"turnover":0,"volume":0,"yield":4.4},{"date":"2021-01-26","price":100.33,"turnover":0,"volume":0,"yield":4.27},{"date":"2021-01-27","price":100.33,"turnover":42113.4,"volume":42.0,"yield":4.89},{"date":"2021-01-28","price":100.33,"turnover":1161897.5,"volume":1159.0,"yield":5.02},{"date":"2021-01-29","price":100.3,"turnover":15778636.8,"volume":15744.0,"yield":5.07},{"date":"2021-02-01","price":100.3,"turnover":0,"volume":0,"yield":4.93},{"date":"2021-02-02","price":100.3,"turnover":0,"volume":0,"yield":4.8},{"date":"2021-02-03","price":100.3,"turnover":10022.0,"volume":10.0,"yield":4.63},{"date":"2021-02-04","price":100.3,"turnover":10018.0,"volume":10.0,"yield":5.16},{"date":"2021-02-05","price":100.3,"turnover":1001.6,"volume":1.0,"yield":5.03},{"date":"2021-02-08","price":100.3,"turnover":1001.5,"volume":1.0,"yield":5.06},{"date":"2021-02-09","price":100.21,"turnover":2476462.2,"volume":2473.0,"yield":5.08},{"date":"2021-02-10","price":100.21,"turnover":0,"volume":0,"yield":4.89},{"date":"2021-02-11","price":100.21,"turnover":0,"volume":0,"yield":4.64},{"date":"2021-02-12","price":100.17,"turnover":4994491.0,"volume":4990.0,"yield":5.3},{"date":"2021-02-15","price":100.1,"turnover":67560.3,"volume":68.0,"yield":4.99},{"date":"2021-02-16","price":100.1,"turnover":0,"volume":0,"yield":4.62},{"date":"2021-02-17","price":100.03,"turnover":61953.0,"volume":62.0,"yield":6.0},{"date":"2021-02-18","price":99.92,"turnover":1001000.6,"volume":1002.0,"yield":6.78},{"date":"2021-02-19","price":100.1,"turnover":302261588.3,"volume":301961.0,"yield":5.49},{"date":"2021-02-20","price":100.1,"turnover":0,"volume":0,"yield":5.48},{"date":"2021-02-22","price":100.1,"turnover":0,"volume":0,"yield":5.46},{"date":"2021-02-24","price":100.1,"turnover":82259.5,"volume":82.0,"yield":5.89},{"date":"2021-02-25","price":100.08,"turnover":11626075.2,"volume":11617.0,"yield":5.47},{"date":"2021-02-26","price":100.09,"turnover":35459886.1,"volume":35429.0,"yield":5.47},{"date":"2021-03-01","price":100.08,"turnover":74948322.4,"volume":74890.0,"yield":5.46},{"date":"2021-03-02","price":100.08,"turnover":39944926.2,"volume":39913.0,"yield":5.47},{"date":"2021-03-03","price":100.08,"turnover":9839.6,"volume":10.0,"yield":5.53},{"date":"2021-03-04","price":100.08,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-03-05","price":100.08,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-03-09","price":100.08,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-03-10","price":100.08,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-03-11","price":100.08,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-03-12","price":100.08,"turnover":974.0,"volume":1.0,"yield":7.51},{"date":"2021-03-15","price":100.08,"turnover":2000.0,"volume":2.0,"yield":5.52},{"date":"2021-03-16","price":100.05,"turnover":124053.2,"volume":126.0,"yield":5.85},{"date":"2021-03-17","price":100.05,"turnover":0,"volume":0,"yield":5.85},{"date":"2021-03-18","price":100.05,"turnover":0,"volume":0,"yield":5.85},{"date":"2021-03-19","price":100.05,"turnover":0,"volume":0,"yield":5.85},{"date":"2021-03-22","price":100.05,"turnover":0,"volume":0,"yield":5.85},{"date":"2021-03-23","price":100.06,"turnover":10279.0,"volume":10.0,"yield":3.46},{"date":"2021-03-24","price":100.06,"turnover":0,"volume":0,"yield":3.45},{"date":"2021-03-25","price":100.06,"turnover":0,"volume":0,"yield":3.45},{"date":"2021-03-26","price":100.05,"turnover":21485.0,"volume":22.0,"yield":5.91},{"date":"2021-03-29","price":100.05,"turnover":17973.0,"volume":18.0,"yield":5.64},{"date":"2021-03-30","price":100.05,"turnover":52602.5,"volume":53.0,"yield":6.1},{"date":"2021-03-31","price":100.34,"turnover":402400.0,"volume":400.0,"yield":5.06},{"date":"2021-04-01","price":100.34,"turnover":0,"volume":0,"yield":5.06},{"date":"2021-04-02","price":100.34,"turnover":0,"volume":0,"yield":5.06},{"date":"2021-04-05","price":100.34,"turnover":0,"volume":0,"yield":5.06},{"date":"2021-04-06","price":100.34,"turnover":0,"volume":0,"yield":5.06},{"date":"2021-04-07","price":100.34,"turnover":0,"volume":0,"yield":5.06},{"date":"2021-04-08","price":100.34,"turnover":0,"volume":0,"yield":5.05},{"date":"2021-04-09","price":100.34,"turnover":0,"volume":0,"yield":5.05},{"date":"2021-04-12","price":100.34,"turnover":0,"volume":0,"yield":5.05},{"date":"2021-04-13","price":100.34,"turnover":0,"volume":0,"yield":5.05},{"date":"2021-04-14","price":100.34,"turnover":0,"volume":0,"yield":5.05},{"date":"2021-04-15","price":100.34,"turnover":0,"volume":0,"yield":5.05},{"date":"2021-04-16","price":99.22,"turnover":2376000.0,"volume":2400.0,"yield":6.32},{"date":"2021-04-19","price":99.22,"turnover":0,"volume":0,"yield":6.33},{"date":"2021-04-20","price":99.22,"turnover":0,"volume":0,"yield":6.33},{"date":"2021-04-21","price":99.22,"turnover":0,"volume":0,"yield":6.33},{"date":"2021-04-22","price":99.22,"turnover":0,"volume":0,"yield":6.33},{"date":"2021-04-23","price":99.22,"turnover":0,"volume":0,"yield":6.33},{"date":"2021-04-26","price":99.22,"turnover":0,"volume":0,"yield":6.34},{"date":"2021-04-27","price":99.22,"turnover":0,"volume":0,"yield":6.34},{"date":"2021-04-28","price":99.22,"turnover":0,"volume":0,"yield":6.34},{"date":"2021-04-29","price":99.22,"turnover":0,"volume":0,"yield":6.34},{"date":"2021-04-30","price":99.22,"turnover":0,"volume":0,"yield":6.35},{"date":"2021-05-04","price":99.22,"turnover":0,"volume":0,"yield":6.35},{"date":"2021-05-05","price":99.22,"turnover":0,"volume":0,"yield":6.35},{"date":"2021-05-06","price":99.22,"turnover":0,"volume":0,"yield":6.35},{"date":"2021-05-07","price":99.22,"turnover":0,"volume":0,"yield":6.36},{"date":"2021-05-10","price":99.23,"turnover":10907.7,"volume":11.0,"yield":5.53},{"date":"2021-05-11","price":99.23,"turnover":5000.0,"volume":5.0,"yield":5.52},{"date":"2021-05-12","price":99.23,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-05-13","price":99.23,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-05-14","price":99.23,"turnover":12998.7,"volume":13.0,"yield":5.53},{"date":"2021-05-17","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-18","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-19","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-20","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-21","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-24","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-25","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-26","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-27","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-28","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-05-31","price":99.23,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-06-01","price":99.23,"turnover":977.1,"volume":1.0,"yield":7.56},{"date":"2021-06-02","price":98.7,"turnover":165994.9,"volume":170.0,"yield":7.07},{"date":"2021-06-03","price":98.7,"turnover":0,"volume":0,"yield":7.07},{"date":"2021-06-04","price":98.7,"turnover":0,"volume":0,"yield":7.08},{"date":"2021-06-07","price":98.7,"turnover":0,"volume":0,"yield":7.09},{"date":"2021-06-08","price":98.7,"turnover":0,"volume":0,"yield":7.09},{"date":"2021-06-09","price":98.69,"turnover":2947.5,"volume":3.0,"yield":7.09},{"date":"2021-06-10","price":98.69,"turnover":0,"volume":0,"yield":7.1},{"date":"2021-06-11","price":98.69,"turnover":0,"volume":0,"yield":7.11},{"date":"2021-06-14","price":98.69,"turnover":0,"volume":0,"yield":7.11},{"date":"2021-06-15","price":98.69,"turnover":0,"volume":0,"yield":7.12},{"date":"2021-06-16","price":98.72,"turnover":14000.0,"volume":14.0,"yield":5.52},{"date":"2021-06-17","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-18","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-21","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-22","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-23","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-24","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-25","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-28","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-29","price":98.72,"turnover":0,"volume":0,"yield":5.52},{"date":"2021-06-30","price":98.72,"turnover":1980.0,"volume":2.0,"yield":6.46},{"date":"2021-07-01","price":98.72,"turnover":0,"volume":0,"yield":6.46},{"date":"2021-07-02","price":98.72,"turnover":0,"volume":0,"yield":6.47},{"date":"2021-07-05","price":98.72,"turnover":0,"volume":0,"yield":6.47},{"date":"2021-07-06","price":98.72,"turnover":0,"volume":0,"yield":6.47},{"date":"2021-07-07","price":98.72,"turnover":1954.5,"volume":2.0,"yield":7.45},{"date":"2021-07-08","price":98.71,"turnover":1949.0,"volume":2.0,"yield":7.99},{"date":"2021-07-09","price":98.71,"turnover":0,"volume":0,"yield":8.01},{"date":"2021-07-12","price":98.71,"turnover":0,"volume":0,"yield":8.02},{"date":"2021-07-13","price":98.72,"turnover":9900.0,"volume":10.0,"yield":6.49},{"date":"2021-07-14","price":98.72,"turnover":0,"volume":0,"yield":6.49},{"date":"2021-07-15","price":98.72,"turnover":0,"volume":0,"yield":6.49},{"date":"2021-07-16","price":98.72,"turnover":0,"volume":0,"yield":6.5},{"date":"2021-07-19","price":98.72,"turnover":0,"volume":0,"yield":6.5},{"date":"2021-07-20","price":98.72,"turnover":0,"volume":0,"yield":6.5},{"date":"2021-07-21","price":98.72,"turnover":0,"volume":0,"yield":6.51},{"date":"2021-07-22","price":98.72,"turnover":0,"volume":0,"yield":6.51},{"date":"2021-07-23","price":98.72,"turnover":0,"volume":0,"yield":6.52},{"date":"2021-07-26","price":98.72,"turnover":0,"volume":0,"yield":6.52},{"date":"2021-07-27","price":98.72,"turnover":0,"volume":0,"yield":6.52},{"date":"2021-07-28","price":98.72,"turnover":0,"volume":0,"yield":6.52},{"date":"2021-07-29","price":98.72,"turnover":0,"volume":0,"yield":6.53},{"date":"2021-07-30","price":98.72,"turnover":0,"volume":0,"yield":6.54},{"date":"2021-08-02","price":98.72,"turnover":0,"volume":0,"yield":6.54},{"date":"2021-08-03","price":98.72,"turnover":0,"volume":0,"yield":6.54},{"date":"2021-08-04","price":98.72,"turnover":0,"volume":0,"yield":6.54},{"date":"2021-08-05","price":98.72,"turnover":0,"volume":0,"yield":6.55},{"date":"2021-08-06","price":98.72,"turnover":0,"volume":0,"yield":6.55},{"date":"2021-08-09","price":98.72,"turnover":0,"volume":0,"yield":6.56},{"date":"2021-08-10","price":98.72,"turnover":0,"volume":0,"yield":6.56},{"date":"2021-08-11","price":98.72,"turnover":0,"volume":0,"yield":6.56},{"date":"2021-08-12","price":98.72,"turnover":0,"volume":0,"yield":6.57},{"date":"2021-08-13","price":98.72,"turnover":0,"volume":0,"yield":6.58},{"date":"2021-08-16","price":98.72,"turnover":970.3,"volume":1.0,"yield":8.72},{"date":"2021-08-17","price":98.72,"turnover":6955.6,"volume":7.0,"yield":5.94},{"date":"2021-08-18","price":98.67,"turnover":21350.3,"volume":22.0,"yield":8.77},{"date":"2021-08-19","price":98.67,"turnover":12773.7,"volume":13.0,"yield":7.4},{"date":"2021-08-20","price":98.61,"turnover":26212.7,"volume":27.0,"yield":7.47},{"date":"2021-08-23","price":97.65,"turnover":5859.0,"volume":6.0,"yield":7.38},{"date":"2021-08-24","price":99.05,"turnover":5943.0,"volume":6.0,"yield":6.55},{"date":"2021-08-25","price":99.05,"turnover":0,"volume":0,"yield":6.55},{"date":"2021-08-26","price":97.41,"turnover":3896.5,"volume":4.0,"yield":6.46},{"date":"2021-08-27","price":99.14,"turnover":1982.7,"volume":2.0,"yield":6.45},{"date":"2021-08-30","price":99.14,"turnover":0,"volume":0,"yield":6.45},{"date":"2021-08-31","price":97.13,"turnover":5827.6,"volume":6.0,"yield":8.03},{"date":"2021-09-01","price":99.12,"turnover":9911.5,"volume":10.0,"yield":6.46},{"date":"2021-09-02","price":99.12,"turnover":0,"volume":0,"yield":6.46},{"date":"2021-09-03","price":99.12,"turnover":0,"volume":0,"yield":6.47},{"date":"2021-09-06","price":99.12,"turnover":0,"volume":0,"yield":6.47},{"date":"2021-09-07","price":99.12,"turnover":0,"volume":0,"yield":6.47},{"date":"2021-09-08","price":98.07,"turnover":198770.5,"volume":202.0,"yield":7.67},{"date":"2021-09-09","price":98.06,"turnover":21538.0,"volume":22.0,"yield":7.91},{"date":"2021-09-10","price":98.06,"turnover":0,"volume":0,"yield":7.93},{"date":"2021-09-13","price":98.06,"turnover":0,"volume":0,"yield":7.94},{"date":"2021-09-14","price":98.06,"turnover":0,"volume":0,"yield":7.94},{"date":"2021-09-15","price":98.06,"turnover":14597.4,"volume":15.0,"yield":6.56},{"date":"2021-09-16","price":98.06,"turnover":0,"volume":0,"yield":6.56},{"date":"2021-09-17","price":98.06,"turnover":0,"volume":0,"yield":6.57},{"date":"2021-09-20","price":98.03,"turnover":21366.0,"volume":22.0,"yield":7.81},{"date":"2021-09-21","price":98.03,"turnover":0,"volume":0,"yield":7.81},{"date":"2021-09-22","price":97.96,"turnover":29051.4,"volume":30.0,"yield":7.7},{"date":"2021-09-23","price":97.96,"turnover":0,"volume":0,"yield":7.71},{"date":"2021-09-24","price":97.96,"turnover":0,"volume":0,"yield":7.72},{"date":"2021-09-27","price":97.96,"turnover":0,"volume":0,"yield":7.73},{"date":"2021-09-28","price":97.96,"turnover":0,"volume":0,"yield":7.74},{"date":"2021-09-29","price":97.96,"turnover":0,"volume":0,"yield":7.74},{"date":"2021-09-30","price":97.96,"turnover":0,"volume":0,"yield":7.75},{"date":"2021-10-01","price":97.96,"turnover":0,"volume":0,"yield":7.77},{"date":"2021-10-04","price":97.96,"turnover":0,"volume":0,"yield":7.78},{"date":"2021-10-05","price":97.96,"turnover":0,"volume":0,"yield":7.78},{"date":"2021-10-06","price":98.15,"turnover":0,"volume":0,"yield":7.79},{"date":"2021-10-07","price":98.15,"turnover":0,"volume":0,"yield":7.8},{"date":"2021-10-08","price":97.25,"turnover":1945.0,"volume":2.0,"yield":8.01},{"date":"2021-10-11","price":98.0,"turnover":0,"volume":0,"yield":8.01},{"date":"2021-10-12","price":98.0,"turnover":0,"volume":0,"yield":8.02},{"date":"2021-10-13","price":98.0,"turnover":0,"volume":0,"yield":8.03},{"date":"2021-10-14","price":98.0,"turnover":0,"volume":0,"yield":8.04},{"date":"2021-10-15","price":97.76,"turnover":581006.5,"volume":594.0,"yield":8.0},{"date":"2021-10-18","price":97.76,"turnover":0,"volume":0,"yield":8.0},{"date":"2021-10-19","price":97.77,"turnover":980.5,"volume":1.0,"yield":8.01},{"date":"2021-10-20","price":97.77,"turnover":0,"volume":0,"yield":8.02},{"date":"2021-10-21","price":97.77,"turnover":0,"volume":0,"yield":8.03},{"date":"2021-10-22","price":97.77,"turnover":0,"volume":0,"yield":8.05},{"date":"2021-10-25","price":97.77,"turnover":0,"volume":0,"yield":8.06},{"date":"2021-10-26","price":97.82,"turnover":3927.9,"volume":4.0,"yield":5.53},{"date":"2021-10-27","price":97.87,"turnover":1832127.7,"volume":1872.0,"yield":8.14},{"date":"2021-10-28","price":97.87,"turnover":0,"volume":0,"yield":8.15},{"date":"2021-10-29","price":97.91,"turnover":1835436.7,"volume":1874.0,"yield":5.53},{"date":"2021-11-01","price":97.91,"turnover":0,"volume":0,"yield":5.53},{"date":"2021-11-02","price":97.88,"turnover":40914.1,"volume":43.0,"yield":10.98},{"date":"2021-11-03","price":95.62,"turnover":566985.2,"volume":593.0,"yield":8.45},{"date":"2021-11-05","price":95.61,"turnover":8711.7,"volume":9.0,"yield":9.65},{"date":"2021-11-08","price":95.62,"turnover":6831.5,"volume":7.0,"yield":8.46},{"date":"2021-11-09","price":95.74,"turnover":90688.0,"volume":94.0,"yield":8.27},{"date":"2021-11-10","price":95.74,"turnover":0,"volume":0,"yield":8.28},{"date":"2021-11-11","price":96.89,"turnover":390738.9,"volume":402.0,"yield":11.11},{"date":"2021-11-12","price":97.1,"turnover":23434.9,"volume":24.0,"yield":8.49},{"date":"2021-11-15","price":97.1,"turnover":978.6,"volume":1.0,"yield":8.51},{"date":"2021-11-16","price":97.1,"turnover":0,"volume":0,"yield":8.53},{"date":"2021-11-17","price":97.34,"turnover":99758.6,"volume":102.0,"yield":8.59},{"date":"2021-11-18","price":97.34,"turnover":0,"volume":0,"yield":8.6},{"date":"2021-11-19","price":97.31,"turnover":25174.8,"volume":26.0,"yield":8.81},{"date":"2021-11-22","price":97.31,"turnover":0,"volume":0,"yield":8.83},{"date":"2021-11-23","price":97.31,"turnover":0,"volume":0,"yield":8.84},{"date":"2021-11-24","price":97.31,"turnover":0,"volume":0,"yield":8.85},{"date":"2021-11-25","price":97.31,"turnover":0,"volume":0,"yield":8.86},{"date":"2021-11-26","price":97.31,"turnover":0,"volume":0,"yield":8.9},{"date":"2021-11-29","price":97.32,"turnover":4893.5,"volume":5.0,"yield":8.65},{"date":"2021-11-30","price":97.82,"turnover":894082.0,"volume":914.0,"yield":6.97},{"date":"2021-12-01","price":97.82,"turnover":0,"volume":0,"yield":6.98},{"date":"2021-12-02","price":97.79,"turnover":11476.7,"volume":12.0,"yield":8.49},{"date":"2021-12-03","price":97.79,"turnover":975.0,"volume":1.0,"yield":9.3},{"date":"2021-12-06","price":97.79,"turnover":0,"volume":0,"yield":9.31},{"date":"2021-12-07","price":97.79,"turnover":975.0,"volume":1.0,"yield":9.33},{"date":"2021-12-08","price":97.79,"turnover":975.0,"volume":1.0,"yield":9.34},{"date":"2021-12-09","price":97.79,"turnover":0,"volume":0,"yield":9.36},{"date":"2021-12-10","price":97.79,"turnover":0,"volume":0,"yield":9.4},{"date":"2021-12-13","price":97.79,"turnover":4596134880.0,"volume":4700005.0,"yield":8.62},{"date":"2021-12-14","price":97.79,"turnover":977.9,"volume":1.0,"yield":8.97},{"date":"2021-12-15","price":97.79,"turnover":0,"volume":0,"yield":8.98},{"date":"2021-12-16","price":97.79,"turnover":0,"volume":0,"yield":8.99},{"date":"2021-12-17","price":97.79,"turnover":0,"volume":0,"yield":9.04},{"date":"2021-12-20","price":97.79,"turnover":0,"volume":0,"yield":9.05},{"date":"2021-12-21","price":97.79,"turnover":3876.2,"volume":4.0,"yield":8.72},{"date":"2021-12-22","price":97.79,"turnover":0,"volume":0,"yield":8.73},{"date":"2021-12-23","price":97.79,"turnover":0,"volume":0,"yield":8.74},{"date":"2021-12-24","price":97.79,"turnover":0,"volume":0,"yield":8.78},{"date":"2021-12-27","price":97.79,"turnover":0,"volume":0,"yield":8.8},{"date":"2021-12-28","price":97.79,"turnover":0,"volume":0,"yield":8.81},{"date":"2021-12-29","price":97.79,"turnover":0,"volume":0,"yield":8.83},{"date":"2021-12-30","price":97.79,"turnover":999.5,"volume":1.0,"yield":5.6},{"date":"2022-01-03","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-04","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-05","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-06","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-07","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-10","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-11","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-12","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-13","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-14","price":97.79,"turnover":0,"volume":0,"yield":5.6},{"date":"2022-01-17","price":97.79,"turnover":1955400.0,"volume":2000.0,"yield":9.54},{"date":"2022-01-18","price":97.77,"turnover":1928.5,"volume":2.0,"yield":9.6},{"date":"2022-01-19","price":97.77,"turnover":0,"volume":0,"yield":9.62},{"date":"2022-01-20","price":97.77,"turnover":970.0,"volume":1.0,"yield":11.07},{"date":"2022-01-21","price":97.78,"turnover":10000.0,"volume":10.0,"yield":5.52},{"date":"2022-01-24","price":97.78,"turnover":0,"volume":0,"yield":5.52},{"date":"2022-01-25","price":97.78,"turnover":0,"volume":0,"yield":5.52},{"date":"2022-01-26","price":97.78,"turnover":991.0,"volume":1.0,"yield":7.18},{"date":"2022-01-27","price":97.78,"turnover":0,"volume":0,"yield":7.19},{"date":"2022-01-28","price":97.78,"turnover":0,"volume":0,"yield":7.21},{"date":"2022-01-31","price":97.79,"turnover":9950.0,"volume":10.0,"yield":6.46},{"date":"2022-02-01","price":97.79,"turnover":0,"volume":0,"yield":6.47},{"date":"2022-02-02","price":97.79,"turnover":0,"volume":0,"yield":6.47},{"date":"2022-02-03","price":97.79,"turnover":0,"volume":0,"yield":6.47},{"date":"2022-02-04","price":97.79,"turnover":0,"volume":0,"yield":6.49},{"date":"2022-02-07","price":97.79,"turnover":0,"volume":0,"yield":6.49},{"date":"2022-02-08","price":97.79,"turnover":0,"volume":0,"yield":6.5},{"date":"2022-02-09","price":97.79,"turnover":0,"volume":0,"yield":6.5},{"date":"2022-02-10","price":97.79,"turnover":3855.3,"volume":4.0,"yield":7.54},{"date":"2022-02-11","price":97.79,"turnover":0,"volume":0,"yield":7.57},{"date":"2022-02-14","price":97.78,"turnover":3854.0,"volume":4.0,"yield":10.53},{"date":"2022-02-15","price":97.78,"turnover":0,"volume":0,"yield":10.56},{"date":"2022-02-16","price":97.78,"turnover":0,"volume":0,"yield":10.59},{"date":"2022-02-17","price":97.78,"turnover":0,"volume":0,"yield":10.61},{"date":"2022-02-18","price":97.78,"turnover":980.0,"volume":1.0,"yield":9.79},{"date":"2022-02-21","price":97.79,"turnover":158601.0,"volume":162.0,"yield":8.83},{"date":"2022-02-22","price":97.79,"turnover":960.1,"volume":1.0,"yield":14.45},{"date":"2022-02-23","price":97.79,"turnover":0,"volume":0,"yield":14.45},{"date":"2022-02-24","price":97.79,"turnover":0,"volume":0,"yield":14.5},{"date":"2022-02-25","price":97.79,"turnover":19449.0,"volume":20.0,"yield":14.68},{"date":"2022-02-28","price":97.79,"turnover":0,"volume":0,"yield":14.73},{"date":"2022-03-01","price":97.79,"turnover":0,"volume":0,"yield":14.78},{"date":"2022-03-02","price":97.79,"turnover":0,"volume":0,"yield":14.84},{"date":"2022-03-03","price":97.79,"turnover":0,"volume":0,"yield":14.89},{"date":"2022-03-04","price":97.79,"turnover":0,"volume":0,"yield":15.17},{"date":"2022-03-09","price":97.79,"turnover":0,"volume":0,"yield":15.23},{"date":"2022-03-10","price":97.79,"turnover":0,"volume":0,"yield":15.28},{"date":"2022-03-11","price":97.79,"turnover":0,"volume":0,"yield":15.46},{"date":"2022-03-14","price":97.79,"turnover":0,"volume":0,"yield":15.52},{"date":"2022-03-15","price":97.79,"turnover":0,"volume":0,"yield":15.59},{"date":"2022-03-16","price":97.79,"turnover":0,"volume":0,"yield":15.65},{"date":"2022-03-17","price":97.79,"turnover":0,"volume":0,"yield":15.71},{"date":"2022-03-18","price":97.79,"turnover":0,"volume":0,"yield":15.91},{"date":"2022-03-21","price":97.79,"turnover":0,"volume":0,"yield":15.98},{"date":"2022-03-22","price":97.79,"turnover":0,"volume":0,"yield":16.05},{"date":"2022-03-23","price":97.79,"turnover":0,"volume":0,"yield":16.12},{"date":"2022-03-24","price":97.79,"turnover":0,"volume":0,"yield":16.19},{"date":"2022-03-25","price":97.79,"turnover":0,"volume":0,"yield":16.4},{"date":"2022-03-28","price":97.79,"turnover":0,"volume":0,"yield":16.47},{"date":"2022-03-29","price":95.73,"turnover":2006550.0,"volume":2100.0,"yield":17.89},{"date":"2022-03-30","price":95.73,"turnover":0,"volume":0,"yield":17.98},{"date":"2022-03-31","price":95.73,"turnover":0,"volume":0,"yield":18.06},{"date":"2022-04-01","price":95.73,"turnover":0,"volume":0,"yield":18.34},{"date":"2022-04-04","price":95.63,"turnover":2007614.0,"volume":2100.0,"yield":18.27},{"date":"2022-04-05","price":95.63,"turnover":0,"volume":0,"yield":18.36},{"date":"2022-04-06","price":95.63,"turnover":0,"volume":0,"yield":18.46},{"date":"2022-04-07","price":95.63,"turnover":0,"volume":0,"yield":18.55},{"date":"2022-04-08","price":95.63,"turnover":0,"volume":0,"yield":18.85},{"date":"2022-04-11","price":96.33,"turnover":1388850.0,"volume":1410.0,"yield":9.84},{"date":"2022-04-12","price":96.33,"turnover":0,"volume":0,"yield":9.87},{"date":"2022-04-13","price":96.31,"turnover":1905.0,"volume":2.0,"yield":9.91},{"date":"2022-04-14","price":96.31,"turnover":0,"volume":0,"yield":9.94},{"date":"2022-04-15","price":96.31,"turnover":0,"volume":0,"yield":10.04},{"date":"2022-04-18","price":96.31,"turnover":0,"volume":0,"yield":10.08},{"date":"2022-04-19","price":96.31,"turnover":0,"volume":0,"yield":10.11},{"date":"2022-04-20","price":96.31,"turnover":0,"volume":0,"yield":10.15},{"date":"2022-04-21","price":96.31,"turnover":0,"volume":0,"yield":10.18},{"date":"2022-04-22","price":96.31,"turnover":1935.1,"volume":2.0,"yield":11.96},{"date":"2022-04-25","price":98.49,"turnover":13744.4,"volume":14.0,"yield":10.37},{"date":"2022-04-26","price":98.49,"turnover":0,"volume":0,"yield":10.41},{"date":"2022-04-27","price":98.49,"turnover":984.9,"volume":1.0,"yield":10.45},{"date":"2022-04-28","price":98.49,"turnover":0,"volume":0,"yield":10.49},{"date":"2022-04-29","price":98.49,"turnover":0,"volume":0,"yield":10.71},{"date":"2022-05-04","price":98.49,"turnover":0,"volume":0,"yield":10.76},{"date":"2022-05-05","price":98.49,"turnover":0,"volume":0,"yield":10.8},{"date":"2022-05-06","price":98.49,"turnover":0,"volume":0,"yield":11.05},{"date":"2022-05-11","price":98.49,"turnover":0,"volume":0,"yield":11.1},{"date":"2022-05-12","price":98.49,"turnover":0,"volume":0,"yield":11.16},{"date":"2022-05-13","price":98.49,"turnover":0,"volume":0,"yield":11.32},{"date":"2022-05-16","price":98.49,"turnover":0,"volume":0,"yield":11.38},{"date":"2022-05-17","price":98.49,"turnover":0,"volume":0,"yield":11.44},{"date":"2022-05-18","price":98.49,"turnover":0,"volume":0,"yield":11.5},{"date":"2022-05-19","price":98.49,"turnover":0,"volume":0,"yield":11.56},{"date":"2022-05-20","price":98.49,"turnover":0,"volume":0,"yield":11.76},{"date":"2022-05-23","price":98.49,"turnover":0,"volume":0,"yield":11.82},{"date":"2022-05-24","price":98.49,"turnover":2938.5,"volume":3.0,"yield":14.3},{"date":"2022-05-25","price":98.49,"turnover":0,"volume":0,"yield":14.4},{"date":"2022-05-26","price":98.49,"turnover":2955.0,"volume":3.0,"yield":11.99},{"date":"2022-05-27","price":98.49,"turnover":0,"volume":0,"yield":12.21},{"date":"2022-05-30","price":98.49,"turnover":19700.0,"volume":20.0,"yield":12.29},{"date":"2022-05-31","price":98.5,"turnover":552585.0,"volume":561.0,"yield":12.37},{"date":"2022-06-01","price":98.5,"turnover":0,"volume":0,"yield":12.46},{"date":"2022-06-02","price":98.5,"turnover":0,"volume":0,"yield":12.54},{"date":"2022-06-03","price":98.5,"turnover":990.2,"volume":1.0,"yield":10.2},{"date":"2022-06-06","price":98.5,"turnover":0,"volume":0,"yield":10.26},{"date":"2022-06-07","price":98.55,"turnover":118536.0,"volume":120.0,"yield":11.54},{"date":"2022-06-08","price":98.55,"turnover":9880.0,"volume":10.0,"yield":11.52},{"date":"2022-06-09","price":98.55,"turnover":0,"volume":0,"yield":11.6},{"date":"2022-06-10","price":99.07,"turnover":4956008.6,"volume":4999.0,"yield":10.06},{"date":"2022-06-14","price":99.07,"turnover":0,"volume":0,"yield":10.13},{"date":"2022-06-15","price":99.07,"turnover":0,"volume":0,"yield":10.19},{"date":"2022-06-16","price":99.07,"turnover":0,"volume":0,"yield":10.26},{"date":"2022-06-17","price":99.07,"turnover":0,"volume":0,"yield":10.47},{"date":"2022-06-20","price":99.07,"turnover":2971.8,"volume":3.0,"yield":11.04},{"date":"2022-06-21","price":99.07,"turnover":0,"volume":0,"yield":11.12},{"date":"2022-06-22","price":99.07,"turnover":0,"volume":0,"yield":11.21},{"date":"2022-06-23","price":99.07,"turnover":0,"volume":0,"yield":11.3},{"date":"2022-06-24","price":99.07,"turnover":0,"volume":0,"yield":11.6},{"date":"2022-06-27","price":99.07,"turnover":0,"volume":0,"yield":null},{"date":"2022-06-28","price":99.07,"turnover":0,"volume":0,"yield":null},{"date":"2022-06-29","price":99.07,"turnover":5025.0,"volume":5.0,"yield":2.22},{"date":"2022-06-30","price":99.07,"turnover":2980.2,"volume":3.0,"yield":10.04},{"date":"2022-07-01","price":99.07,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-04","price":99.07,"turnover":19878.0,"volume":20.0,"yield":10.01},{"date":"2022-07-05","price":99.07,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-06","price":99.12,"turnover":802722.9,"volume":807.0,"yield":9.56},{"date":"2022-07-07","price":99.12,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-08","price":99.12,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-11","price":99.12,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-12","price":99.18,"turnover":3009.0,"volume":3.0,"yield":2.93},{"date":"2022-07-13","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-14","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-15","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-18","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-19","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-20","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-21","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-22","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-25","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-26","price":99.18,"turnover":2992.2,"volume":3.0,"yield":8.78},{"date":"2022-07-27","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-28","price":99.18,"turnover":0,"volume":0,"yield":null},{"date":"2022-07-29","price":99.19,"turnover":998.0,"volume":1.0,"yield":8.53},{"date":"2022-08-01","price":99.19,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-02","price":99.19,"turnover":3010.5,"volume":3.0,"yield":-0.09},{"date":"2022-08-03","price":99.48,"turnover":3997.6,"volume":4.0,"yield":0.47},{"date":"2022-08-04","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-05","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-08","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-09","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-10","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-11","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-12","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-15","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-16","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-17","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-18","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-19","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-22","price":99.47,"turnover":960.0,"volume":1.0,"yield":null},{"date":"2022-08-23","price":99.47,"turnover":1000.0,"volume":1.0,"yield":8.51},{"date":"2022-08-24","price":99.47,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-25","price":99.47,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-26","price":99.48,"turnover":1010.0,"volume":1.0,"yield":7.77},{"date":"2022-08-29","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-30","price":99.48,"turnover":0,"volume":0,"yield":null},{"date":"2022-08-31","price":100.0,"turnover":1296834000.0,"volume":1296834.0,"yield":8.52},{"date":"2022-09-01","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-02","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-05","price":100.0,"turnover":1005.0,"volume":1.0,"yield":8.14},{"date":"2022-09-06","price":100.0,"turnover":1401404.0,"volume":1400.0,"yield":8.44},{"date":"2022-09-07","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-08","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-09","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-12","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-13","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-14","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-15","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-16","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-19","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-20","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-21","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-22","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-23","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-26","price":100.0,"turnover":957.1,"volume":1.0,"yield":12.08},{"date":"2022-09-27","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-09-28","price":100.0,"turnover":1912.4,"volume":2.0,"yield":11.73},{"date":"2022-09-29","price":100.0,"turnover":999.9,"volume":1.0,"yield":8.52},{"date":"2022-09-30","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-03","price":100.0,"turnover":937.1,"volume":1.0,"yield":13.9},{"date":"2022-10-04","price":100.0,"turnover":977.0,"volume":1.0,"yield":10.42},{"date":"2022-10-05","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-06","price":100.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-07","price":99.0,"turnover":990000.0,"volume":1000.0,"yield":9.34},{"date":"2022-10-10","price":99.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-11","price":99.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-12","price":99.0,"turnover":0,"volume":0,"yield":9.34},{"date":"2022-10-13","price":99.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-14","price":99.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-17","price":99.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-18","price":99.0,"turnover":990.0,"volume":1.0,"yield":9.35},{"date":"2022-10-19","price":99.0,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-20","price":99.63,"turnover":169371000.0,"volume":170000.0,"yield":8.82},{"date":"2022-10-21","price":99.66,"turnover":213840034.5,"volume":214505.0,"yield":8.77},{"date":"2022-10-24","price":99.66,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-25","price":99.66,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-26","price":99.66,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-27","price":99.66,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-28","price":99.66,"turnover":0,"volume":0,"yield":null},{"date":"2022-10-31","price":99.66,"turnover":1005.0,"volume":1.0,"yield":8.08},{"date":"2022-11-01","price":99.66,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-02","price":99.66,"turnover":1951.7,"volume":2.0,"yield":8.85},{"date":"2022-11-03","price":99.66,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-07","price":99.69,"turnover":506200.0,"volume":505.0,"yield":8.3},{"date":"2022-11-08","price":99.69,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-09","price":99.69,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-10","price":99.69,"turnover":506363.5,"volume":505.0,"yield":8.27},{"date":"2022-11-11","price":99.69,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-14","price":99.69,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-15","price":99.69,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-16","price":99.69,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-17","price":99.7,"turnover":300480.0,"volume":300.0,"yield":8.37},{"date":"2022-11-18","price":99.7,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-21","price":99.7,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-22","price":100.16,"turnover":303615.0,"volume":303.0,"yield":8.06},{"date":"2022-11-23","price":100.21,"turnover":701190.0,"volume":700.0,"yield":8.36},{"date":"2022-11-24","price":100.21,"turnover":6961.5,"volume":7.0,"yield":9.0},{"date":"2022-11-25","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-28","price":100.21,"turnover":701400.0,"volume":700.0,"yield":8.33},{"date":"2022-11-29","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2022-11-30","price":100.21,"turnover":1004.0,"volume":1.0,"yield":8.15},{"date":"2022-12-01","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-02","price":100.19,"turnover":29820.1,"volume":30.0,"yield":9.06},{"date":"2022-12-05","price":100.17,"turnover":5970.1,"volume":6.0,"yield":8.97},{"date":"2022-12-06","price":100.17,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-07","price":100.17,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-08","price":100.17,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-09","price":100.1,"turnover":301203621.9,"volume":300902.0,"yield":8.41},{"date":"2022-12-12","price":100.1,"turnover":2004.5,"volume":2.0,"yield":8.32},{"date":"2022-12-13","price":100.1,"turnover":965016.0,"volume":963.0,"yield":8.31},{"date":"2022-12-14","price":100.1,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-15","price":100.1,"turnover":1005.0,"volume":1.0,"yield":8.04},{"date":"2022-12-16","price":100.1,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-19","price":100.1,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-20","price":100.1,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-21","price":100.1,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-22","price":100.1,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-23","price":100.1,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-26","price":100.19,"turnover":5994.0,"volume":6.0,"yield":8.6},{"date":"2022-12-27","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-28","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-29","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2022-12-30","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-03","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-04","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-05","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-06","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-09","price":100.19,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-10","price":100.19,"turnover":1006.0,"volume":1.0,"yield":7.92},{"date":"2023-01-11","price":100.21,"turnover":2990.2,"volume":3.0,"yield":7.93},{"date":"2023-01-12","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-13","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-16","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-17","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-18","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-19","price":100.2,"turnover":970.1,"volume":1.0,"yield":11.64},{"date":"2023-01-20","price":100.2,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-23","price":100.2,"turnover":2013.9,"volume":2.0,"yield":7.8},{"date":"2023-01-24","price":100.21,"turnover":2014.0,"volume":2.0,"yield":7.8},{"date":"2023-01-25","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-26","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-27","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-30","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-01-31","price":100.21,"turnover":3002.9,"volume":3.0,"yield":8.73},{"date":"2023-02-01","price":100.21,"turnover":3019.5,"volume":3.0,"yield":7.84},{"date":"2023-02-02","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-03","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-06","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-07","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-08","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-09","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-10","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-13","price":100.21,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-14","price":100.21,"turnover":1037.2,"volume":1.0,"yield":4.63},{"date":"2023-02-15","price":100.23,"turnover":8226.9,"volume":8.0,"yield":4.61},{"date":"2023-02-16","price":100.23,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-17","price":100.25,"turnover":5150.0,"volume":5.0,"yield":5.33},{"date":"2023-02-20","price":100.25,"turnover":996.1,"volume":1.0,"yield":8.96},{"date":"2023-02-21","price":100.26,"turnover":10162.0,"volume":10.0,"yield":4.6},{"date":"2023-02-22","price":100.27,"turnover":3063.0,"volume":3.0,"yield":5.27},{"date":"2023-02-24","price":100.26,"turnover":6967.1,"volume":7.0,"yield":9.06},{"date":"2023-02-27","price":100.26,"turnover":0,"volume":0,"yield":null},{"date":"2023-02-28","price":100.27,"turnover":1039.8,"volume":1.0,"yield":4.22},{"date":"2023-03-01","price":100.27,"turnover":997.1,"volume":1.0,"yield":8.85},{"date":"2023-03-02","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-03","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-06","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-07","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-09","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-10","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-13","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-14","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-15","price":100.27,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-16","price":100.26,"turnover":1990.4,"volume":2.0,"yield":9.08},{"date":"2023-03-17","price":100.26,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-20","price":100.26,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-21","price":100.26,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-22","price":100.26,"turnover":998.5,"volume":1.0,"yield":8.69},{"date":"2023-03-23","price":100.24,"turnover":47928.0,"volume":48.0,"yield":8.69},{"date":"2023-03-24","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-27","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-28","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-29","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-30","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-03-31","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-03","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-04","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-05","price":100.24,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-06","price":100.25,"turnover":2079.7,"volume":2.0,"yield":3.74},{"date":"2023-04-07","price":100.25,"turnover":1000.2,"volume":1.0,"yield":8.48},{"date":"2023-04-10","price":100.25,"turnover":990.2,"volume":1.0,"yield":9.76},{"date":"2023-04-11","price":100.25,"turnover":3027.0,"volume":3.0,"yield":8.87},{"date":"2023-04-12","price":100.26,"turnover":1039.8,"volume":1.0,"yield":3.66},{"date":"2023-04-13","price":100.25,"turnover":995.8,"volume":1.0,"yield":9.04},{"date":"2023-04-14","price":100.25,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-17","price":100.25,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-18","price":100.25,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-19","price":100.25,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-20","price":100.25,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-21","price":99.58,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-24","price":99.58,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-25","price":99.58,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-26","price":99.58,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-27","price":99.58,"turnover":0,"volume":0,"yield":null},{"date":"2023-04-28","price":99.58,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-02","price":99.56,"turnover":995.6,"volume":1.0,"yield":9.1},{"date":"2023-05-03","price":99.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-04","price":99.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-05","price":99.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-08","price":99.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-10","price":99.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-11","price":99.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-12","price":99.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-15","price":100.5,"turnover":6029.7,"volume":6.0,"yield":8.03},{"date":"2023-05-16","price":99.08,"turnover":990.8,"volume":1.0,"yield":9.81},{"date":"2023-05-17","price":99.08,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-18","price":99.08,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-19","price":100.06,"turnover":6003.6,"volume":6.0,"yield":8.38},{"date":"2023-05-22","price":100.06,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-23","price":100.06,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-24","price":100.06,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-25","price":100.06,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-26","price":100.06,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-29","price":100.06,"turnover":0,"volume":0,"yield":null},{"date":"2023-05-30","price":103.84,"turnover":1038.4,"volume":1.0,"yield":3.04},{"date":"2023-05-31","price":98.46,"turnover":3938.3,"volume":4.0,"yield":10.6},{"date":"2023-06-01","price":103.83,"turnover":2076.6,"volume":2.0,"yield":3.01},{"date":"2023-06-02","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-05","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-06","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-07","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-08","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-09","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-13","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-14","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-15","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-16","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-19","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-20","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-21","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-22","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-23","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-26","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-27","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-28","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-29","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-06-30","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-07-03","price":103.83,"turnover":0,"volume":0,"yield":null},{"date":"2023-07-04","price":100.51,"turnover":1172835.0,"volume":1167.0,"yield":7.65},{"date":"2023-07-05","price":100.5,"turnover":2012.0,"volume":2.0,"yield":7.48},{"date":"2023-07-06","price":100.5,"turnover":0,"volume":0,"yield":null},{"date":"2023-07-07","price":100.55,"turnover":1328265.5,"volume":1321.0,"yield":7.55},{"date":"2023-07-10","price":100.23,"turnover":1798191.0,"volume":1794.0,"yield":8.24},{"date":"2023-07-11","price":100.15,"turnover":8826219.5,"volume":8813.0,"yield":8.24},{"date":"2023-07-12","price":100.05,"turnover":4996496.0,"volume":4994.0,"yield":8.24},{"date":"2023-07-13","price":100.15,"turnover":523784.5,"volume":523.0,"yield":8.23},{"date":"2023-07-14","price":100.15,"turnover":7668485.5,"volume":7657.0,"yield":8.23},{"date":"2023-07-17","price":100.15,"turnover":5692526.0,"volume":5684.0,"yield":8.23},{"date":"2023-07-18","price":100.14,"turnover":4300011.6,"volume":4294.0,"yield":8.25},{"date":"2023-07-19","price":100.14,"turnover":9675526.8,"volume":9662.0,"yield":8.25},{"date":"2023-07-20","price":100.14,"turnover":0,"volume":0,"yield":null},{"date":"2023-07-21","price":100.14,"turnover":995.5,"volume":1.0,"yield":9.34},{"date":"2023-07-24","price":100.14,"turnover":7922.5,"volume":8.0,"yield":9.16},{"date":"2023-07-25","price":100.14,"turnover":0,"volume":0,"yield":null},{"date":"2023-07-26","price":100.16,"turnover":8317.6,"volume":8.0,"yield":1.43},{"date":"2023-07-27","price":100.16,"turnover":1039.7,"volume":1.0,"yield":1.4},{"date":"2023-07-28","price":100.16,"turnover":0,"volume":0,"yield":null},{"date":"2023-07-31","price":100.16,"turnover":0,"volume":0,"yield":null},{"date":"2023-08-01","price":100.18,"turnover":9180.0,"volume":9.0,"yield":4.75},{"date":"2023-08-02","price":100.18,"turnover":0,"volume":0,"yield":null},{"date":"2023-08-03","price":100.18,"turnover":0,"volume":0,"yield":null},{"date":"2023-08-04","price":100.18,"turnover":0,"volume":0,"yield":null},{"date":"2023-08-07","price":100.18,"turnover":0,"volume":0,"yield":null},{"date":"2023-08-08","price":100.18,"turnover":0,"volume":0,"yield":null},{"date":"2023-08-09","price":98.73,"turnover":614105.2,"volume":622.0,"yield":8.33},{"date":"2023-08-10","price":99.19,"turnover":300490.6,"volume":302.0,"yield":9.53},{"date":"2023-08-11","price":99.19,"turnover":3004.2,"volume":3.0,"yield":8.23},{"date":"2023-08-14","price":99.2,"turnover":2049.5,"volume":2.0,"yield":6.48},{"date":"2023-08-15","price":99.57,"turnover":119806.5,"volume":121.0,"yield":11.11},{"date":"2023-08-16","price":99.58,"turnover":19005.8,"volume":19.0,"yield":1.41},{"date":"2023-08-17","price":99.58,"turnover":28873.1,"volume":29.0,"yield":10.43},{"date":"2023-08-18","price":99.6,"turnover":2079.4,"volume":2.0,"yield":0.54},{"date":"2023-08-21","price":99.67,"turnover":67856.7,"volume":67.0,"yield":7.48},{"date":"2023-08-22","price":101.13,"turnover":205244.5,"volume":199.0,"yield":7.14},{"date":"2023-08-23","price":98.47,"turnover":2289542.8,"volume":2325.0,"yield":12.07},{"date":"2023-08-24","price":98.47,"turnover":231721.5,"volume":235.0,"yield":11.62},{"date":"2023-08-25","price":98.42,"turnover":55800.2,"volume":57.0,"yield":10.7},{"date":"2023-08-28","price":98.43,"turnover":74858.2,"volume":76.0,"yield":13.08},{"date":"2023-08-29","price":98.43,"turnover":33489.0,"volume":34.0,"yield":10.63},{"date":"2023-08-30","price":98.44,"turnover":9904.9,"volume":10.0,"yield":11.74},{"date":"2023-08-31","price":98.34,"turnover":334394.4,"volume":340.0,"yield":8.86},{"date":"2023-09-01","price":98.34,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-04","price":98.34,"turnover":997.4,"volume":1.0,"yield":9.12},{"date":"2023-09-05","price":98.32,"turnover":9684.9,"volume":10.0,"yield":11.96},{"date":"2023-09-06","price":98.32,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-07","price":98.32,"turnover":13752.8,"volume":14.0,"yield":12.15},{"date":"2023-09-08","price":98.39,"turnover":5985.0,"volume":6.0,"yield":9.11},{"date":"2023-09-11","price":98.39,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-12","price":98.39,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-13","price":97.56,"turnover":236138.2,"volume":245.0,"yield":13.25},{"date":"2023-09-14","price":97.64,"turnover":230031.3,"volume":233.0,"yield":11.55},{"date":"2023-09-15","price":97.64,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-18","price":97.64,"turnover":974.1,"volume":1.0,"yield":15.29},{"date":"2023-09-19","price":97.65,"turnover":1997.0,"volume":2.0,"yield":8.88},{"date":"2023-09-20","price":97.6,"turnover":17649.0,"volume":18.0,"yield":9.16},{"date":"2023-09-21","price":97.6,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-22","price":97.6,"turnover":5937.4,"volume":6.0,"yield":10.47},{"date":"2023-09-25","price":97.6,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-26","price":97.6,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-27","price":97.6,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-28","price":97.6,"turnover":0,"volume":0,"yield":null},{"date":"2023-09-29","price":97.72,"turnover":30767.5,"volume":31.0,"yield":10.56},{"date":"2023-10-02","price":97.72,"turnover":0,"volume":0,"yield":null},{"date":"2023-10-03","price":97.93,"turnover":383562.3,"volume":394.0,"yield":13.04},{"date":"2023-10-04","price":97.96,"turnover":24680.4,"volume":25.0,"yield":11.32},{"date":"2023-10-05","price":97.96,"turnover":0,"volume":0,"yield":null},{"date":"2023-10-06","price":97.96,"turnover":2917.1,"volume":3.0,"yield":11.54},{"date":"2023-10-09","price":97.96,"turnover":0,"volume":0,"yield":null},{"date":"2023-10-10","price":97.96,"turnover":989.3,"volume":1.0,"yield":11.65},{"date":"2023-10-11","price":97.63,"turnover":34318.7,"volume":35.0,"yield":11.58},{"date":"2023-10-12","price":97.63,"turnover":0,"volume":0,"yield":null},{"date":"2023-10-13","price":97.66,"turnover":10886.2,"volume":11.0,"yield":11.85},{"date":"2023-10-16","price":97.67,"turnover":1980.0,"volume":2.0,"yield":11.57},{"date":"2023-10-17","price":97.67,"turnover":0,"volume":0,"yield":null},{"date":"2023-10-18","price":97.67,"turnover":0,"volume":0,"yield":null},{"date":"2023-10-19","price":97.66,"turnover":1978.0,"volume":2.0,"yield":11.96},{"date":"2023-10-20","price":97.66,"turnover":1979.8,"volume":2.0,"yield":11.74},{"date":"2023-10-23","price":97.65,"turnover":7887.0,"volume":8.0,"yield":11.76},{"date":"2023-10-24","price":97.55,"turnover":28247.2,"volume":29.0,"yield":11.86},{"date":"2023-10-25","price":97.54,"turnover":1955.0,"volume":2.0,"yield":11.82},{"date":"2023-10-26","price":97.55,"turnover":470213.7,"volume":482.0,"yield":10.02},{"date":"2023-10-27","price":97.55,"turnover":0,"volume":0,"yield":null},{"date":"2023-10-30","price":97.56,"turnover":1990.8,"volume":2.0,"yield":10.03},{"date":"2023-10-31","price":97.56,"turnover":0,"volume":0,"yield":null},{"date":"2023-11-01","price":97.84,"turnover":84666.9,"volume":85.0,"yield":9.68},{"date":"2023-11-02","price":98.57,"turnover":298758.0,"volume":303.0,"yield":13.47},{"date":"2023-11-03","price":98.9,"turnover":523181.0,"volume":529.0,"yield":12.48},{"date":"2023-11-06","price":98.9,"turnover":0,"volume":0,"yield":null},{"date":"2023-11-07","price":98.9,"turnover":122616.3,"volume":124.0,"yield":12.63},{"date":"2023-11-08","price":98.89,"turnover":26692.1,"volume":27.0,"yield":12.74},{"date":"2023-11-09","price":98.89,"turnover":57342.6,"volume":58.0,"yield":12.74},{"date":"2023-11-10","price":98.87,"turnover":505225.7,"volume":511.0,"yield":12.87},{"date":"2023-11-13","price":98.82,"turnover":43243.3,"volume":44.0,"yield":14.42},{"date":"2023-11-14","price":98.79,"turnover":25520.0,"volume":26.0,"yield":14.48},{"date":"2023-11-15","price":98.78,"turnover":8892.7,"volume":9.0,"yield":13.08},{"date":"2023-11-16","price":97.74,"turnover":4113103.5,"volume":4208.0,"yield":16.14},{"date":"2023-11-17","price":98.85,"turnover":580225.2,"volume":587.0,"yield":13.27},{"date":"2023-11-20","price":98.85,"turnover":1686378.4,"volume":1706.0,"yield":13.32},{"date":"2023-11-21","price":98.74,"turnover":141676.9,"volume":144.0,"yield":13.37},{"date":"2023-11-22","price":98.75,"turnover":51397.3,"volume":52.0,"yield":13.42},{"date":"2023-11-23","price":98.64,"turnover":308021.5,"volume":312.0,"yield":13.34},{"date":"2023-11-24","price":98.64,"turnover":0,"volume":0,"yield":null},{"date":"2023-11-27","price":98.66,"turnover":68154.7,"volume":69.0,"yield":13.28},{"date":"2023-11-28","price":98.66,"turnover":17802.8,"volume":18.0,"yield":13.1},{"date":"2023-11-29","price":98.67,"turnover":6936.3,"volume":7.0,"yield":12.68},{"date":"2023-11-30","price":98.7,"turnover":28831.5,"volume":29.0,"yield":13.89},{"date":"2023-12-01","price":98.8,"turnover":41527.5,"volume":42.0,"yield":14.09},{"date":"2023-12-04","price":98.8,"turnover":988.9,"volume":1.0,"yield":13.96},{"date":"2023-12-05","price":98.8,"turnover":24720.0,"volume":25.0,"yield":14.08},{"date":"2023-12-06","price":98.81,"turnover":22747.0,"volume":23.0,"yield":14.05},{"date":"2023-12-07","price":98.8,"turnover":130432.2,"volume":132.0,"yield":14.23},{"date":"2023-12-08","price":98.8,"turnover":15820.8,"volume":16.0,"yield":14.46},{"date":"2023-12-11","price":98.81,"turnover":44505.0,"volume":45.0,"yield":14.43},{"date":"2023-12-12","price":98.87,"turnover":23675.7,"volume":24.0,"yield":14.63},{"date":"2023-12-13","price":98.87,"turnover":12840.8,"volume":13.0,"yield":14.08},{"date":"2023-12-14","price":98.94,"turnover":336566.0,"volume":340.0,"yield":14.16},{"date":"2023-12-15","price":98.73,"turnover":19746989.8,"volume":20001.0,"yield":16.02},{"date":"2023-12-18","price":98.73,"turnover":30914.8,"volume":31.0,"yield":15.19},{"date":"2023-12-19","price":98.73,"turnover":15000.0,"volume":15.0,"yield":8.41},{"date":"2023-12-20","price":98.73,"turnover":0,"volume":0,"yield":null},{"date":"2023-12-21","price":98.73,"turnover":0,"volume":0,"yield":null},{"date":"2023-12-22","price":98.86,"turnover":49728620.0,"volume":50302.0,"yield":15.05},{"date":"2023-12-25","price":98.86,"turnover":20776.8,"volume":21.0,"yield":15.16},{"date":"2023-12-26","price":98.86,"turnover":1015.3,"volume":1.0,"yield":-1.22},{"date":"2023-12-27","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2023-12-28","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2023-12-29","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-03","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-04","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-05","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-08","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-09","price":98.86,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-10","price":98.86,"turnover":5094.8,"volume":5.0,"yield":-7.91},{"date":"2024-01-11","price":99.17,"turnover":8234071.1,"volume":8303.0,"yield":-8.19},{"date":"2024-01-12","price":99.17,"turnover":996.0,"volume":1.0,"yield":12.4},{"date":"2024-01-15","price":99.17,"turnover":3988.0,"volume":4.0,"yield":11.46},{"date":"2024-01-16","price":99.17,"turnover":997.0,"volume":1.0,"yield":11.54},{"date":"2024-01-17","price":99.17,"turnover":1990.0,"volume":2.0,"yield":11.63},{"date":"2024-01-18","price":99.17,"turnover":997.0,"volume":1.0,"yield":11.72},{"date":"2024-01-19","price":99.17,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-22","price":99.17,"turnover":2041.0,"volume":2.0,"yield":-13.97},{"date":"2024-01-23","price":99.43,"turnover":1176166.6,"volume":1183.0,"yield":12.28},{"date":"2024-01-24","price":99.43,"turnover":9970.0,"volume":10.0,"yield":12.41},{"date":"2024-01-25","price":99.43,"turnover":91503.2,"volume":92.0,"yield":16.03},{"date":"2024-01-26","price":99.43,"turnover":2015.9,"volume":2.0,"yield":15.97},{"date":"2024-01-29","price":99.44,"turnover":69790.0,"volume":70.0,"yield":13.25},{"date":"2024-01-30","price":99.44,"turnover":0,"volume":0,"yield":null},{"date":"2024-01-31","price":99.44,"turnover":0,"volume":0,"yield":null},{"date":"2024-02-01","price":99.44,"turnover":0,"volume":0,"yield":null},{"date":"2024-02-02","price":99.66,"turnover":1299517.3,"volume":1304.0,"yield":13.8},{"date":"2024-02-05","price":99.66,"turnover":796363.3,"volume":799.0,"yield":16.03},{"date":"2024-02-06","price":99.66,"turnover":24962.0,"volume":25.0,"yield":13.73},{"date":"2024-02-07","price":99.71,"turnover":45293274.5,"volume":45425.0,"yield":14.12},{"date":"2024-02-08","price":99.71,"turnover":0,"volume":0,"yield":null},{"date":"2024-02-09","price":99.71,"turnover":16139.3,"volume":16.0,"yield":13.69},{"date":"2024-02-12","price":99.71,"turnover":7984.8,"volume":8.0,"yield":15.85},{"date":"2024-02-13","price":99.71,"turnover":2995.5,"volume":3.0,"yield":14.45},{"date":"2024-02-14","price":99.71,"turnover":6992.4,"volume":7.0,"yield":13.71},{"date":"2024-02-15","price":99.71,"turnover":4994.9,"volume":5.0,"yield":14.55},{"date":"2024-02-16","price":99.71,"turnover":58400.8,"volume":58.0,"yield":-38.58},{"date":"2024-02-19","price":99.71,"turnover":1006.5,"volume":1.0,"yield":-49.17},{"date":"2024-02-20","price":99.72,"turnover":26519.7,"volume":26.0,"yield":14.42},{"date":"2024-02-21","price":99.72,"turnover":50660.5,"volume":50.0,"yield":15.14},{"date":"2024-02-22","price":99.74,"turnover":147038.7,"volume":144.0,"yield":14.5},{"date":"2024-02-26","price":100.85,"turnover":207612.2,"volume":208.0,"yield":14.67},{"date":"2024-02-27","price":100.85,"turnover":4994.4,"volume":5.0,"yield":14.79},{"date":"2024-02-28","price":100.86,"turnover":3021.9,"volume":3.0,"yield":15.03},{"date":"2024-02-29","price":100.86,"turnover":20176.7,"volume":20.0,"yield":14.91},{"date":"2024-03-01","price":100.86,"turnover":6036.7,"volume":6.0,"yield":14.56},{"date":"2024-03-04","price":100.84,"turnover":30118.2,"volume":30.0,"yield":14.9},{"date":"2024-03-05","price":100.16,"turnover":172574.0,"volume":174.0,"yield":13.7},{"date":"2024-03-06","price":99.92,"turnover":57056.5,"volume":56.0,"yield":12.5},{"date":"2024-03-07","price":99.93,"turnover":2041.6,"volume":2.0,"yield":12.25},{"date":"2024-03-11","price":99.9,"turnover":21836.7,"volume":22.0,"yield":16.27},{"date":"2024-03-12","price":99.88,"turnover":25756.7,"volume":26.0,"yield":16.27},{"date":"2024-03-13","price":99.46,"turnover":207993.3,"volume":210.0,"yield":15.14},{"date":"2024-03-14","price":99.46,"turnover":1985.4,"volume":2.0,"yield":15.41},{"date":"2024-03-15","price":99.46,"turnover":994.5,"volume":1.0,"yield":15.58},{"date":"2024-03-18","price":99.46,"turnover":0,"volume":0,"yield":null},{"date":"2024-03-19","price":99.46,"turnover":0,"volume":0,"yield":null},{"date":"2024-03-20","price":97.98,"turnover":584938.9,"volume":597.0,"yield":16.48},{"date":"2024-03-21","price":97.95,"turnover":36114.3,"volume":37.0,"yield":16.22},{"date":"2024-03-22","price":99.7,"turnover":610169.4,"volume":612.0,"yield":14.37},{"date":"2024-03-25","price":99.77,"turnover":18049.5,"volume":18.0,"yield":16.24},{"date":"2024-03-26","price":99.77,"turnover":1003.9,"volume":1.0,"yield":14.37},{"date":"2024-03-27","price":99.77,"turnover":0,"volume":0,"yield":null},{"date":"2024-03-28","price":99.77,"turnover":1997.2,"volume":2.0,"yield":14.56},{"date":"2024-03-29","price":99.78,"turnover":10031.8,"volume":10.0,"yield":14.34},{"date":"2024-04-01","price":99.78,"turnover":996.5,"volume":1.0,"yield":15.33},{"date":"2024-04-02","price":99.76,"turnover":30777.1,"volume":31.0,"yield":15.1},{"date":"2024-04-03","price":99.81,"turnover":98038.5,"volume":99.0,"yield":16.2},{"date":"2024-04-04","price":99.81,"turnover":8967.2,"volume":9.0,"yield":15.53},{"date":"2024-04-05","price":99.78,"turnover":46774.3,"volume":47.0,"yield":15.66},{"date":"2024-04-08","price":99.07,"turnover":515155.3,"volume":520.0,"yield":15.4},{"date":"2024-04-09","price":99.09,"turnover":26877.1,"volume":27.0,"yield":15.47},{"date":"2024-04-10","price":99.1,"turnover":18850.3,"volume":19.0,"yield":17.45},{"date":"2024-04-11","price":99.79,"turnover":11027266.0,"volume":11050.0,"yield":15.67},{"date":"2024-04-12","price":99.8,"turnover":22019.9,"volume":22.0,"yield":15.04},{"date":"2024-04-15","price":99.8,"turnover":18302.5,"volume":18.0,"yield":12.42},{"date":"2024-04-16","price":99.8,"turnover":26998.9,"volume":27.0,"yield":12.46},{"date":"2024-04-17","price":99.8,"turnover":999.3,"volume":1.0,"yield":14.94},{"date":"2024-04-18","price":99.81,"turnover":8009.7,"volume":8.0,"yield":15.18},{"date":"2024-04-19","price":99.81,"turnover":42056.1,"volume":42.0,"yield":16.26},{"date":"2024-04-22","price":99.8,"turnover":49492.8,"volume":50.0,"yield":14.88},{"date":"2024-04-23","price":99.8,"turnover":84843999.6,"volume":85014.0,"yield":14.45},{"date":"2024-04-24","price":99.8,"turnover":1002.7,"volume":1.0,"yield":14.46},{"date":"2024-04-25","price":99.8,"turnover":2983.5,"volume":3.0,"yield":15.62},{"date":"2024-04-26","price":99.8,"turnover":53611.5,"volume":54.0,"yield":15.41},{"date":"2024-04-27","price":99.8,"turnover":10947.1,"volume":11.0,"yield":16.14},{"date":"2024-04-29","price":99.8,"turnover":4970.0,"volume":5.0,"yield":16.04},{"date":"2024-04-30","price":99.8,"turnover":10880.9,"volume":11.0,"yield":17.44},{"date":"2024-05-02","price":99.8,"turnover":41797.9,"volume":42.0,"yield":15.49},{"date":"2024-05-03","price":99.8,"turnover":1992.0,"volume":2.0,"yield":15.37},{"date":"2024-05-06","price":99.8,"turnover":6007.4,"volume":6.0,"yield":14.63},{"date":"2024-05-07","price":99.8,"turnover":5007.5,"volume":5.0,"yield":14.61},{"date":"2024-05-08","price":99.8,"turnover":18000.9,"volume":18.0,"yield":15.78},{"date":"2024-05-10","price":99.8,"turnover":3960.1,"volume":4.0,"yield":16.34},{"date":"2024-05-13","price":99.79,"turnover":280253.1,"volume":285.0,"yield":15.32},{"date":"2024-05-14","price":99.45,"turnover":73287591.6,"volume":73695.0,"yield":15.58},{"date":"2024-05-15","price":99.5,"turnover":50251.1,"volume":51.0,"yield":15.8},{"date":"2024-05-16","price":99.5,"turnover":76533.5,"volume":77.0,"yield":14.7},{"date":"2024-05-17","price":98.49,"turnover":542673.5,"volume":551.0,"yield":16.09},{"date":"2024-05-20","price":98.87,"turnover":213749.1,"volume":216.0,"yield":16.13},{"date":"2024-05-21","price":98.89,"turnover":37701.2,"volume":38.0,"yield":15.86},{"date":"2024-05-22","price":99.38,"turnover":194969.0,"volume":195.0,"yield":14.82},{"date":"2024-05-23","price":99.52,"turnover":273891.5,"volume":276.0,"yield":13.33},{"date":"2024-05-24","price":98.62,"turnover":261773.2,"volume":267.0,"yield":17.18},{"date":"2024-05-27","price":98.63,"turnover":9885.6,"volume":10.0,"yield":16.38},{"date":"2024-05-28","price":98.67,"turnover":65369.4,"volume":66.0,"yield":16.1},{"date":"2024-05-29","price":99.1,"turnover":34685000.0,"volume":35000.0,"yield":16.26},{"date":"2024-05-30","price":97.78,"turnover":1107815.4,"volume":1133.0,"yield":18.98},{"date":"2024-05-31","price":97.77,"turnover":65971.5,"volume":67.0,"yield":17.47},{"date":"2024-06-03","price":98.41,"turnover":846330.6,"volume":860.0,"yield":17.3},{"date":"2024-06-04","price":98.49,"turnover":3963.6,"volume":4.0,"yield":16.31},{"date":"2024-06-05","price":98.57,"turnover":63728.5,"volume":64.0,"yield":15.64},{"date":"2024-06-06","price":98.57,"turnover":14740.6,"volume":15.0,"yield":16.49},{"date":"2024-06-07","price":98.58,"turnover":7979.8,"volume":8.0,"yield":15.95},{"date":"2024-06-10","price":98.82,"turnover":110848.3,"volume":110.0,"yield":18.7},{"date":"2024-06-11","price":98.76,"turnover":80398.4,"volume":82.0,"yield":15.2},{"date":"2024-06-13","price":98.76,"turnover":2997.3,"volume":3.0,"yield":14.85},{"date":"2024-06-14","price":97.73,"turnover":996889.0,"volume":1020.0,"yield":16.36},{"date":"2024-06-17","price":96.72,"turnover":4767089.1,"volume":4929.0,"yield":20.8},{"date":"2024-06-18","price":98.94,"turnover":159667027.4,"volume":161385.0,"yield":16.97},{"date":"2024-06-19","price":97.27,"turnover":439060.8,"volume":449.0,"yield":17.14},{"date":"2024-06-20","price":96.94,"turnover":21850166.8,"volume":22541.0,"yield":20.29},{"date":"2024-06-21","price":97.43,"turnover":1743998.3,"volume":1790.0,"yield":18.78},{"date":"2024-06-24","price":97.61,"turnover":19678.8,"volume":20.0,"yield":16.74},{"date":"2024-06-25","price":98.02,"turnover":592935.1,"volume":605.0,"yield":18.42},{"date":"2024-06-26","price":98.0,"turnover":1717962.2,"volume":1753.0,"yield":17.28},{"date":"2024-06-27","price":98.07,"turnover":59170.6,"volume":60.0,"yield":16.07},{"date":"2024-06-28","price":96.86,"turnover":8053329.2,"volume":8314.0,"yield":20.47},{"date":"2024-07-01","price":97.16,"turnover":308030.9,"volume":316.0,"yield":19.09},{"date":"2024-07-02","price":97.41,"turnover":3538777.2,"volume":3633.0,"yield":18.53},{"date":"2024-07-03","price":97.42,"turnover":213718.0,"volume":219.0,"yield":17.86},{"date":"2024-07-04","price":97.42,"turnover":8800.1,"volume":9.0,"yield":18.01},{"date":"2024-07-05","price":97.9,"turnover":4823505.3,"volume":4927.0,"yield":18.81},{"date":"2024-07-08","price":97.89,"turnover":517850.2,"volume":529.0,"yield":18.11},{"date":"2024-07-09","price":98.01,"turnover":82093.1,"volume":83.0,"yield":16.28},{"date":"2024-07-10","price":97.56,"turnover":652657.6,"volume":669.0,"yield":19.56},{"date":"2024-07-11","price":96.98,"turnover":19349731.4,"volume":19952.0,"yield":18.37},{"date":"2024-07-12","price":96.95,"turnover":29468.7,"volume":30.0,"yield":18.74},{"date":"2024-07-15","price":97.16,"turnover":899679.7,"volume":926.0,"yield":20.53},{"date":"2024-07-16","price":96.96,"turnover":900714.7,"volume":929.0,"yield":20.98},{"date":"2024-07-17","price":96.75,"turnover":27129258.8,"volume":28042.0,"yield":19.9},{"date":"2024-07-18","price":97.32,"turnover":7543251.8,"volume":7751.0,"yield":19.87},{"date":"2024-07-19","price":97.51,"turnover":24438.1,"volume":25.0,"yield":19.61},{"date":"2024-07-22","price":97.56,"turnover":59801.0,"volume":61.0,"yield":17.89},{"date":"2024-07-23","price":97.95,"turnover":192230.1,"volume":194.0,"yield":16.47},{"date":"2024-07-24","price":97.62,"turnover":344129.5,"volume":355.0,"yield":18.73},{"date":"2024-07-25","price":96.75,"turnover":2591052.7,"volume":2678.0,"yield":19.19},{"date":"2024-07-26","price":97.3,"turnover":6233725.5,"volume":6407.0,"yield":20.34},{"date":"2024-07-29","price":97.4,"turnover":83104.2,"volume":85.0,"yield":18.62},{"date":"2024-07-30","price":97.45,"turnover":55902.1,"volume":57.0,"yield":19.2},{"date":"2024-07-31","price":97.76,"turnover":1127148.2,"volume":1153.0,"yield":19.07},{"date":"2024-08-01","price":97.76,"turnover":13722.0,"volume":14.0,"yield":18.9},{"date":"2024-08-02","price":97.77,"turnover":11956676.8,"volume":12229.0,"yield":19.3},{"date":"2024-08-05","price":98.05,"turnover":2578709.4,"volume":2630.0,"yield":19.1},{"date":"2024-08-06","price":97.84,"turnover":6259693.2,"volume":6398.0,"yield":19.12},{"date":"2024-08-07","price":97.82,"turnover":643639.4,"volume":658.0,"yield":19.19},{"date":"2024-08-08","price":97.76,"turnover":71624.2,"volume":73.0,"yield":19.1},{"date":"2024-08-09","price":98.1,"turnover":1590234.5,"volume":1621.0,"yield":19.96},{"date":"2024-08-12","price":98.63,"turnover":2656203.4,"volume":2693.0,"yield":17.47},{"date":"2024-08-13","price":97.84,"turnover":4063154.8,"volume":4153.0,"yield":18.97},{"date":"2024-08-14","price":98.69,"turnover":30124527.0,"volume":30525.0,"yield":13.21},{"date":"2024-08-15","price":98.56,"turnover":813112.9,"volume":825.0,"yield":17.06},{"date":"2024-08-16","price":98.08,"turnover":3379921.2,"volume":3446.0,"yield":18.01},{"date":"2024-08-19","price":98.92,"turnover":275033.8,"volume":276.0,"yield":17.47},{"date":"2024-08-20","price":98.86,"turnover":2908398.6,"volume":2942.0,"yield":17.6},{"date":"2024-08-21","price":98.97,"turnover":1637989.8,"volume":1655.0,"yield":18.55},{"date":"2024-08-22","price":99.1,"turnover":141560.4,"volume":142.0,"yield":17.26},{"date":"2024-08-23","price":97.47,"turnover":3738837.4,"volume":3836.0,"yield":21.3},{"date":"2024-08-26","price":97.51,"turnover":10570466.5,"volume":10840.0,"yield":20.21},{"date":"2024-08-27","price":97.77,"turnover":635502.6,"volume":650.0,"yield":19.81},{"date":"2024-08-28","price":97.57,"turnover":9973991.3,"volume":10222.0,"yield":19.8},{"date":"2024-08-29","price":98.07,"turnover":675698.7,"volume":689.0,"yield":19.96},{"date":"2024-08-30","price":96.99,"turnover":580992.0,"volume":599.0,"yield":21.94},{"date":"2024-09-02","price":97.27,"turnover":694512.4,"volume":714.0,"yield":21.5},{"date":"2024-09-03","price":97.3,"turnover":195772.4,"volume":201.0,"yield":22.12},{"date":"2024-09-04","price":98.5,"turnover":147792913.9,"volume":150044.0,"yield":18.85},{"date":"2024-09-05","price":98.5,"turnover":370960.0,"volume":380.0,"yield":19.71},{"date":"2024-09-06","price":97.47,"turnover":404381.9,"volume":415.0,"yield":19.2},{"date":"2024-09-09","price":97.47,"turnover":2122999.5,"volume":2178.0,"yield":20.92},{"date":"2024-09-10","price":97.46,"turnover":54047.0,"volume":55.0,"yield":20.16},{"date":"2024-09-11","price":97.54,"turnover":331554.5,"volume":339.0,"yield":18.88},{"date":"2024-09-12","price":97.94,"turnover":704197.2,"volume":719.0,"yield":20.3},{"date":"2024-09-13","price":97.73,"turnover":1871456.8,"volume":1915.0,"yield":21.01},{"date":"2024-09-16","price":97.25,"turnover":651561.4,"volume":670.0,"yield":23.18},{"date":"2024-09-17","price":97.14,"turnover":754789.5,"volume":777.0,"yield":21.83},{"date":"2024-09-18","price":98.25,"turnover":64045319.3,"volume":65188.0,"yield":19.66},{"date":"2024-09-19","price":97.63,"turnover":1630399.9,"volume":1670.0,"yield":19.8},{"date":"2024-09-20","price":97.7,"turnover":81534.9,"volume":83.0,"yield":19.88},{"date":"2024-09-23","price":98.23,"turnover":437076.7,"volume":445.0,"yield":20.33},{"date":"2024-09-24","price":98.22,"turnover":17647.5,"volume":18.0,"yield":19.74},{"date":"2024-09-25","price":98.22,"turnover":5895.0,"volume":6.0,"yield":19.91},{"date":"2024-09-26","price":98.06,"turnover":254367.6,"volume":260.0,"yield":19.67},{"date":"2024-09-27","price":98.08,"turnover":56985.6,"volume":58.0,"yield":20.01},{"date":"2024-09-30","price":97.93,"turnover":1530588.9,"volume":1563.0,"yield":21.03},{"date":"2024-10-01","price":97.92,"turnover":28403.3,"volume":29.0,"yield":21.07},{"date":"2024-10-02","price":97.45,"turnover":4852926.0,"volume":4980.0,"yield":20.82},{"date":"2024-10-03","price":98.3,"turnover":74304440.0,"volume":75593.0,"yield":19.64},{"date":"2024-10-04","price":98.3,"turnover":58044.1,"volume":59.0,"yield":20.37},{"date":"2024-10-07","price":98.3,"turnover":985.7,"volume":1.0,"yield":19.22},{"date":"2024-10-08","price":97.9,"turnover":1037736.6,"volume":1060.0,"yield":20.51},{"date":"2024-10-09","price":97.89,"turnover":34219.9,"volume":35.0,"yield":20.61},{"date":"2024-10-10","price":98.25,"turnover":98267659.3,"volume":100018.0,"yield":20.49},{"date":"2024-10-11","price":98.25,"turnover":34268.5,"volume":35.0,"yield":22.55},{"date":"2024-10-14","price":97.7,"turnover":7209383.3,"volume":7379.0,"yield":20.34},{"date":"2024-10-15","price":97.75,"turnover":26419.0,"volume":27.0,"yield":22.18},{"date":"2024-10-16","price":98.29,"turnover":44457527.2,"volume":45232.0,"yield":20.45},{"date":"2024-10-17","price":97.91,"turnover":4375744.0,"volume":4469.0,"yield":20.5},{"date":"2024-10-18","price":97.33,"turnover":49791.1,"volume":51.0,"yield":22.42},{"date":"2024-10-21","price":97.41,"turnover":1906294.6,"volume":1957.0,"yield":24.06},{"date":"2024-10-22","price":97.39,"turnover":1106329.4,"volume":1136.0,"yield":20.42},{"date":"2024-10-23","price":97.61,"turnover":96773.4,"volume":99.0,"yield":20.46},{"date":"2024-10-24","price":97.76,"turnover":1480127.8,"volume":1514.0,"yield":21.39},{"date":"2024-10-25","price":97.75,"turnover":327174.8,"volume":335.0,"yield":23.47},{"date":"2024-10-28","price":97.81,"turnover":721855.8,"volume":738.0,"yield":22.96},{"date":"2024-10-29","price":97.82,"turnover":15630.9,"volume":16.0,"yield":23.54},{"date":"2024-10-30","price":97.81,"turnover":4873.3,"volume":5.0,"yield":23.06},{"date":"2024-10-31","price":97.7,"turnover":282808.0,"volume":290.0,"yield":24.21},{"date":"2024-11-01","price":97.57,"turnover":145104.4,"volume":150.0,"yield":23.6},{"date":"2024-11-02","price":97.17,"turnover":242578.5,"volume":250.0,"yield":22.93},{"date":"2024-11-05","price":97.29,"turnover":351897.4,"volume":361.0,"yield":26.86},{"date":"2024-11-06","price":97.32,"turnover":31309.9,"volume":32.0,"yield":23.75},{"date":"2024-11-07","price":97.61,"turnover":793603.0,"volume":813.0,"yield":24.05},{"date":"2024-11-08","price":97.63,"turnover":51937.0,"volume":53.0,"yield":23.04},{"date":"2024-11-11","price":97.74,"turnover":16641.4,"volume":17.0,"yield":25.7},{"date":"2024-11-12","price":97.79,"turnover":198809.2,"volume":203.0,"yield":23.65},{"date":"2024-11-13","price":97.58,"turnover":289074.9,"volume":297.0,"yield":25.97},{"date":"2024-11-14","price":97.6,"turnover":4155631.2,"volume":4258.0,"yield":23.78},{"date":"2024-11-15","price":97.58,"turnover":4893.9,"volume":5.0,"yield":23.17},{"date":"2024-11-18","price":98.12,"turnover":2975882.4,"volume":3033.0,"yield":23.11},{"date":"2024-11-19","price":97.66,"turnover":1909225.7,"volume":1955.0,"yield":23.3},{"date":"2024-11-20","price":97.66,"turnover":2693558.0,"volume":2758.0,"yield":22.52},{"date":"2024-11-21","price":97.75,"turnover":16608.8,"volume":17.0,"yield":23.97},{"date":"2024-11-22","price":97.73,"turnover":185331.3,"volume":190.0,"yield":24.53},{"date":"2024-11-25","price":97.73,"turnover":6854.7,"volume":7.0,"yield":23.77},{"date":"2024-11-26","price":97.85,"turnover":639951.6,"volume":654.0,"yield":25.54},{"date":"2024-11-27","price":97.88,"turnover":74559.1,"volume":76.0,"yield":23.93},{"date":"2024-11-28","price":97.64,"turnover":3977480.8,"volume":4074.0,"yield":24.04},{"date":"2024-11-29","price":97.63,"turnover":7857598.8,"volume":8048.0,"yield":25.37},{"date":"2024-12-02","price":97.6,"turnover":65560.8,"volume":67.0,"yield":24.55},{"date":"2024-12-03","price":97.61,"turnover":124296.5,"volume":127.0,"yield":22.72},{"date":"2024-12-04","price":97.61,"turnover":14705.0,"volume":15.0,"yield":23.33},{"date":"2024-12-05","price":97.98,"turnover":191023.6,"volume":194.0,"yield":23.1},{"date":"2024-12-06","price":97.99,"turnover":15729.6,"volume":16.0,"yield":23.32},{"date":"2024-12-09","price":98.0,"turnover":32383.5,"volume":33.0,"yield":23.62},{"date":"2024-12-10","price":97.93,"turnover":12963649.8,"volume":13238.0,"yield":24.84},{"date":"2024-12-11","price":97.93,"turnover":91087.3,"volume":93.0,"yield":25.05},{"date":"2024-12-12","price":97.93,"turnover":70639.7,"volume":72.0,"yield":25.39},{"date":"2024-12-13","price":98.34,"turnover":14323156.6,"volume":14565.0,"yield":25.01},{"date":"2024-12-16","price":98.34,"turnover":15715.2,"volume":16.0,"yield":29.63},{"date":"2024-12-17","price":98.06,"turnover":5239521.6,"volume":5343.0,"yield":27.26},{"date":"2024-12-18","price":98.05,"turnover":24407516.1,"volume":24894.0,"yield":25.64},{"date":"2024-12-19","price":98.02,"turnover":4916.3,"volume":5.0,"yield":25.81},{"date":"2024-12-20","price":98.12,"turnover":52244.7,"volume":53.0,"yield":23.08},{"date":"2024-12-23","price":98.32,"turnover":361469.2,"volume":366.0,"yield":23.22},{"date":"2024-12-24","price":98.77,"turnover":416851.6,"volume":422.0,"yield":23.3},{"date":"2024-12-25","price":98.84,"turnover":6308094.1,"volume":6382.0,"yield":22.53},{"date":"2024-12-26","price":98.83,"turnover":543588.4,"volume":550.0,"yield":20.92},{"date":"2024-12-27","price":98.83,"turnover":60328.2,"volume":61.0,"yield":21.04},{"date":"2024-12-28","price":98.97,"turnover":160156.8,"volume":161.0,"yield":18.59},{"date":"2024-12-30","price":98.99,"turnover":153556.5,"volume":155.0,"yield":19.08},{"date":"2025-01-03","price":98.22,"turnover":1985000.6,"volume":2021.0,"yield":30.59},{"date":"2025-01-06","price":98.54,"turnover":659210.9,"volume":669.0,"yield":24.22},{"date":"2025-01-08","price":98.9,"turnover":793156.5,"volume":802.0,"yield":23.34},{"date":"2025-01-09","price":98.97,"turnover":68687.5,"volume":69.0,"yield":19.42},{"date":"2025-01-10","price":99.21,"turnover":211206.2,"volume":212.0,"yield":18.2},{"date":"2025-01-13","price":99.28,"turnover":419616.3,"volume":423.0,"yield":18.73},{"date":"2025-01-14","price":99.28,"turnover":65528.2,"volume":66.0,"yield":18.84},{"date":"2025-01-15","price":99.21,"turnover":8586665.0,"volume":8655.0,"yield":20.11},{"date":"2025-01-16","price":99.23,"turnover":10901797.9,"volume":10986.0,"yield":19.8},{"date":"2025-01-17","price":99.28,"turnover":73539.5,"volume":74.0,"yield":23.32},{"date":"2025-01-20","price":99.31,"turnover":195007.1,"volume":196.0,"yield":21.16},{"date":"2025-01-21","price":99.31,"turnover":2986.6,"volume":3.0,"yield":20.82},{"date":"2025-01-22","price":99.36,"turnover":6117615.3,"volume":6157.0,"yield":23.23},{"date":"2025-01-23","price":99.37,"turnover":315710.6,"volume":317.0,"yield":22.32},{"date":"2025-01-24","price":99.41,"turnover":1286397.9,"volume":1294.0,"yield":24.14},{"date":"2025-01-27","price":99.41,"turnover":39803.6,"volume":40.0,"yield":23.67},{"date":"2025-01-28","price":99.44,"turnover":87757.9,"volume":88.0,"yield":22.41},{"date":"2025-01-29","price":99.47,"turnover":132693.7,"volume":133.0,"yield":18.63},{"date":"2025-01-30","price":99.47,"turnover":17956.7,"volume":18.0,"yield":19.21},{"date":"2025-01-31","price":99.57,"turnover":1050494.8,"volume":1055.0,"yield":20.01},{"date":"2025-02-03","price":99.63,"turnover":1042133.9,"volume":1046.0,"yield":24.29},{"date":"2025-02-04","price":99.59,"turnover":23918.5,"volume":24.0,"yield":22.81},{"date":"2025-02-05","price":99.61,"turnover":315886.5,"volume":317.0,"yield":24.53},{"date":"2025-02-06","price":99.61,"turnover":11988.0,"volume":12.0,"yield":17.24},{"date":"2025-02-07","price":99.63,"turnover":117667.5,"volume":118.0,"yield":19.13},{"date":"2025-02-10","price":99.51,"turnover":2381254.4,"volume":2393.0,"yield":19.18},{"date":"2025-02-11","price":99.53,"turnover":193284.3,"volume":194.0,"yield":30.19},{"date":"2025-02-12","price":99.54,"turnover":45892.3,"volume":46.0,"yield":20.9},{"date":"2025-02-13","price":99.69,"turnover":1543218.2,"volume":1548.0,"yield":60.33},{"date":"2025-02-14","price":99.57,"turnover":441884.6,"volume":442.0,"yield":15.39},{"date":"2025-02-17","price":100.01,"turnover":1555174.2,"volume":1555.0,"yield":50.24},{"date":"2025-02-18","price":100.82,"turnover":1194675.9,"volume":1185.0,"yield":20.9},{"date":"2025-02-19","price":100.94,"turnover":342653.0,"volume":339.0,"yield":21.4},{"date":"2025-02-20","price":100.59,"turnover":412571.4,"volume":410.0,"yield":21.97},{"date":"2025-02-21","price":99.24,"turnover":1102568.8,"volume":1111.0,"yield":23.14},{"date":"2025-02-24","price":99.6,"turnover":557782.7,"volume":560.0,"yield":23.18},{"date":"2025-02-25","price":99.69,"turnover":182670.5,"volume":183.0,"yield":22.95},{"date":"2025-02-26","price":99.8,"turnover":522952.0,"volume":524.0,"yield":23.2},{"date":"2025-02-27","price":99.28,"turnover":2815485.3,"volume":2836.0,"yield":22.99},{"date":"2025-02-28","price":99.1,"turnover":96890.3,"volume":97.0,"yield":22.9},{"date":"2025-03-03","price":99.12,"turnover":53803.8,"volume":54.0,"yield":22.97},{"date":"2025-03-04","price":99.14,"turnover":60995.4,"volume":61.0,"yield":22.55},{"date":"2025-03-05","price":100.74,"turnover":1023526.2,"volume":1016.0,"yield":20.88},{"date":"2025-03-06","price":100.82,"turnover":1228964.6,"volume":1218.0,"yield":20.21},{"date":"2025-03-07","price":100.83,"turnover":6059.4,"volume":6.0,"yield":19.9},{"date":"2025-03-10","price":100.91,"turnover":71692.6,"volume":71.0,"yield":17.38},{"date":"2025-03-11","price":100.91,"turnover":5039.0,"volume":5.0,"yield":20.62},{"date":"2025-03-12","price":100.9,"turnover":24179.1,"volume":24.0,"yield":21.08},{"date":"2025-03-13","price":100.9,"turnover":64549.2,"volume":64.0,"yield":19.92},{"date":"2025-03-14","price":100.9,"turnover":6028.8,"volume":6.0,"yield":20.53},{"date":"2025-03-17","price":100.89,"turnover":13110.8,"volume":13.0,"yield":19.96},{"date":"2025-03-18","price":100.89,"turnover":14110.4,"volume":14.0,"yield":20.63},{"date":"2025-03-19","price":99.74,"turnover":2088476.7,"volume":2094.0,"yield":22.47},{"date":"2025-03-20","price":99.63,"turnover":65307.3,"volume":65.0,"yield":20.29},{"date":"2025-03-21","price":99.64,"turnover":66814.2,"volume":67.0,"yield":21.0},{"date":"2025-03-24","price":99.64,"turnover":13068.0,"volume":13.0,"yield":21.01},{"date":"2025-03-25","price":99.67,"turnover":48353.4,"volume":48.0,"yield":21.66},{"date":"2025-03-26","price":99.67,"turnover":17029.7,"volume":17.0,"yield":22.12},{"date":"2025-03-27","price":99.69,"turnover":59124.4,"volume":59.0,"yield":21.17},{"date":"2025-03-28","price":99.69,"turnover":15048.7,"volume":15.0,"yield":21.3},{"date":"2025-03-31","price":99.7,"turnover":13057.5,"volume":13.0,"yield":19.47},{"date":"2025-04-01","price":99.7,"turnover":6019.2,"volume":6.0,"yield":18.44},{"date":"2025-04-02","price":100.39,"turnover":3075942.2,"volume":3064.0,"yield":22.37},{"date":"2025-04-03","price":100.39,"turnover":37051.6,"volume":37.0,"yield":21.52},{"date":"2025-04-04","price":100.37,"turnover":91802.7,"volume":92.0,"yield":21.23},{"date":"2025-04-07","price":100.36,"turnover":22915.8,"volume":23.0,"yield":23.78},{"date":"2025-04-08","price":99.56,"turnover":522697.5,"volume":525.0,"yield":22.88},{"date":"2025-04-09","price":100.84,"turnover":1057759.9,"volume":1049.0,"yield":19.14},{"date":"2025-04-10","price":100.87,"turnover":1277056.0,"volume":1266.0,"yield":19.11},{"date":"2025-04-11","price":100.96,"turnover":1602273.6,"volume":1587.0,"yield":19.02},{"date":"2025-04-14","price":100.97,"turnover":14103.1,"volume":14.0,"yield":21.35},{"date":"2025-04-15","price":99.74,"turnover":634357.7,"volume":636.0,"yield":23.5},{"date":"2025-04-16","price":99.57,"turnover":399211.4,"volume":401.0,"yield":23.99},{"date":"2025-04-17","price":99.69,"turnover":342236.6,"volume":343.0,"yield":22.95},{"date":"2025-04-18","price":99.83,"turnover":151975.1,"volume":152.0,"yield":22.98},{"date":"2025-04-21","price":99.88,"turnover":149004.7,"volume":149.0,"yield":22.66},{"date":"2025-04-22","price":99.88,"turnover":30945.1,"volume":31.0,"yield":22.94},{"date":"2025-04-23","price":99.88,"turnover":21000.8,"volume":21.0,"yield":21.94},{"date":"2025-04-24","price":100.09,"turnover":386550.0,"volume":386.0,"yield":21.71},{"date":"2025-04-25","price":100.08,"turnover":64900.0,"volume":65.0,"yield":22.64},{"date":"2025-04-28","price":100.09,"turnover":18005.9,"volume":18.0,"yield":22.64},{"date":"2025-04-29","price":99.29,"turnover":8012781.2,"volume":8070.0,"yield":24.74},{"date":"2025-04-30","price":99.9,"turnover":2108906.1,"volume":2111.0,"yield":22.21},{"date":"2025-05-02","price":99.55,"turnover":786436.0,"volume":790.0,"yield":24.29},{"date":"2025-05-05","price":99.99,"turnover":20880959.3,"volume":20884.0,"yield":21.51},{"date":"2025-05-06","price":100.03,"turnover":4264428.5,"volume":4263.0,"yield":22.01},{"date":"2025-05-07","price":100.03,"turnover":19020.3,"volume":19.0,"yield":22.04},{"date":"2025-05-08","price":100.03,"turnover":9026.2,"volume":9.0,"yield":22.02},{"date":"2025-05-12","price":100.03,"turnover":16018.6,"volume":16.0,"yield":21.8},{"date":"2025-05-13","price":100.03,"turnover":20027.3,"volume":20.0,"yield":22.0},{"date":"2025-05-14","price":100.01,"turnover":6222754.8,"volume":6222.0,"yield":20.21},{"date":"2025-05-15","price":100.31,"turnover":681105.1,"volume":679.0,"yield":20.74},{"date":"2025-05-16","price":100.3,"turnover":33049.9,"volume":33.0,"yield":21.56},{"date":"2025-05-19","price":100.3,"turnover":0,"volume":0,"yield":null},{"date":"2025-05-20","price":100.2,"turnover":176951.3,"volume":177.0,"yield":22.18},{"date":"2025-05-21","price":99.95,"turnover":1799132.2,"volume":1800.0,"yield":22.26},{"date":"2025-05-22","price":100.45,"turnover":1017522.5,"volume":1013.0,"yield":21.98},{"date":"2025-05-23","price":100.57,"turnover":133606.7,"volume":133.0,"yield":19.17},{"date":"2025-05-26","price":100.57,"turnover":10047.6,"volume":10.0,"yield":18.1},{"date":"2025-05-27","price":99.95,"turnover":1778058.1,"volume":1779.0,"yield":19.33},{"date":"2025-05-28","price":100.05,"turnover":1300687.3,"volume":1300.0,"yield":22.28},{"date":"2025-05-29","price":100.19,"turnover":773501.3,"volume":772.0,"yield":21.48},{"date":"2025-05-30","price":100.16,"turnover":141592.4,"volume":141.0,"yield":19.4},{"date":"2025-06-02","price":100.24,"turnover":269267.6,"volume":268.0,"yield":20.44},{"date":"2025-06-03","price":100.37,"turnover":72168.2,"volume":72.0,"yield":19.01},{"date":"2025-06-04","price":100.43,"turnover":61329.1,"volume":61.0,"yield":18.76},{"date":"2025-06-05","price":100.44,"turnover":26157.6,"volume":26.0,"yield":21.06},{"date":"2025-06-06","price":100.18,"turnover":1146057.5,"volume":1144.0,"yield":21.29},{"date":"2025-06-09","price":100.35,"turnover":369184.8,"volume":367.0,"yield":19.64},{"date":"2025-06-10","price":100.33,"turnover":99157.4,"volume":99.0,"yield":21.26},{"date":"2025-06-11","price":100.45,"turnover":99282.2,"volume":99.0,"yield":20.29},{"date":"2025-06-13","price":100.45,"turnover":7034.4,"volume":7.0,"yield":18.26},{"date":"2025-06-16","price":100.41,"turnover":45239.4,"volume":45.0,"yield":18.75},{"date":"2025-06-17","price":100.4,"turnover":8035.1,"volume":8.0,"yield":21.21},{"date":"2025-06-18","price":100.42,"turnover":69280.0,"volume":69.0,"yield":19.79},{"date":"2025-06-19","price":100.45,"turnover":54136.1,"volume":54.0,"yield":20.07},{"date":"2025-06-20","price":100.18,"turnover":432691.1,"volume":432.0,"yield":18.02},{"date":"2025-06-23","price":100.19,"turnover":32209.6,"volume":32.0,"yield":22.66},{"date":"2025-06-24","price":100.1,"turnover":908910.7,"volume":908.0,"yield":21.37},{"date":"2025-06-25","price":100.12,"turnover":159387.8,"volume":159.0,"yield":17.54},{"date":"2025-06-26","price":100.13,"turnover":57146.3,"volume":57.0,"yield":20.32},{"date":"2025-06-27","price":100.11,"turnover":618670.5,"volume":618.0,"yield":21.37},{"date":"2025-06-30","price":100.08,"turnover":7016.4,"volume":7.0,"yield":20.92},{"date":"2025-07-01","price":100.5,"turnover":2760669.5,"volume":2747.0,"yield":18.28},{"date":"2025-07-02","price":100.54,"turnover":454506.3,"volume":452.0,"yield":18.88},{"date":"2025-07-03","price":100.45,"turnover":379710.2,"volume":378.0,"yield":16.67},{"date":"2025-07-04","price":100.51,"turnover":3933905.0,"volume":3914.0,"yield":17.53},{"date":"2025-07-07","price":100.27,"turnover":124766.7,"volume":124.0,"yield":19.29},{"date":"2025-07-08","price":100.27,"turnover":37027.4,"volume":37.0,"yield":22.69},{"date":"2025-07-09","price":100.45,"turnover":259443.3,"volume":258.0,"yield":16.68},{"date":"2025-07-10","price":100.73,"turnover":390131.9,"volume":387.0,"yield":15.57},{"date":"2025-07-11","price":100.73,"turnover":71566.5,"volume":71.0,"yield":16.76},{"date":"2025-07-14","price":100.78,"turnover":38187.1,"volume":38.0,"yield":18.22},{"date":"2025-07-15","price":100.79,"turnover":21192.5,"volume":21.0,"yield":10.07},{"date":"2025-07-16","price":101.18,"turnover":309114.3,"volume":304.0,"yield":11.52},{"date":"2025-07-17","price":101.42,"turnover":131517.6,"volume":130.0,"yield":10.25},{"date":"2025-07-18","price":101.36,"turnover":86465.6,"volume":86.0,"yield":18.5},{"date":"2025-07-21","price":101.33,"turnover":26309.7,"volume":26.0,"yield":11.93},{"date":"2025-07-22","price":101.94,"turnover":1448612.7,"volume":1421.0,"yield":9.96},{"date":"2025-07-23","price":101.97,"turnover":55772.6,"volume":55.0,"yield":6.22},{"date":"2025-07-24","price":101.97,"turnover":10127.3,"volume":10.0,"yield":5.89},{"date":"2025-07-25","price":101.94,"turnover":32205.5,"volume":32.0,"yield":13.97},{"date":"2025-07-28","price":101.78,"turnover":130277.5,"volume":130.0,"yield":9.17},{"date":"2025-07-29","price":100.83,"turnover":867097.0,"volume":860.0,"yield":8.35},{"date":"2025-07-30","price":100.98,"turnover":23142.3,"volume":23.0,"yield":11.45},{"date":"2025-07-31","price":100.97,"turnover":10073.7,"volume":10.0,"yield":7.66},{"date":"2025-08-01","price":100.97,"turnover":64595.2,"volume":64.0,"yield":5.49},{"date":"2025-08-04","price":100.99,"turnover":67813.1,"volume":67.0,"yield":-10.02},{"date":"2025-08-05","price":101.01,"turnover":15275.7,"volume":15.0,"yield":-10.19},{"date":"2025-08-06","price":101.02,"turnover":39445.5,"volume":39.0,"yield":0.31},{"date":"2025-08-07","price":101.02,"turnover":43453.1,"volume":43.0,"yield":2.15},{"date":"2025-08-08","price":100.99,"turnover":154250.6,"volume":153.0,"yield":14.87},{"date":"2025-08-11","price":100.57,"turnover":681863.9,"volume":678.0,"yield":16.53},{"date":"2025-08-12","price":101.87,"turnover":667242.4,"volume":655.0,"yield":-24.55},{"date":"2025-08-13","price":101.21,"turnover":768219.9,"volume":759.0,"yield":-5.7},{"date":"2025-08-14","price":100.69,"turnover":5226868.0,"volume":5191.0,"yield":-7.47},{"date":"2025-08-15","price":101.07,"turnover":2062928.2,"volume":2041.0,"yield":-16.54},{"date":"2025-08-18","price":100.9,"turnover":720401.0,"volume":714.0,"yield":-16.7},{"date":"2025-08-19","price":101.48,"turnover":2944005.6,"volume":2901.0,"yield":-17.72},{"date":"2025-08-20","price":100.8,"turnover":995868.5,"volume":988.0,"yield":-31.9},{"date":"2025-08-21","price":100.15,"turnover":3648467.5,"volume":3643.0,"yield":-9.1},{"date":"2025-08-22","price":99.18,"turnover":4649515.8,"volume":4688.0,"yield":124.34},{"date":"2025-08-25","price":98.99,"turnover":2085647.1,"volume":2107.0,"yield":408.52},{"date":"2025-08-26","price":99.21,"turnover":1026809.1,"volume":1035.0,"yield":0.0},{"date":"2025-08-27","price":98.99,"turnover":242618.5,"volume":246.0,"yield":17.83},{"date":"2025-08-28","price":98.76,"turnover":140017.7,"volume":142.0,"yield":17.86},{"date":"2025-08-29","price":98.74,"turnover":265875.5,"volume":269.0,"yield":17.59},{"date":"2025-09-01","price":98.72,"turnover":196201.6,"volume":199.0,"yield":17.53},{"date":"2025-09-02","price":98.72,"turnover":116276.9,"volume":118.0,"yield":18.23},{"date":"2025-09-03","price":98.42,"turnover":2093464.5,"volume":2127.0,"yield":18.12},{"date":"2025-09-04","price":98.72,"turnover":442369.6,"volume":448.0,"yield":17.27},{"date":"2025-09-05","price":98.73,"turnover":61134.5,"volume":62.0,"yield":18.16},{"date":"2025-09-08","price":98.73,"turnover":38506.9,"volume":39.0,"yield":17.39},{"date":"2025-09-09","price":98.68,"turnover":113485.5,"volume":115.0,"yield":18.17},{"date":"2025-09-10","price":98.77,"turnover":284767.4,"volume":288.0,"yield":17.26},{"date":"2025-09-11","price":99.43,"turnover":2603012.7,"volume":2618.0,"yield":15.94},{"date":"2025-09-12","price":99.49,"turnover":69637.3,"volume":70.0,"yield":16.63},{"date":"2025-09-15","price":99.25,"turnover":428090.8,"volume":433.0,"yield":16.8},{"date":"2025-09-16","price":98.85,"turnover":68145.8,"volume":69.0,"yield":18.05},{"date":"2025-09-17","price":98.85,"turnover":28646.3,"volume":29.0,"yield":18.07},{"date":"2025-09-18","price":98.85,"turnover":2967.3,"volume":3.0,"yield":17.42},{"date":"2025-09-19","price":98.8,"turnover":36649.6,"volume":37.0,"yield":17.35},{"date":"2025-09-22","price":98.79,"turnover":148305.7,"volume":150.0,"yield":17.66},{"date":"2025-09-23","price":98.79,"turnover":66120.2,"volume":67.0,"yield":18.26},{"date":"2025-09-24","price":98.8,"turnover":14843.9,"volume":15.0,"yield":16.94},{"date":"2025-09-25","price":98.81,"turnover":111551.9,"volume":113.0,"yield":17.57},{"date":"2025-09-26","price":98.8,"turnover":37538.3,"volume":38.0,"yield":17.42},{"date":"2025-09-29","price":99.41,"turnover":1673102.5,"volume":1683.0,"yield":15.68},{"date":"2025-09-30","price":99.51,"turnover":78673.1,"volume":79.0,"yield":14.89},{"date":"2025-10-01","price":99.51,"turnover":23850.5,"volume":24.0,"yield":15.29},{"date":"2025-10-02","price":99.57,"turnover":165647.4,"volume":166.0,"yield":16.03},{"date":"2025-10-03","price":99.57,"turnover":0,"volume":0,"yield":null},{"date":"2025-10-06","price":99.55,"turnover":142974.5,"volume":144.0,"yield":18.15},{"date":"2025-10-07","price":99.44,"turnover":581711.7,"volume":585.0,"yield":16.58},{"date":"2025-10-08","price":99.44,"turnover":1990.0,"volume":2.0,"yield":16.08},{"date":"2025-10-09","price":99.43,"turnover":9905.1,"volume":10.0,"yield":16.57},{"date":"2025-10-10","price":99.43,"turnover":60673.3,"volume":61.0,"yield":15.86},{"date":"2025-10-13","price":99.51,"turnover":272981.0,"volume":274.0,"yield":15.77},{"date":"2025-10-14","price":99.43,"turnover":107847.6,"volume":109.0,"yield":16.78},{"date":"2025-10-15","price":99.43,"turnover":1987.5,"volume":2.0,"yield":16.79},{"date":"2025-10-16","price":99.42,"turnover":5942.0,"volume":6.0,"yield":17.38},{"date":"2025-10-17","price":99.39,"turnover":27698.9,"volume":28.0,"yield":18.27},{"date":"2025-10-20","price":99.38,"turnover":46632.3,"volume":47.0,"yield":16.18},{"date":"2025-10-21","price":99.36,"turnover":35695.5,"volume":36.0,"yield":17.28},{"date":"2025-10-22","price":99.37,"turnover":82518.8,"volume":83.0,"yield":18.34},{"date":"2025-10-23","price":99.36,"turnover":7937.4,"volume":8.0,"yield":16.31},{"date":"2025-10-24","price":99.36,"turnover":9920.4,"volume":10.0,"yield":16.96},{"date":"2025-10-27","price":99.36,"turnover":5942.5,"volume":6.0,"yield":16.83},{"date":"2025-10-28","price":99.32,"turnover":995.3,"volume":1.0,"yield":16.16},{"date":"2025-10-29","price":99.32,"turnover":10920.6,"volume":11.0,"yield":16.8},{"date":"2025-10-30","price":99.32,"turnover":0,"volume":0,"yield":null},{"date":"2025-10-31","price":99.32,"turnover":16898.9,"volume":17.0,"yield":16.22},{"date":"2025-11-01","price":99.33,"turnover":137709.1,"volume":138.0,"yield":15.74},{"date":"2025-11-03","price":99.34,"turnover":10948.1,"volume":11.0,"yield":16.27},{"date":"2025-11-05","price":99.34,"turnover":1994.1,"volume":2.0,"yield":14.99},{"date":"2025-11-06","price":99.38,"turnover":22967.5,"volume":23.0,"yield":14.74},{"date":"2025-11-07","price":99.38,"turnover":4976.8,"volume":5.0,"yield":16.61},{"date":"2025-11-10","price":99.38,"turnover":7969.4,"volume":8.0,"yield":16.24},{"date":"2025-11-11","price":99.41,"turnover":10969.2,"volume":11.0,"yield":15.98},{"date":"2025-11-12","price":99.48,"turnover":34949.6,"volume":35.0,"yield":15.01},{"date":"2025-11-13","price":99.49,"turnover":11964.5,"volume":12.0,"yield":15.84},{"date":"2025-11-14","price":99.55,"turnover":73583.5,"volume":74.0,"yield":15.3},{"date":"2025-11-17","price":99.58,"turnover":1405887.7,"volume":1402.0,"yield":14.82},{"date":"2025-11-18","price":99.59,"turnover":33858.9,"volume":34.0,"yield":15.4},{"date":"2025-11-19","price":99.62,"turnover":337035.6,"volume":338.0,"yield":16.79},{"date":"2025-11-20","price":99.81,"turnover":235874.7,"volume":236.0,"yield":16.86},{"date":"2025-11-21","price":99.85,"turnover":25196.9,"volume":25.0,"yield":16.7},{"date":"2025-11-24","price":99.81,"turnover":78594.6,"volume":79.0,"yield":16.06},{"date":"2025-11-25","price":99.86,"turnover":73222.3,"volume":73.0,"yield":13.9},{"date":"2025-11-26","price":99.88,"turnover":51577.3,"volume":51.0,"yield":13.1},{"date":"2025-11-27","price":99.98,"turnover":52744.1,"volume":52.0,"yield":13.26},{"date":"2025-11-28","price":100.13,"turnover":19930.9,"volume":20.0,"yield":15.16},{"date":"2025-12-01","price":100.13,"turnover":32934.3,"volume":33.0,"yield":15.88},{"date":"2025-12-02","price":100.13,"turnover":5019.0,"volume":5.0,"yield":12.86},{"date":"2025-12-03","price":100.12,"turnover":20976.6,"volume":21.0,"yield":15.67},{"date":"2025-12-04","price":100.12,"turnover":3008.5,"volume":3.0,"yield":12.67},{"date":"2025-12-05","price":100.12,"turnover":17025.3,"volume":17.0,"yield":13.1},{"date":"2025-12-08","price":100.12,"turnover":18023.9,"volume":18.0,"yield":13.99},{"date":"2025-12-09","price":100.12,"turnover":4004.2,"volume":4.0,"yield":15.75},{"date":"2025-12-10","price":100.13,"turnover":153832.2,"volume":154.0,"yield":18.12},{"date":"2025-12-11","price":99.9,"turnover":168874.7,"volume":170.0,"yield":14.87},{"date":"2025-12-12","price":99.79,"turnover":298942.6,"volume":299.0,"yield":15.38},{"date":"2025-12-15","price":99.8,"turnover":7048.7,"volume":7.0,"yield":14.66},{"date":"2025-12-16","price":99.82,"turnover":108959.9,"volume":109.0,"yield":17.25},{"date":"2025-12-17","price":99.03,"turnover":4079294.2,"volume":4119.0,"yield":17.4},{"date":"2025-12-18","price":99.03,"turnover":127327.7,"volume":128.0,"yield":17.44},{"date":"2025-12-19","price":99.43,"turnover":635449.3,"volume":639.0,"yield":18.14},{"date":"2025-12-22","price":99.43,"turnover":68650.1,"volume":69.0,"yield":17.56},{"date":"2025-12-23","price":99.48,"turnover":871435.6,"volume":876.0,"yield":18.19},{"date":"2025-12-24","price":99.5,"turnover":87526.7,"volume":88.0,"yield":18.25},{"date":"2025-12-25","price":99.49,"turnover":154190.3,"volume":155.0,"yield":17.71},{"date":"2025-12-26","price":99.54,"turnover":2221191.8,"volume":2226.0,"yield":12.6},{"date":"2025-12-29","price":99.57,"turnover":45354.7,"volume":45.0,"yield":7.81},{"date":"2025-12-30","price":99.6,"turnover":50474.8,"volume":50.0,"yield":11.31},{"date":"2026-01-05","price":99.61,"turnover":125721.6,"volume":126.0,"yield":0.64},{"date":"2026-01-06","price":99.62,"turnover":26100.8,"volume":26.0,"yield":10.73},{"date":"2026-01-08","price":99.62,"turnover":1004.7,"volume":1.0,"yield":10.57},{"date":"2026-01-09","price":99.62,"turnover":0,"volume":0,"yield":null},{"date":"2026-01-12","price":99.62,"turnover":6015.7,"volume":6.0,"yield":11.99},{"date":"2026-01-13","price":99.62,"turnover":7028.9,"volume":7.0,"yield":12.85},{"date":"2026-01-14","price":99.62,"turnover":3005.2,"volume":3.0,"yield":14.41},{"date":"2026-01-15","price":99.63,"turnover":21124.2,"volume":21.0,"yield":11.72},{"date":"2026-01-16","price":99.63,"turnover":3020.8,"volume":3.0,"yield":5.1},{"date":"2026-01-19","price":99.66,"turnover":64339.5,"volume":64.0,"yield":14.41},{"date":"2026-01-20","price":100.18,"turnover":101736.7,"volume":102.0,"yield":8.72},{"date":"2026-01-21","price":100.18,"turnover":0,"volume":0,"yield":null},{"date":"2026-01-22","price":100.17,"turnover":19001.4,"volume":19.0,"yield":11.42},{"date":"2026-01-23","price":100.28,"turnover":42698.6,"volume":42.0,"yield":12.15},{"date":"2026-01-26","price":100.04,"turnover":249116.7,"volume":250.0,"yield":13.12},{"date":"2026-01-27","price":100.05,"turnover":10031.0,"volume":10.0,"yield":12.94},{"date":"2026-01-28","price":100.05,"turnover":64893.3,"volume":65.0,"yield":18.07},{"date":"2026-01-29","price":100.05,"turnover":6999.0,"volume":7.0,"yield":16.09},{"date":"2026-01-30","price":100.05,"turnover":16025.2,"volume":16.0,"yield":16.5},{"date":"2026-02-02","price":100.04,"turnover":57173.1,"volume":57.0,"yield":9.4},{"date":"2026-02-03","price":100.04,"turnover":72310.0,"volume":72.0,"yield":13.23},{"date":"2026-02-04","price":100.11,"turnover":47335.0,"volume":47.0,"yield":-3.6},{"date":"2026-02-05","price":100.11,"turnover":19025.7,"volume":19.0,"yield":13.32},{"date":"2026-02-06","price":100.12,"turnover":15091.5,"volume":15.0,"yield":14.79},{"date":"2026-02-09","price":100.1,"turnover":48878.4,"volume":49.0,"yield":16.6},{"date":"2026-02-10","price":100.01,"turnover":27008.7,"volume":27.0,"yield":17.07},{"date":"2026-02-11","price":100.04,"turnover":80175.4,"volume":80.0,"yield":4.23},{"date":"2026-02-12","price":100.07,"turnover":86335.5,"volume":86.0,"yield":-4.83},{"date":"2026-02-13","price":100.23,"turnover":73200.2,"volume":73.0,"yield":14.82},{"date":"2026-02-16","price":99.96,"turnover":778552.3,"volume":778.0,"yield":-49.24},{"date":"2026-02-17","price":100.2,"turnover":465023.6,"volume":463.0,"yield":-63.83},{"date":"2026-02-18","price":101.4,"turnover":1634974.1,"volume":1613.0,"yield":-26.81},{"date":"2026-02-19","price":99.95,"turnover":1914925.2,"volume":1916.0,"yield":6.45},{"date":"2026-02-20","price":99.87,"turnover":1181408.6,"volume":1183.0,"yield":116.73},{"date":"2026-02-24","price":100.34,"turnover":841803.2,"volume":839.0,"yield":-19.03},{"date":"2026-02-25","price":100.52,"turnover":232950.6,"volume":232.0,"yield":0.0},{"date":"2026-02-26","price":100.31,"turnover":224575.7,"volume":225.0,"yield":15.94},{"date":"2026-02-27","price":100.23,"turnover":73995.9,"volume":74.0,"yield":16.89},{"date":"2026-03-02","price":100.17,"turnover":92851.2,"volume":93.0,"yield":15.95},{"date":"2026-03-03","price":99.88,"turnover":265957.7,"volume":266.0,"yield":16.19},{"date":"2026-03-04","price":99.88,"turnover":50019.9,"volume":50.0,"yield":15.97},{"date":"2026-03-05","price":100.0,"turnover":174002.9,"volume":174.0,"yield":16.4},{"date":"2026-03-06","price":100.05,"turnover":42300.1,"volume":42.0,"yield":15.95},{"date":"2026-03-09","price":100.07,"turnover":64311.0,"volume":64.0,"yield":15.7},{"date":"2026-03-10","price":100.12,"turnover":232014.1,"volume":232.0,"yield":15.82},{"date":"2026-03-11","price":100.12,"turnover":44995.6,"volume":45.0,"yield":15.67},{"date":"2026-03-12","price":100.1,"turnover":166019.8,"volume":166.0,"yield":15.89},{"date":"2026-03-13","price":100.02,"turnover":241101.3,"volume":241.0,"yield":16.39},{"date":"2026-03-16","price":100.05,"turnover":134116.3,"volume":134.0,"yield":15.93},{"date":"2026-03-17","price":99.99,"turnover":204735.8,"volume":205.0,"yield":16.18},{"date":"2026-03-18","price":100.0,"turnover":370151.7,"volume":370.0,"yield":15.92},{"date":"2026-03-19","price":100.01,"turnover":38054.3,"volume":38.0,"yield":15.92},{"date":"2026-03-20","price":100.02,"turnover":82062.7,"volume":82.0,"yield":15.61},{"date":"2026-03-23","price":100.02,"turnover":64996.6,"volume":65.0,"yield":16.31},{"date":"2026-03-24","price":100.02,"turnover":36977.5,"volume":37.0,"yield":15.9},{"date":"2026-03-25","price":100.04,"turnover":226986.4,"volume":227.0,"yield":15.9},{"date":"2026-03-26","price":100.06,"turnover":65991.1,"volume":66.0,"yield":16.14},{"date":"2026-03-27","price":100.05,"turnover":49009.9,"volume":49.0,"yield":15.91},{"date":"2026-03-30","price":100.04,"turnover":39956.2,"volume":40.0,"yield":16.59},{"date":"2026-03-31","price":100.01,"turnover":234054.1,"volume":234.0,"yield":15.59},{"date":"2026-04-01","price":100.02,"turnover":67082.5,"volume":67.0,"yield":15.31},{"date":"2026-04-02","price":100.07,"turnover":195253.5,"volume":195.0,"yield":16.1},{"date":"2026-04-03","price":100.09,"turnover":35100.6,"volume":35.0,"yield":14.96},{"date":"2026-04-06","price":100.19,"turnover":275905.5,"volume":275.0,"yield":14.66},{"date":"2026-04-07","price":100.19,"turnover":7028.0,"volume":7.0,"yield":15.03},{"date":"2026-04-08","price":100.19,"turnover":20345.7,"volume":20.0,"yield":14.28},{"date":"2026-04-09","price":100.16,"turnover":180999.5,"volume":181.0,"yield":15.85},{"date":"2026-04-10","price":100.16,"turnover":14061.5,"volume":14.0,"yield":14.62},{"date":"2026-04-13","price":100.16,"turnover":19035.6,"volume":19.0,"yield":14.79},{"date":"2026-04-14","price":100.22,"turnover":29075.7,"volume":29.0,"yield":15.28},{"date":"2026-04-15","price":100.22,"turnover":36149.5,"volume":36.0,"yield":15.42},{"date":"2026-04-16","price":100.18,"turnover":67074.2,"volume":67.0,"yield":14.35},{"date":"2026-04-17","price":100.19,"turnover":43205.5,"volume":43.0,"yield":14.6},{"date":"2026-04-20","price":100.19,"turnover":68281.1,"volume":68.0,"yield":13.75},{"date":"2026-04-21","price":100.19,"turnover":20173.0,"volume":20.0,"yield":13.13},{"date":"2026-04-22","price":100.22,"turnover":13064.3,"volume":13.0,"yield":14.2},{"date":"2026-04-23","price":100.3,"turnover":144577.1,"volume":144.0,"yield":13.7},{"date":"2026-04-24","price":100.31,"turnover":10067.9,"volume":10.0,"yield":13.51},{"date":"2026-04-27","price":100.71,"turnover":278647.9,"volume":276.0,"yield":13.02},{"date":"2026-04-28","price":100.73,"turnover":25248.4,"volume":25.0,"yield":10.68},{"date":"2026-04-29","price":100.76,"turnover":13170.2,"volume":13.0,"yield":11.73},{"date":"2026-04-30","price":100.76,"turnover":0,"volume":0,"yield":null},{"date":"2026-05-04","price":100.76,"turnover":319220.3,"volume":318.0,"yield":14.33},{"date":"2026-05-05","price":100.81,"turnover":147197.7,"volume":147.0,"yield":15.4},{"date":"2026-05-06","price":100.65,"turnover":422343.0,"volume":419.0,"yield":13.03},{"date":"2026-05-07","price":100.64,"turnover":28068.3,"volume":28.0,"yield":15.28},{"date":"2026-05-08","price":100.62,"turnover":29037.4,"volume":29.0,"yield":14.61},{"date":"2026-05-11","price":100.62,"turnover":16047.6,"volume":16.0,"yield":13.69},{"date":"2026-05-12","price":100.61,"turnover":12050.1,"volume":12.0,"yield":14.12},{"date":"2026-05-13","price":100.61,"turnover":34226.6,"volume":34.0,"yield":13.18},{"date":"2026-05-14","price":100.71,"turnover":18039.6,"volume":18.0,"yield":13.58},{"date":"2026-05-15","price":100.71,"turnover":8033.9,"volume":8.0,"yield":13.55},{"date":"2026-05-18","price":100.71,"turnover":23253.2,"volume":23.0,"yield":12.85},{"date":"2026-05-19","price":100.71,"turnover":4026.1,"volume":4.0,"yield":13.38},{"date":"2026-05-20","price":100.71,"turnover":14071.6,"volume":14.0,"yield":12.62},{"date":"2026-05-21","price":100.47,"turnover":176680.0,"volume":177.0,"yield":13.37},{"date":"2026-05-22","price":100.47,"turnover":33141.3,"volume":33.0,"yield":13.81},{"date":"2026-05-25","price":100.33,"turnover":115330.8,"volume":115.0,"yield":16.69},{"date":"2026-05-26","price":100.33,"turnover":8039.1,"volume":8.0,"yield":13.24},{"date":"2026-05-27","price":100.25,"turnover":87787.3,"volume":88.0,"yield":14.13},{"date":"2026-05-28","price":100.06,"turnover":14025.2,"volume":14.0,"yield":14.88},{"date":"2026-05-29","price":100.06,"turnover":12997.1,"volume":13.0,"yield":15.23},{"date":"2026-06-01","price":100.03,"turnover":143759.7,"volume":143.0,"yield":9.59},{"date":"2026-06-02","price":100.01,"turnover":26037.8,"volume":26.0,"yield":14.82},{"date":"2026-06-03","price":100.01,"turnover":13004.4,"volume":13.0,"yield":14.86},{"date":"2026-06-04","price":100.0,"turnover":4008.5,"volume":4.0,"yield":14.55},{"date":"2026-06-05","price":100.0,"turnover":1002.2,"volume":1.0,"yield":14.55}],"futureCoupons":[{"date":"2026-08-21","startDate":"2026-02-20","face":1000.0,"currency":"RUB","status":"known","value":61.74,"rate":15.4}],"pastCoupons":[{"date":"2019-08-30","startDate":"2019-03-01","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2020-02-28","startDate":"2019-08-30","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2020-08-28","startDate":"2020-02-28","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2021-02-26","startDate":"2020-08-28","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2021-08-27","startDate":"2021-02-26","value":27.18,"rate":5.45,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2022-02-25","startDate":"2021-08-27","value":27.18,"rate":5.45,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2022-08-26","startDate":"2022-02-25","value":27.18,"rate":5.45,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2023-02-24","startDate":"2022-08-26","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2023-08-25","startDate":"2023-02-24","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2024-02-23","startDate":"2023-08-25","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2024-08-23","startDate":"2024-02-23","value":71.8,"rate":14.4,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2025-02-21","startDate":"2024-08-23","value":71.8,"rate":14.4,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2025-08-22","startDate":"2025-02-21","value":107.21,"rate":21.5,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-02-20","startDate":"2025-08-22","value":70.81,"rate":14.2,"face":1000.0,"currency":"RUB","status":"fact"}],"allCoupons":[{"date":"2019-08-30","startDate":"2019-03-01","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2020-02-28","startDate":"2019-08-30","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2020-08-28","startDate":"2020-02-28","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2021-02-26","startDate":"2020-08-28","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2021-08-27","startDate":"2021-02-26","value":27.18,"rate":5.45,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2022-02-25","startDate":"2021-08-27","value":27.18,"rate":5.45,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2022-08-26","startDate":"2022-02-25","value":27.18,"rate":5.45,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2023-02-24","startDate":"2022-08-26","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2023-08-25","startDate":"2023-02-24","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2024-02-23","startDate":"2023-08-25","value":41.64,"rate":8.35,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2024-08-23","startDate":"2024-02-23","value":71.8,"rate":14.4,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2025-02-21","startDate":"2024-08-23","value":71.8,"rate":14.4,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2025-08-22","startDate":"2025-02-21","value":107.21,"rate":21.5,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-02-20","startDate":"2025-08-22","value":70.81,"rate":14.2,"face":1000.0,"currency":"RUB","status":"fact"}],"futureAmortizations":[{"date":"2029-02-16","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
+    const state = { assetIndex: 0, range: "ALL", mode: "price" };
+    if (new URLSearchParams(location.search).get("drawer") === "1" || window.self !== window.top) document.body.classList.add("in-drawer");
+
+    const rub = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 });
+    const rubFine = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const rubTiny = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 0, maximumFractionDigits: 6 });
+    const trimFixed = (value, digits = 2) => {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      let out = Number(value).toFixed(digits);
+      if (out.includes(".")) out = out.replace(/0+$/g, "").replace(/\.$/g, "");
+      return out.replace(".", ",");
+    };
+    const pct = (value, digits = 2) => value === null || value === undefined || Number.isNaN(value) ? "—" : `${trimFixed(value, digits)}%`;
+    const num = (value, digits = 2) => trimFixed(value, digits);
+    const nb = value => String(value).replaceAll(" ", "\u00a0");
+    const normalizeAccent = value => /^#[0-9a-fA-F]{6}$/.test(value || "") ? value : "#0ea56b";
+    const hexToSoft = value => `${normalizeAccent(value)}22`;
+    const currencyLabel = value => (value || "RUB").replace("SUR", "RUB") === "RUB" ? "₽" : (value || "RUB");
+    const money = (value, currency = "RUB", digits = 0) => {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      const abs = Math.abs(value);
+      const formatter = digits > 0 ? (abs > 0 && abs < 0.01 ? rubTiny : rubFine) : rub;
+      return `${nb(formatter.format(value))}\u00a0${currencyLabel(currency)}`;
+    };
+    const dividendMoney = (item, asset) => money(item.value, item.currency || asset.currency, 2);
+    const dividendYield = item => item.yieldPct === null || item.yieldPct === undefined || Number.isNaN(item.yieldPct) ? null : pct(item.yieldPct);
+    const dividendValue = (item, asset) => {
+      const yieldText = dividendYield(item);
+      return yieldText ? `${dividendMoney(item, asset)} · ${yieldText}` : dividendMoney(item, asset);
+    };
+    const dividendNote = item => item.yieldPct === null || item.yieldPct === undefined || Number.isNaN(item.yieldPct) ? "процент не рассчитан" : "история выплат";
+    const compactMoney = (value, currency = "RUB") => {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      const unit = currencyLabel(currency);
+      const abs = Math.abs(value);
+      if (abs >= 1_000_000_000_000) return `${num(value / 1_000_000_000_000, 2)}\u00a0трлн\u00a0${unit}`;
+      if (abs >= 1_000_000_000) return `${num(value / 1_000_000_000, 2)}\u00a0млрд\u00a0${unit}`;
+      if (abs >= 1_000_000) return `${num(value / 1_000_000, 1)}\u00a0млн\u00a0${unit}`;
+      return money(value, currency);
+    };
+    const couponStatus = value => value === "estimate" || value === "forecast" ? "прогноз" : value === "known" ? "по графику" : value === "schedule" ? "по графику" : "факт";
+    const signedPct = value => value === null || value === undefined || Number.isNaN(value) ? "—" : `${value >= 0 ? "+" : ""}${pct(value)}`;
+    const periodLabel = value => ({ D: "День", W: "Неделя", M: "Месяц", "3M": "3М", "6M": "6М", YTD: "YTD", "1Y": "Год", "3Y": "3Г", "5Y": "5Л", ALL: "Всё" }[value] || value);
+    const htmlEsc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+    const dateRu = value => {
+      if (!value) return "—";
+      const d = new Date(`${value}T00:00:00`);
+      return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString("ru-RU");
+    };
+
+    function setActiveButtons(containerId, attr, value) {
+      document.querySelectorAll(`#${containerId} button`).forEach(button => button.classList.toggle("active", button.dataset[attr] === value));
+    }
+
+    function filteredHistory(asset) {
+      const rows = asset.history || [];
+      if (state.range === "ALL" || rows.length === 0) return rows;
+      const last = new Date(`${rows[rows.length - 1].date}T00:00:00`);
+      const start = new Date(last);
+      if (state.range === "D") start.setDate(start.getDate() - 1);
+      if (state.range === "W") start.setDate(start.getDate() - 7);
+      if (state.range === "1M") start.setMonth(start.getMonth() - 1);
+      if (state.range === "3M") start.setMonth(start.getMonth() - 3);
+      if (state.range === "6M") start.setMonth(start.getMonth() - 6);
+      if (state.range === "1Y") start.setFullYear(start.getFullYear() - 1);
+      if (state.range === "3Y") start.setFullYear(start.getFullYear() - 3);
+      if (state.range === "5Y") start.setFullYear(start.getFullYear() - 5);
+      if (state.range === "YTD") {
+        start.setMonth(0);
+        start.setDate(1);
+      }
+      return rows.filter(row => new Date(`${row.date}T00:00:00`) >= start);
+    }
+
+    function renderButtons() {
+      const wrap = document.getElementById("assetButtons");
+      const switcher = document.querySelector(".asset-switcher");
+      if (ASSETS.length < 2) {
+        if (switcher) switcher.style.display = "none";
+      }
+      wrap.innerHTML = ASSETS.map((asset, index) => `<button data-asset="${index}" class="${index === state.assetIndex ? "active" : ""}">${asset.title}</button>`).join("");
+      wrap.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+        state.assetIndex = Number(button.dataset.asset);
+        render();
+      }));
+      document.querySelectorAll("#rangeButtons button").forEach(button => button.addEventListener("click", () => {
+        state.range = button.dataset.range;
+        render();
+      }));
+      document.querySelectorAll("#modeButtons button").forEach(button => button.addEventListener("click", () => {
+        state.mode = button.dataset.mode;
+        render();
+      }));
+    }
+
+    function renderLogo(asset) {
+      const logo = document.getElementById("logo");
+      if (asset.logo) {
+        logo.innerHTML = `<img src="${asset.logo}" alt="">`;
+      } else {
+        logo.innerHTML = `<span class="logo-fallback">${asset.title.slice(0, 3)}</span>`;
+      }
+    }
+
+    function isDateValue(value) {
+      return /^\d{2}\.\d{2}\.\d{4}$/.test(String(value || "").trim());
+    }
+
+    function metricValueClass(value) {
+      const textValue = !String(value).includes("%") && String(value).length > 8;
+      const longValue = !String(value).includes("%") && String(value).length > 13;
+      return ["metric-value", textValue ? "text" : "", longValue ? "long" : "", isDateValue(value) ? "date" : ""].filter(Boolean).join(" ");
+    }
+
+    function tileValueHtml(value) {
+      const raw = String(value ?? "—");
+      const parts = raw.split(" · ");
+      if (parts.length === 2 && isDateValue(parts[1])) {
+        return `<strong class="money">${parts[0]}<span class="tile-date">${parts[1]}</span></strong>`;
+      }
+      if (isDateValue(raw)) {
+        return `<strong class="tile-date solo">${raw}</strong>`;
+      }
+      const moneyLike = /[₽$€¥]|млн|млрд|тыс/i.test(raw);
+      const fit = raw.length > 14 || moneyLike;
+      const size = moneyLike && raw.length > 12 ? Math.max(13, 19 - (raw.length - 12) * 0.9).toFixed(1) + "px" : "";
+      const style = size ? ` style="--fit-size:${size}"` : "";
+      return `<strong class="${[fit ? "fit" : "", moneyLike ? "money" : ""].filter(Boolean).join(" ")}"${style}>${raw}</strong>`;
+    }
+
+    function renderTiles(rows) {
+      return rows.map(([value, label]) => `<div class="tile">${tileValueHtml(value)}<span>${label}</span></div>`).join("");
+    }
+
+    function valueTone(value) {
+      return value > 0 ? "positive" : value < 0 ? "negative" : "";
+    }
+
+    function setDelta(value, text) {
+      const delta = document.getElementById("delta");
+      delta.textContent = text;
+      delta.className = `delta ${valueTone(value)}`;
+    }
+
+    function renderPeriodReturns(asset) {
+      const wrap = document.getElementById("periodReturns");
+      if (!asset.assetType || asset.assetType === "bond") {
+        wrap.innerHTML = "";
+        return;
+      }
+      const periods = ["D", "W", "M", "3M", "6M", "YTD", "1Y", "3Y", "5Y", "ALL"];
+      wrap.innerHTML = periods.map(period => {
+        const value = asset.returns?.[period];
+        const note = period === "ALL" && asset.firstObservation ? `с ${dateRu(asset.firstObservation)}` : "";
+        return `<div class="return-pill"><div class="return-label">${periodLabel(period)}</div><div class="return-value ${valueTone(value)}">${signedPct(value)}</div>${note ? `<div class="return-note">${note}</div>` : ""}</div>`;
+      }).join("");
+    }
+
+
+    function logoHex(r, g, b) {
+      return "#" + [r, g, b].map(value => Math.max(0, Math.min(255, value)).toString(16).padStart(2, "0")).join("");
+    }
+    function dominantLogoColor(img) {
+      try {
+        const canvas = document.createElement("canvas");
+        const size = 48;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        if (!ctx) return "";
+        ctx.drawImage(img, 0, 0, size, size);
+        const data = ctx.getImageData(0, 0, size, size).data;
+        const buckets = new Map();
+        for (let i = 0; i < data.length; i += 4) {
+          const alpha = data[i + 3];
+          if (alpha < 180) continue;
+          const r = data[i], g = data[i + 1], b = data[i + 2];
+          const max = Math.max(r, g, b), min = Math.min(r, g, b);
+          const light = (max + min) / 510;
+          const saturation = max === 0 ? 0 : (max - min) / max;
+          if (light > 0.88 || saturation < 0.16) continue;
+          const key = [r, g, b].map(value => Math.round(value / 16) * 16).join(",");
+          const previous = buckets.get(key) || { count: 0, score: 0, r: 0, g: 0, b: 0 };
+          previous.count += 1;
+          previous.score += 1 + saturation * 1.7;
+          previous.r += r;
+          previous.g += g;
+          previous.b += b;
+          buckets.set(key, previous);
+        }
+        const best = [...buckets.values()].sort((a, b) => b.score - a.score)[0];
+        if (!best) return "";
+        return logoHex(Math.round(best.r / best.count), Math.round(best.g / best.count), Math.round(best.b / best.count));
+      } catch (error) {
+        return "";
+      }
+    }
+    function applyLogoAccentFromImage() {
+      const img = document.querySelector(".logo img");
+      if (!img) return;
+      const apply = () => {
+        const color = dominantLogoColor(img);
+        if (!color) return;
+        document.documentElement.style.setProperty("--accent", normalizeAccent(color));
+        document.documentElement.style.setProperty("--accent-soft", hexToSoft(color));
+        renderChart(ASSETS[state.assetIndex]);
+      };
+      if (img.complete && img.naturalWidth) apply();
+      else img.addEventListener("load", apply, { once: true });
+    }
+    function adaptiveChartRange(values, mode) {
+      const clean = values.map(Number).filter(value => Number.isFinite(value));
+      if (!clean.length) return undefined;
+      let low = Math.min(...clean);
+      let high = Math.max(...clean);
+      let span = high - low;
+      if (span < 1e-9) {
+        const base = Math.max(Math.abs(high), 1);
+        span = base * 0.04;
+        low -= span / 2;
+        high += span / 2;
+      }
+      const pad = Math.max(span * 0.08, Math.max(Math.abs(low), 1) * 0.015);
+      const bottom = mode === "price" ? Math.max(0, low - pad) : low - pad;
+      return [bottom, high + pad];
+    }
+
+    function renderSummary(asset) {
+      const hasYieldSeries = (asset.history || []).some(row => Number(row.yield || 0) > 0);
+      if (!hasYieldSeries && state.mode === "yield") state.mode = "price";
+      document.querySelector('[data-mode="yield"]').style.display = hasYieldSeries ? "" : "none";
+      document.documentElement.style.setProperty("--accent", normalizeAccent(asset.accent));
+      document.documentElement.style.setProperty("--accent-soft", hexToSoft(asset.accent));
+      requestAnimationFrame(applyLogoAccentFromImage);
+      document.getElementById("title").textContent = asset.title;
+      if (asset.assetType && asset.assetType !== "bond") {
+        renderPeriodReturns(asset);
+        const isFund = asset.assetType === "fund";
+        document.getElementById("subtitle").textContent = asset.subtitle || "";
+        document.getElementById("chips").innerHTML = [
+          asset.isin,
+          asset.secid,
+          asset.board,
+          isFund ? "БПИФ" : "Акция",
+          isFund ? asset.etfStructure : asset.sector,
+          asset.currency
+        ].filter(Boolean).map((item, i) => `<span class="chip ${i === 2 || i === 3 ? "tint" : ""}">${item}</span>`).join("");
+        document.getElementById("price").textContent = money(asset.price, asset.currency, 2);
+        document.getElementById("dirtyPrice").textContent = isFund ? "Расчётная цена пая" : "Цена закрытия";
+        const dayDelta = asset.priceDeltaDay;
+        const dayDeltaPct = asset.priceDeltaDayPct;
+        const sign = (dayDelta || 0) >= 0 ? "+" : "";
+        setDelta(dayDelta, dayDelta === null || dayDelta === undefined ? "—" : `${sign}${money(Math.abs(dayDelta), asset.currency, 2)} за день (${sign}${pct(dayDeltaPct)})`);
+        const metrics = isFund ? [
+          ["Годовая доходность", pct(asset.annualReturn), asset.note || "из портфельной модели", false],
+          ["Риск", pct(asset.annualVol), "годовая волатильность", false],
+          [asset.rating ? "Рейтинг" : "УК", asset.rating || asset.etfCompany || "—", asset.rating ? "MOEX" : "", false],
+          ["Структура", asset.etfStructure || "—", "", false],
+        ] : [
+          ["День", signedPct(asset.priceDeltaDayPct), "изменение цены закрытия", false],
+          ["Риск", pct(asset.annualVol), "годовая волатильность", false],
+          ["Оборот", asset.turnover ? compactMoney(asset.turnover) : "—", "последний торговый день", false],
+          [asset.rating ? "Рейтинг" : "Сектор", asset.rating || asset.sector || "—", asset.rating ? "MOEX" : "", false],
+        ];
+        document.getElementById("metrics").innerHTML = metrics.map(([label, value, note, hot]) => {
+          return `<div class="metric ${hot ? "hot" : ""}"><div class="${metricValueClass(value)}">${value}</div><div class="metric-label">${label}</div>${note ? `<div class="metric-note">${note}</div>` : ""}</div>`;
+        }).join("");
+        const lastDividend = asset.latestDividend ? `${dividendValue(asset.latestDividend, asset)} · ${dateRu(asset.latestDividend.date)}` : "—";
+        document.getElementById("tiles").innerHTML = renderTiles(isFund ? [
+          [asset.etfCompany || "—", "Управляющая компания"],
+          [asset.etfStructure || "—", "Структура"],
+          [asset.avgTurnover ? compactMoney(asset.avgTurnover) : "—", "Средний оборот за 60 торговых дней"],
+          [pct(asset.annualReturn), "Ожидаемая доходность"],
+          [pct(asset.annualVol), "Риск"],
+          [asset.isin || "—", "ISIN"],
+        ] : [
+          [asset.marketCap ? compactMoney(asset.marketCap) : "—", "Капитализация"],
+          [asset.turnover ? compactMoney(asset.turnover) : "—", "Оборот за день"],
+          [asset.volume ? nb(rub.format(asset.volume)) : "—", "Объем, шт."],
+          [asset.open ? money(asset.open, asset.currency, 2) : "—", "Цена открытия"],
+          [asset.high && asset.low ? `${money(asset.high, asset.currency, 2)} / ${money(asset.low, asset.currency, 2)}` : "—", "High / Low"],
+          [lastDividend, "Последний дивиденд"],
+        ]);
+        const extra = isFund
+          ? `<div class="formula"><strong>${asset.etfStructure || "Состав БПИФ"}</strong><span>УК: ${asset.etfCompany || "—"}</span>${asset.note ? `<span>${asset.note}</span>` : ""}</div>`
+          : `<div class="formula"><strong>${asset.sector || "Сектор"}</strong><span>${[asset.industry, asset.issuer].filter(Boolean).join(" · ") || "Отраслевые данные из локального справочника"}</span></div>`;
+        document.getElementById("description").innerHTML = `${asset.description || "Описание недоступно."}${extra}`;
+        document.getElementById("footerNote").textContent = `Источник: local moex_library/packages/${asset.secid} · portfolio_interactive · данные на ${dateRu(asset.asof)}`;
+        return;
+      }
+      renderPeriodReturns(asset);
+      document.getElementById("subtitle").textContent = `${asset.subtitle} · ${asset.issuer}`;
+      document.getElementById("chips").innerHTML = [
+        asset.isin,
+        asset.board,
+        asset.isCurrencyBond ? "Валютная" : "",
+        asset.couponType,
+        asset.class,
+        asset.currency
+      ].filter(Boolean).map((item, i) => `<span class="chip ${i >= 2 && i <= 4 ? "tint" : ""}">${item}</span>`).join("");
+      document.getElementById("price").textContent = pct(asset.price, 2);
+      document.getElementById("dirtyPrice").textContent = asset.dirtyPrice ? money(asset.dirtyPrice, asset.currency, 2) : `${num((asset.price || 0) * (asset.faceValue || 1000) / 100, 2)}\u00a0${currencyLabel(asset.currency)}`;
+      const sign = (asset.priceDelta || 0) >= 0 ? "+" : "";
+      setDelta(asset.priceDelta, asset.priceDelta === null || asset.priceDelta === undefined ? "—" : `${sign}${num(asset.priceDelta)} п.п. (${sign}${pct(asset.priceDeltaPct)})`);
+      const floatingRateReference = asset.couponBenchmark === "Ключевая ставка Банка России" && asset.keyRate
+        ? ` · КС ЦБ ${pct(asset.keyRate.value)}`
+        : "";
+      const floatingYieldNote = asset.couponFormulaShort
+        ? `${asset.couponFormulaShort}${floatingRateReference}`
+        : "";
+      const couponNote = asset.couponValue ? `${money(asset.couponValue, asset.currency, 2)} · ${dateRu(asset.nextCouponDate)} · ${couponStatus(asset.couponStatus)}` : "";
+      const metrics = [];
+      if (asset.couponType === "Структурная") {
+        metrics.push(["Тип", "Структурная", "купон/доходность зависят от условий продукта", false]);
+        metrics.push(["Погашение", dateRu(asset.maturityDate), "", false]);
+        metrics.push(["НКД", money(asset.accint), "", false]);
+        metrics.push(["Рейтинг", asset.rating || "—", "", false]);
+      } else if (asset.couponType === "Флоатер") {
+        metrics.push(["Купонная доходность", pct(asset.couponRate), couponNote || floatingYieldNote, false]);
+        metrics.push(["Текущая доходность", pct(asset.currentYield), floatingYieldNote || "годовой купон / чистая цена", false]);
+        metrics.push(["НКД", money(asset.accint), "", false]);
+        metrics.push(["Рейтинг", asset.rating || "—", "", false]);
+      } else {
+        metrics.push(["Купон", pct(asset.couponRate), couponNote, false]);
+        metrics.push(["Текущая доходность", pct(asset.currentYield), "годовой купон / чистая цена", false]);
+        metrics.push(["Доходность к погашению / MOEX", pct(asset.ytm), "", false]);
+        metrics.push(["Рейтинг", asset.rating || "—", "", false]);
+      }
+      document.getElementById("metrics").innerHTML = metrics.map(([label, value, note, hot]) => {
+        return `<div class="metric ${hot ? "hot" : ""}"><div class="${metricValueClass(value)}">${value}</div><div class="metric-label">${label}</div>${note ? `<div class="metric-note">${note}</div>` : ""}</div>`;
+      }).join("");
+      document.getElementById("tiles").innerHTML = renderTiles([
+        [money(asset.faceValue, asset.currency), "Номинал"],
+        [asset.avgTurnover ? compactMoney(asset.avgTurnover) : "—", "Средний оборот за 60 торговых дней"],
+        [asset.frequency ? num(asset.frequency, 0) : "—", "Купонов в год"],
+        [dateRu(asset.issueDate), "Размещение"],
+        [dateRu(asset.nextCouponDate), "Ближайший купон"],
+        [dateRu(asset.maturityDate), `Погашение${asset.yearsToMaturity ? ` · ${num(asset.yearsToMaturity, 1)} г.` : ""}`]
+      ]);
+      const formulaReference = asset.couponBenchmark === "Ключевая ставка Банка России" && asset.keyRate
+        ? `<span>Ориентир: ключевая ставка Банка России ${pct(asset.keyRate.value)} на ${dateRu(asset.keyRate.date)}.</span>`
+        : asset.couponBenchmark
+          ? `<span>Ориентир: ${asset.couponBenchmark}.</span>`
+          : "";
+      document.getElementById("description").innerHTML = `${asset.description}${asset.couponFormula ? `<div class="formula"><strong>${asset.couponFormulaShort || asset.couponType}</strong><span>${asset.couponFormula}</span>${formulaReference}</div>` : ""}`;
+      document.getElementById("footerNote").textContent = `Источник: local moex_library/packages/${asset.secid} · данные на ${dateRu(asset.asof)}`;
+    }
+
+    function renderDetailCta(asset) {
+      const wrap = document.getElementById("detailCta");
+      const url = asset.assetType === "stock" ? asset.detailPageUrl : "";
+      if (!url) {
+        wrap.style.display = "none";
+        wrap.innerHTML = "";
+        return;
+      }
+      wrap.style.display = "block";
+      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Подробнее</a>`;
+    }
+
+    function renderCashflow(asset) {
+      if (asset.assetType === "stock") {
+        document.getElementById("cashflowTitle").textContent = "Дивиденды";
+        const rows = (asset.dividends || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
+        document.getElementById("cashflow").innerHTML = rows.length ? rows.map(item => `<div class="flow-row">
+          <div class="flow-date">${dateRu(item.date)}</div>
+          <div class="flow-main"><div class="flow-title">Дивиденд</div><div class="flow-note">${dividendNote(item)}</div></div>
+          <div class="flow-value">${dividendValue(item, asset)}</div>
+        </div>`).join("") : `<div class="desc">В локальном пакете нет дивидендного календаря.</div>`;
+        return;
+      }
+      if (asset.assetType === "fund") {
+        document.getElementById("cashflowTitle").textContent = "Состав БПИФ";
+        document.getElementById("cashflow").innerHTML = (asset.fundComposition || []).map(item => `<div class="flow-row">
+          <div class="flow-date">${item.label}</div>
+          <div class="flow-main"><div class="flow-title">${item.value || "—"}</div><div class="flow-note">${asset.secid}</div></div>
+          <div class="flow-value"></div>
+        </div>`).join("");
+        return;
+      }
+      document.getElementById("cashflowTitle").textContent = "Денежный поток";
+      const couponRows = (asset.futureCoupons || []).map(item => ({ ...item, type: "Купон" })).sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      const yearEnd = `${new Date().getFullYear()}-12-31`;
+      const coupons = asset.couponType === "Флоатер" ? couponRows.filter(item => String(item.date) <= yearEnd) : couponRows.slice(0, 6);
+      const amort = (asset.futureAmortizations || []).map(item => ({ ...item, type: "Погашение" })).sort((a, b) => String(a.date).localeCompare(String(b.date))).slice(0, 2);
+      if (!amort.length && asset.maturityDate) amort.push({ date: asset.maturityDate, value: asset.faceValue, rate: 100, currency: asset.currency, type: "Погашение" });
+      const rows = [...coupons, ...amort].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      const historyRows = (asset.allCoupons || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const missingCouponHtml = !couponRows.length
+        ? `<div class="desc">Будущие купоны не раскрыты в локальном пакете${asset.couponType === "Флоатер" ? ": ставка появится ближе к купонному периоду." : "."}</div>`
+        : "";
+      const cashflowHtml = rows.length ? rows.map(item => {
+        return `<div class="flow-row">
+          <div class="flow-date">${dateRu(item.date)}</div>
+          <div class="flow-main"><div class="flow-title">${item.type}${item.type === "Купон" && item.rate ? ` · ${pct(item.rate)}` : ""}</div><div class="flow-note">${item.type === "Погашение" ? "номинал · плановая выплата" : item.status ? couponStatus(item.status) : "плановая выплата"}</div></div>
+          <div class="flow-value">${money(item.value, item.currency || asset.currency, item.type === "Купон" ? 2 : 0)}</div>
+        </div>`;
+      }).join("") : `<div class="desc">Будущие купоны не раскрыты в локальном пакете. Для флоатеров это нормально: ставка часто появляется ближе к купонному периоду.</div>`;
+      const historyHtml = historyRows.length ? `<details class="coupon-history"><summary><span>Прошлые купоны</span><span>${historyRows.length} выплат</span></summary><div class="coupon-table">${historyRows.map(item => {
+        return `<div class="flow-row past">
+          <div class="flow-date">${dateRu(item.date)}</div>
+          <div class="flow-main"><div class="flow-title">Купон${item.rate ? ` · ${pct(item.rate)}` : ""}</div><div class="flow-note">факт</div></div>
+          <div class="flow-value">${money(item.value, item.currency || asset.currency, 2)}</div>
+        </div>`;
+      }).join("")}</div></details>` : "";
+      document.getElementById("cashflow").innerHTML = missingCouponHtml + cashflowHtml + historyHtml;
+    }
+
+    function renderChart(asset) {
+      const rows = filteredHistory(asset);
+      const x = rows.map(row => row.date);
+      const price = rows.map(row => row.price);
+      const yieldClose = rows.map(row => row.yield);
+      const turnover = rows.map(row => row.turnover || 0);
+      const y = state.mode === "yield" ? yieldClose : price;
+      const yTitle = state.mode === "yield" ? "Доходность, %" : (asset.assetType && asset.assetType !== "bond" ? `Цена, ${asset.currency || "RUB"}` : "Цена, %");
+      const yRange = adaptiveChartRange(y, state.mode);
+      const lineColor = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+      const hasPlotly = typeof Plotly !== "undefined";
+      if (!hasPlotly) {
+        document.getElementById("chart").innerHTML = "<div class='desc'>График недоступен: библиотека Plotly не загружена.</div>";
+        return;
+      }
+      Plotly.react("chart", [
+        {
+          type: "bar",
+          x,
+          y: turnover,
+          yaxis: "y2",
+          marker: { color: "rgba(16,18,21,.10)", line: { width: 0 } },
+          hovertemplate: "%{x}<br>Оборот: %{y:,.0f} ₽<extra></extra>",
+          name: "Оборот"
+        },
+        {
+          type: "scatter",
+          mode: "lines",
+          x,
+          y,
+          connectgaps: true,
+          line: { color: lineColor, width: 4, shape: "spline", smoothing: 1.15 },
+          fill: "none",
+          fillcolor: `${lineColor}18`,
+          hovertemplate: `%{x}<br>${yTitle}: %{y:.2f}<extra></extra>`,
+          name: yTitle
+        }
+      ], {
+        margin: { l: 42, r: 42, t: 10, b: 38 },
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        hovermode: "x unified",
+        showlegend: false,
+        xaxis: {
+          tickfont: { color: "rgba(16,18,21,.48)", size: 11 },
+          gridcolor: "rgba(16,18,21,.06)",
+          zeroline: false,
+          rangeslider: { visible: false }
+        },
+        yaxis: {
+          title: "",
+          tickfont: { color: "rgba(16,18,21,.50)", size: 11 },
+          gridcolor: "rgba(16,18,21,.08)",
+          range: yRange,
+          zeroline: false
+        },
+        yaxis2: {
+          overlaying: "y",
+          side: "right",
+          showgrid: false,
+          tickfont: { color: "rgba(16,18,21,.38)", size: 11 },
+          zeroline: false
+        },
+        hoverlabel: {
+          bgcolor: "rgba(255,255,255,.92)",
+          bordercolor: "rgba(255,255,255,.9)",
+          font: { color: "#101215" }
+        }
+      }, { responsive: true, displayModeBar: false });
+    }
+
+    function render() {
+      const asset = ASSETS[state.assetIndex];
+      renderLogo(asset);
+      renderSummary(asset);
+      renderDetailCta(asset);
+      renderCashflow(asset);
+      renderChart(asset);
+      setActiveButtons("assetButtons", "asset", String(state.assetIndex));
+      setActiveButtons("rangeButtons", "range", state.range);
+      setActiveButtons("modeButtons", "mode", state.mode);
+    }
+
+    renderButtons();
+    render();
+    window.addEventListener("resize", () => renderChart(ASSETS[state.assetIndex]));
+  </script>
+</body>
+</html>
