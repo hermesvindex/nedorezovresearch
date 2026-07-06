@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>БПИФ Финам Облигац. с выплатой · Карточка актива</title>
-  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
   <style>
     :root {
       color-scheme: light;
@@ -67,7 +67,7 @@
     .switch-group, .range-group, .mode-group { display: flex; gap: 7px; flex-wrap: wrap; }
     button {
       border: 0;
-      min-height: 38px;
+      min-height: 44px;
       border-radius: 15px;
       padding: 0 14px;
       font: 700 13px/1 system-ui, sans-serif;
@@ -130,7 +130,7 @@
     h1 {
       margin: 0;
       font-size: clamp(30px, 5vw, 58px);
-      line-height: .92;
+      line-height: 1.02;
       letter-spacing: 0;
     }
     .subtitle {
@@ -449,20 +449,20 @@
           <div class="chart-panel">
             <div class="chart-toolbar">
               <div class="mode-group" id="modeButtons">
-                <button data-mode="price" class="active">Цена</button>
-                <button data-mode="yield">Доходность</button>
+                <button type="button" data-mode="price" class="active" aria-selected="true">Цена</button>
+                <button type="button" data-mode="yield" aria-selected="false">Доходность</button>
               </div>
               <div class="range-group" id="rangeButtons">
-                <button data-range="D">День</button>
-                <button data-range="W">Неделя</button>
-                <button data-range="1M">1М</button>
-                <button data-range="3M">3М</button>
-                <button data-range="6M">6М</button>
-                <button data-range="YTD">YTD</button>
-                <button data-range="1Y">Год</button>
-                <button data-range="3Y">3Г</button>
-                <button data-range="5Y">5Л</button>
-                <button data-range="ALL" class="active">Всё</button>
+                <button type="button" data-range="D" aria-label="День">День</button>
+                <button type="button" data-range="W" aria-label="Неделя">Неделя</button>
+                <button type="button" data-range="1M" aria-label="Один месяц">1М</button>
+                <button type="button" data-range="3M" aria-label="Три месяца">3М</button>
+                <button type="button" data-range="6M" aria-label="Шесть месяцев">6М</button>
+                <button type="button" data-range="YTD" aria-label="С начала года">YTD</button>
+                <button type="button" data-range="1Y" aria-label="Один год">Год</button>
+                <button type="button" data-range="3Y" aria-label="Три года">3Г</button>
+                <button type="button" data-range="5Y" aria-label="Пять лет">5Л</button>
+                <button type="button" data-range="ALL" class="active" aria-label="Весь период">Всё</button>
               </div>
             </div>
             <div id="chart"></div>
@@ -605,7 +605,11 @@
     }
 
     function setActiveButtons(containerId, attr, value) {
-      document.querySelectorAll(`#${containerId} button`).forEach(button => button.classList.toggle("active", button.dataset[attr] === value));
+      document.querySelectorAll(`#${containerId} button`).forEach(button => {
+        const selected = button.dataset[attr] === value;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-selected", String(selected));
+      });
     }
 
     function filteredHistory(asset) {
@@ -634,7 +638,7 @@
       if (ASSETS.length < 2) {
         if (switcher) switcher.style.display = "none";
       }
-      wrap.innerHTML = ASSETS.map((asset, index) => `<button data-asset="${index}" class="${index === state.assetIndex ? "active" : ""}">${asset.title}</button>`).join("");
+      wrap.innerHTML = ASSETS.map((asset, index) => `<button type="button" data-asset="${index}" aria-selected="${index === state.assetIndex}" class="${index === state.assetIndex ? "active" : ""}">${asset.title}</button>`).join("");
       wrap.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
         state.assetIndex = Number(button.dataset.asset);
         render();
