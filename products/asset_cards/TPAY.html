@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Т-Капитал Пассивный Доход · Карточка актива</title>
+  <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg-a: #edf3f7;
+      --bg-b: #faf7ef;
+      --bg-c: #f6fbf7;
+      --ink: #101215;
+      --muted: rgba(16, 18, 21, .62);
+      --faint: rgba(16, 18, 21, .42);
+      --line: rgba(255, 255, 255, .72);
+      --glass: rgba(255, 255, 255, .56);
+      --glass-strong: rgba(255, 255, 255, .76);
+      --shadow: 0 28px 86px rgba(25, 34, 48, .17);
+      --radius: 30px;
+      --accent: #7A1027;
+      --accent-soft: rgba(122, 16, 39, .16);
+      --panel: rgba(255,255,255,.55);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(71, 115, 135, .14), transparent 31%),
+        linear-gradient(230deg, rgba(199, 139, 79, .18), transparent 36%),
+        linear-gradient(165deg, var(--bg-a) 0%, var(--bg-b) 48%, var(--bg-c) 100%);
+      padding: clamp(16px, 3vw, 42px);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.42) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.45), transparent 72%);
+    }
+    .shell {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .asset-switcher {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,.82);
+      border-radius: 22px;
+      background: rgba(255,255,255,.42);
+      backdrop-filter: blur(28px) saturate(170%);
+      box-shadow: 0 16px 46px rgba(32, 42, 64, .11);
+    }
+    .switch-group, .range-group, .mode-group { display: flex; gap: 7px; flex-wrap: wrap; }
+    button {
+      border: 0;
+      min-height: 44px;
+      border-radius: 15px;
+      padding: 0 14px;
+      font: 700 13px/1 system-ui, sans-serif;
+      color: rgba(16,18,21,.72);
+      background: rgba(255,255,255,.58);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75), 0 8px 20px rgba(20,32,56,.08);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, color .18s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    button.active {
+      color: #fff;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent), #0b1f16 6%), color-mix(in srgb, var(--accent), #ffffff 18%));
+    }
+    .card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.78);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.76), rgba(255,255,255,.44)),
+        linear-gradient(220deg, color-mix(in srgb, var(--accent), white 88%), rgba(255,255,255,.26));
+      backdrop-filter: blur(36px) saturate(180%);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.88);
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,.72), transparent 26%),
+        linear-gradient(145deg, var(--accent-soft), transparent 36%);
+      pointer-events: none;
+    }
+    .content {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: clamp(18px, 3vw, 34px);
+      padding: clamp(18px, 3vw, 34px);
+    }
+    .topline {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .logo {
+      width: 74px;
+      height: 74px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: var(--accent);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 16px 38px color-mix(in srgb, var(--accent), transparent 72%);
+    }
+    .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .logo-fallback { color: #fff; font-weight: 900; font-size: 22px; }
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin-top: 10px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .chips { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 14px; }
+    .chip {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0 11px;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(16,18,21,.7);
+      background: rgba(255,255,255,.58);
+      border: 1px solid rgba(255,255,255,.74);
+    }
+    .chip.tint { color: color-mix(in srgb, var(--accent), #052515 38%); background: var(--accent-soft); }
+    .price-panel {
+      margin-top: clamp(22px, 4vw, 44px);
+      display: grid;
+      grid-template-columns: .84fr 1.16fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .quote {
+      min-height: 142px;
+      padding: 20px;
+      border-radius: 24px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+    }
+    .quote-value { font-size: clamp(30px, 5vw, 58px); line-height: .92; font-weight: 900; letter-spacing: 0; white-space: nowrap; }
+    .quote-rub { margin-top: 8px; color: var(--muted); font-size: 18px; font-weight: 750; }
+    .delta { margin-top: 12px; font-size: 17px; font-weight: 850; color: #6a7077; }
+    .delta.positive { color: #04884f; }
+    .delta.negative { color: #c5203d; }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .metric {
+      min-height: 66px;
+      min-width: 0;
+      padding: 13px 14px;
+      border-radius: 19px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.68);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+      overflow: hidden;
+    }
+    .metric.hot { background: rgba(255,255,255,.50); }
+    .metric-value { font-size: 22px; line-height: 1.05; font-weight: 900; color: rgba(16,18,21,.90); overflow-wrap: normal; word-break: normal; hyphens: none; }
+    .metric-value.text { font-size: 18px; line-height: 1.1; overflow-wrap: normal; word-break: normal; }
+    .metric-value.long { font-size: 16px; line-height: 1.13; }
+    .metric-value.date { font-size: 17px; font-weight: 780; color: var(--muted); }
+    .metric-label { margin-top: 4px; color: var(--muted); font-size: 12px; line-height: 1.12; }
+    .metric-note { margin-top: 5px; color: var(--faint); font-size: 11px; line-height: 1.15; overflow-wrap: normal; word-break: normal; hyphens: none; }
+    .returns-grid {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .return-pill {
+      min-width: 0;
+      border-radius: 15px;
+      padding: 10px 11px;
+      background: rgba(255,255,255,.46);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.66);
+    }
+    .return-label { color: var(--muted); font-size: 11px; font-weight: 780; line-height: 1; }
+    .return-value { margin-top: 5px; font-size: 15px; line-height: 1; font-weight: 900; color: #6a7077; white-space: nowrap; }
+    .return-value.positive { color: #04884f; }
+    .return-value.negative { color: #c5203d; }
+    .return-note { margin-top: 5px; color: var(--faint); font-size: 10px; font-weight: 720; line-height: 1; white-space: nowrap; }
+    .chart-panel {
+      margin-top: 18px;
+      padding: 14px 14px 10px;
+      border-radius: 26px;
+      background: rgba(255,255,255,.48);
+      border: 1px solid rgba(255,255,255,.66);
+    }
+    .detail-cta {
+      display: none;
+      margin-top: 14px;
+    }
+    .detail-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 999px;
+      background: #101827;
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 18px 34px rgba(16,24,39,.18);
+    }
+    .detail-link:hover {
+      background: #1f2a3d;
+    }
+    #chart { height: 354px; width: 100%; }
+    .chart-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .chart-toolbar .range-group { justify-content: flex-end; }
+    .chart-toolbar .range-group button { padding: 0 10px; }
+    .side {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .tile, .section {
+      border-radius: 21px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.68);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+    .tile { min-height: 83px; min-width: 0; padding: 15px; overflow: hidden; }
+    .tile strong {
+      display: block;
+      max-width: 100%;
+      font-size: 19px;
+      line-height: 1.08;
+      overflow-wrap: anywhere;
+      word-break: normal;
+      text-wrap: balance;
+    }
+    .tile strong.fit {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: clamp(13px, var(--fit-size, 19px), 19px);
+    }
+    .tile strong.money { white-space: nowrap; overflow-wrap: normal; }
+    .tile-date { display: inline-block; margin-left: 5px; color: var(--muted); font-size: 13px; font-weight: 780; white-space: nowrap; vertical-align: baseline; }
+    .tile-date.solo { margin-left: 0; font-size: 16px; }
+    .tile span { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.15; }
+    .section { padding: 16px; }
+    .section h2 { margin: 0 0 12px; font-size: 16px; line-height: 1; }
+    .desc { color: rgba(16,18,21,.72); font-size: 13px; line-height: 1.46; }
+    .formula {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--accent-soft), white 42%);
+      color: rgba(16,18,21,.72);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .formula strong { color: color-mix(in srgb, var(--accent), #071c12 44%); font-size: 15px; }
+    .cashflow { display: grid; gap: 8px; max-height: 420px; overflow: auto; padding-right: 3px; }
+    .flow-row {
+      min-height: 46px;
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 11px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.45);
+    }
+    .flow-date, .flow-note { color: var(--muted); font-size: 12px; }
+    .flow-row.past { opacity: .72; }
+    .flow-main { min-width: 0; }
+    .flow-title { font-size: 13px; font-weight: 850; color: rgba(16,18,21,.74); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .flow-value { font-size: 14px; font-weight: 850; text-align: right; white-space: nowrap; }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(16,18,21,.07);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    details.coupon-history {
+      margin-top: 4px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.34);
+      border: 1px solid rgba(255,255,255,.58);
+      overflow: hidden;
+    }
+    details.coupon-history summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-weight: 850;
+      font-size: 12px;
+      list-style: none;
+    }
+    details.coupon-history summary span:last-child { color: var(--muted); font-weight: 760; }
+    details.coupon-history summary:focus { outline: none; }
+    details.coupon-history summary:focus-visible { box-shadow: inset 0 0 0 2px rgba(16,18,21,.12); }
+    details.coupon-history summary::-webkit-details-marker { display: none; }
+    .coupon-table {
+      display: grid;
+      gap: 6px;
+      max-height: 290px;
+      overflow: auto;
+      padding: 0 10px 10px;
+    }
+    .footer-note {
+      color: var(--faint);
+      font-size: 12px;
+      padding: 0 clamp(18px, 3vw, 34px) clamp(18px, 3vw, 28px);
+      position: relative;
+    }
+    body.in-drawer {
+      padding: 0;
+      background:
+        linear-gradient(135deg, rgba(71, 115, 135, .12), transparent 35%),
+        linear-gradient(145deg, var(--bg-a), var(--bg-b), var(--bg-c));
+    }
+    body.in-drawer::before { display: none; }
+    body.in-drawer .shell { width: 100%; }
+    body.in-drawer .asset-switcher { display: none; }
+    body.in-drawer .card {
+      border-radius: 0;
+      min-height: 100vh;
+      border: 0;
+      box-shadow: none;
+    }
+    body.in-drawer .content {
+      grid-template-columns: 1fr;
+      padding: 14px;
+      gap: 14px;
+    }
+    body.in-drawer .metric-grid { grid-template-columns: 1fr 1fr; }
+    body.in-drawer .chart-panel { margin-top: 14px; }
+    body.in-drawer #chart { height: 290px; }
+    body.in-drawer .footer-note { padding: 0 14px 18px; }
+    @media (max-width: 980px) {
+      .content { grid-template-columns: 1fr; }
+      .side { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      body { padding: 10px; }
+      .asset-switcher { border-radius: 19px; }
+      .content { padding: 14px; gap: 16px; }
+      .topline { grid-template-columns: auto 1fr; }
+      .logo { width: 62px; height: 62px; border-radius: 18px; }
+      .price-panel, .tiles { grid-template-columns: 1fr; }
+      .metric-grid { grid-template-columns: 1fr 1fr; }
+      .returns-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .chart-toolbar .range-group { justify-content: flex-start; }
+      #chart { height: 316px; }
+      .flow-row { grid-template-columns: 82px minmax(0, 1fr) auto; }
+      button { flex: 1 1 auto; }
+    }
+    @media (max-width: 640px), (max-height: 760px) {
+      body.in-drawer .content { padding: 12px; gap: 12px; }
+      body.in-drawer #chart { height: 270px; }
+      body.in-drawer .footer-note { padding: 0 12px 16px; }
+    }
+  </style>
+  <script>try{if(new URLSearchParams(location.search).get("drawer")==="1"){document.documentElement.classList.add("drawer-mode");}}catch(error){}</script>
+  <link rel="stylesheet" href="../assets/liquid-glass.css">
+  <link rel="stylesheet" href="../assets/asset-card.css">
+  <script src="../assets/liquid-glass.js" defer></script>
+</head>
+<body class="lg-root">
+  <main class="shell">
+    <nav class="asset-switcher">
+      <div class="switch-group" id="assetButtons"></div>
+    </nav>
+
+    <article class="card" id="assetCard">
+      <div class="content">
+        <section>
+          <div class="topline">
+            <div class="logo" id="logo"></div>
+            <div>
+              <h1 id="title"></h1>
+              <div class="subtitle" id="subtitle"></div>
+              <div class="chips" id="chips"></div>
+            </div>
+          </div>
+
+          <div class="price-panel">
+            <div class="quote">
+              <div class="quote-value" id="price"></div>
+              <div class="quote-rub" id="dirtyPrice"></div>
+              <div class="delta" id="delta"></div>
+            </div>
+            <div class="metric-grid" id="metrics"></div>
+            <div class="returns-grid" id="periodReturns"></div>
+          </div>
+
+          <div class="chart-panel">
+            <div class="chart-toolbar">
+              <div class="mode-group lg-segmented asset-accent-segmented" id="modeButtons" role="tablist" aria-label="Показатель графика"><span class="lg-segmented__glider" aria-hidden="true"></span>
+                <button type="button" data-mode="price" class="active" aria-selected="true">Цена</button>
+                <button type="button" data-mode="yield" aria-selected="false">Доходность</button>
+              </div>
+              <div class="range-group lg-segmented asset-accent-segmented" id="rangeButtons" role="tablist" aria-label="Горизонт графика"><span class="lg-segmented__glider" aria-hidden="true"></span>
+                <button type="button" data-range="D" aria-label="День">D</button>
+                <button type="button" data-range="W" aria-label="Неделя">W</button>
+                <button type="button" data-range="1M" aria-label="Один месяц">M</button>
+                <button type="button" data-range="3M" aria-label="Три месяца">3М</button>
+                <button type="button" data-range="6M" aria-label="Шесть месяцев">6М</button>
+                <button type="button" data-range="YTD" aria-label="С начала года">YTD</button>
+                <button type="button" data-range="1Y" aria-label="Один год">1Y</button>
+                <button type="button" data-range="3Y" aria-label="Три года">3Y</button>
+                <button type="button" data-range="5Y" aria-label="Пять лет">5Y</button>
+                <button type="button" data-range="ALL" class="active" aria-label="Весь период">ALL</button>
+              </div>
+            </div>
+            <div id="chart"></div>
+          </div>
+          <div class="detail-cta" id="detailCta"></div>
+        </section>
+
+        <aside class="side">
+          <div class="tiles" id="tiles"></div>
+          <section class="section">
+            <h2>Описание</h2>
+            <div class="desc" id="description"></div>
+          </section>
+          <section class="section">
+            <h2 id="cashflowTitle">Денежный поток</h2>
+            <div class="cashflow" id="cashflow"></div>
+          </section>
+        </aside>
+      </div>
+      <div class="footer-note" id="footerNote"></div>
+    </article>
+  </main>
+
+  <script>
+    const ASSETS = [{"assetType":"fund","secid":"TPAY","title":"Т-Капитал Пассивный Доход","subtitle":"","isin":"RU000A108WX3","board":"TQBR","class":"БПИФ","issuer":"Т-Капитал","logo":"../assets/logos/RU000A108WX3.png","accent":"#DABC1D","asof":"2026-07-13","price":101.44,"dirtyPrice":101.44,"priceDelta":0.9200000000000017,"priceDeltaPct":0.9152407481098307,"priceDeltaDay":-0.010000000000005116,"priceDeltaDayPct":-0.009857072449487546,"currency":"RUB","sector":"","industry":"","marketCap":null,"avgTurnover":329917038.561,"turnover":355053685.23,"volume":3499898.0,"numTrades":43011.0,"open":101.49,"high":101.55,"low":101.33,"wap":101.45,"annualReturn":0.4761922049433265,"annualVol":5.177926786448191,"returns":{"D":-0.009857072449492854,"W":-0.0591133004926081,"M":-0.1673063674835218,"3M":0.1777602212127194,"6M":0.8550407635712798,"1Y":2.0625817486668696,"3Y":null,"5Y":null,"YTD":1.1365902293120733,"ALL":0.9152407481098246,"ALL_START":"2024-08-12"},"firstObservation":"2024-08-12","etfCompany":"Т-Капитал","etfStructure":"Смешанный","note":"","rating":"-","description":"инвестиционные паи Биржевого паевого инвестиционного фонда рыночных финансовых инструментов \"Т-Капитал Пассивный Доход\"","history":[{"date":"2024-08-12","price":100.52,"turnover":74291536.19,"volume":739659.0,"open":100.4,"high":100.52,"low":100.36,"wap":100.44},{"date":"2024-08-13","price":100.56,"turnover":170456934.76,"volume":1696596.0,"open":100.42,"high":100.57,"low":100.07,"wap":100.47},{"date":"2024-08-14","price":100.57,"turnover":145894843.18,"volume":1451720.0,"open":100.46,"high":100.58,"low":100.42,"wap":100.5},{"date":"2024-08-15","price":100.48,"turnover":163760600.37,"volume":1629964.0,"open":100.48,"high":100.55,"low":100.41,"wap":100.47},{"date":"2024-08-16","price":100.52,"turnover":224986966.56,"volume":2239261.0,"open":100.52,"high":100.56,"low":100.4,"wap":100.47},{"date":"2024-08-19","price":100.63,"turnover":149089928.81,"volume":1482211.0,"open":100.52,"high":100.63,"low":100.46,"wap":100.59},{"date":"2024-08-20","price":100.6,"turnover":225718462.29,"volume":2244593.0,"open":100.63,"high":100.63,"low":100.5,"wap":100.56},{"date":"2024-08-21","price":100.61,"turnover":186682422.44,"volume":1856357.0,"open":100.6,"high":100.68,"low":100.53,"wap":100.56},{"date":"2024-08-22","price":100.71,"turnover":259944754.43,"volume":2582270.0,"open":100.6,"high":100.71,"low":100.58,"wap":100.67},{"date":"2024-08-23","price":100.73,"turnover":404729168.71,"volume":4019553.0,"open":100.71,"high":100.74,"low":100.65,"wap":100.69},{"date":"2024-08-26","price":100.81,"turnover":344022454.59,"volume":3413441.0,"open":100.74,"high":100.81,"low":100.71,"wap":100.78},{"date":"2024-08-27","price":100.89,"turnover":675113616.12,"volume":6691477.0,"open":100.82,"high":100.9,"low":100.82,"wap":100.89},{"date":"2024-08-28","price":100.92,"turnover":374800962.56,"volume":3714015.0,"open":100.91,"high":100.96,"low":100.87,"wap":100.92},{"date":"2024-08-29","price":100.95,"turnover":375934082.07,"volume":3724707.0,"open":100.92,"high":100.96,"low":100.9,"wap":100.93},{"date":"2024-08-30","price":100.99,"turnover":871636557.61,"volume":8632877.0,"open":100.97,"high":101.0,"low":100.93,"wap":100.97},{"date":"2024-09-02","price":101.09,"turnover":470640328.68,"volume":4656799.0,"open":101.0,"high":101.14,"low":100.95,"wap":101.07},{"date":"2024-09-03","price":101.09,"turnover":578201799.62,"volume":5719037.0,"open":101.1,"high":101.18,"low":100.96,"wap":101.1},{"date":"2024-09-04","price":101.22,"turnover":625067665.89,"volume":6175535.0,"open":101.1,"high":101.24,"low":101.09,"wap":101.22},{"date":"2024-09-05","price":101.22,"turnover":921904978.52,"volume":9108387.0,"open":101.25,"high":101.27,"low":101.18,"wap":100.9},{"date":"2024-09-06","price":101.05,"turnover":508522058.44,"volume":5027456.0,"open":101.28,"high":101.28,"low":100.89,"wap":101.15},{"date":"2024-09-09","price":101.32,"turnover":275143732.94,"volume":2716316.0,"open":101.19,"high":101.34,"low":101.06,"wap":101.29},{"date":"2024-09-10","price":101.46,"turnover":314606943.42,"volume":3101126.0,"open":101.35,"high":101.51,"low":101.3,"wap":101.05},{"date":"2024-09-11","price":101.54,"turnover":280074572.06,"volume":2759457.0,"open":101.5,"high":101.65,"low":101.34,"wap":101.5},{"date":"2024-09-12","price":101.47,"turnover":213523791.25,"volume":2103594.0,"open":101.56,"high":101.57,"low":101.41,"wap":101.5},{"date":"2024-09-13","price":101.6,"turnover":349102554.76,"volume":3436844.0,"open":101.55,"high":101.61,"low":101.51,"wap":101.58},{"date":"2024-09-16","price":101.73,"turnover":360971355.32,"volume":3549072.0,"open":101.64,"high":101.78,"low":101.49,"wap":101.71},{"date":"2024-09-17","price":101.79,"turnover":360598148.98,"volume":3543241.0,"open":101.75,"high":101.81,"low":101.68,"wap":101.77},{"date":"2024-09-18","price":101.86,"turnover":365282845.55,"volume":3586584.0,"open":101.81,"high":101.87,"low":101.8,"wap":101.85},{"date":"2024-09-19","price":101.87,"turnover":362975614.71,"volume":3563593.0,"open":101.89,"high":101.91,"low":101.81,"wap":101.86},{"date":"2024-09-20","price":101.88,"turnover":539377003.19,"volume":5294828.0,"open":101.88,"high":101.9,"low":101.85,"wap":101.87},{"date":"2024-09-23","price":102.06,"turnover":467603593.23,"volume":4581841.0,"open":101.93,"high":102.08,"low":101.85,"wap":101.85},{"date":"2024-09-24","price":102.18,"turnover":490270339.45,"volume":4798781.0,"open":102.13,"high":102.18,"low":102.1,"wap":101.95},{"date":"2024-09-25","price":102.25,"turnover":627300392.33,"volume":6135441.0,"open":102.31,"high":102.4,"low":102.18,"wap":102.24},{"date":"2024-09-26","price":102.31,"turnover":718022316.27,"volume":7019587.0,"open":102.31,"high":102.34,"low":102.01,"wap":102.03},{"date":"2024-09-27","price":102.47,"turnover":739860063.59,"volume":7223722.0,"open":102.37,"high":102.47,"low":102.17,"wap":102.42},{"date":"2024-09-30","price":100.87,"turnover":1085781730.7,"volume":10762764.0,"open":102.23,"high":102.4,"low":100.5,"wap":101.04},{"date":"2024-10-01","price":100.93,"turnover":1493104585.03,"volume":14794470.0,"open":100.9,"high":100.96,"low":100.9,"wap":100.92},{"date":"2024-10-02","price":100.99,"turnover":1114912124.42,"volume":11040481.0,"open":101.0,"high":101.02,"low":100.96,"wap":100.98},{"date":"2024-10-03","price":101.05,"turnover":1087679440.93,"volume":10761350.0,"open":101.05,"high":101.14,"low":101.03,"wap":101.07},{"date":"2024-10-04","price":101.14,"turnover":921151477.9,"volume":9108816.0,"open":101.1,"high":101.16,"low":101.09,"wap":100.7},{"date":"2024-10-07","price":101.17,"turnover":1022603425.08,"volume":10103720.0,"open":101.16,"high":101.29,"low":101.15,"wap":101.21},{"date":"2024-10-08","price":101.26,"turnover":1496233887.33,"volume":14778313.0,"open":101.24,"high":101.28,"low":101.22,"wap":100.93},{"date":"2024-10-09","price":101.29,"turnover":1020897571.76,"volume":10079876.0,"open":101.31,"high":101.32,"low":101.25,"wap":101.28},{"date":"2024-10-10","price":101.21,"turnover":1190573912.46,"volume":11753641.0,"open":101.31,"high":101.33,"low":101.15,"wap":101.29},{"date":"2024-10-11","price":101.23,"turnover":570672024.58,"volume":5635677.0,"open":101.29,"high":101.32,"low":101.18,"wap":101.26},{"date":"2024-10-14","price":101.38,"turnover":563257850.73,"volume":5558844.0,"open":101.33,"high":101.39,"low":101.23,"wap":101.33},{"date":"2024-10-15","price":101.29,"turnover":606286259.85,"volume":5981087.0,"open":101.43,"high":101.43,"low":101.28,"wap":101.37},{"date":"2024-10-16","price":101.3,"turnover":615271471.57,"volume":6076767.0,"open":101.34,"high":101.36,"low":101.1,"wap":101.25},{"date":"2024-10-17","price":101.34,"turnover":794475491.9,"volume":7842119.0,"open":101.31,"high":101.35,"low":101.27,"wap":101.31},{"date":"2024-10-18","price":101.41,"turnover":784158611.26,"volume":7731883.0,"open":101.36,"high":101.44,"low":101.36,"wap":101.42},{"date":"2024-10-21","price":101.12,"turnover":556567823.53,"volume":5496786.0,"open":101.48,"high":101.49,"low":101.06,"wap":101.07},{"date":"2024-10-22","price":100.73,"turnover":698638039.87,"volume":6926607.0,"open":101.13,"high":101.19,"low":100.71,"wap":100.86},{"date":"2024-10-23","price":100.53,"turnover":454447292.49,"volume":4518220.0,"open":100.74,"high":100.77,"low":100.5,"wap":100.58},{"date":"2024-10-24","price":100.74,"turnover":277586903.1,"volume":2756271.0,"open":100.53,"high":100.77,"low":100.32,"wap":100.71},{"date":"2024-10-25","price":101.09,"turnover":532810388.09,"volume":5271843.0,"open":100.8,"high":101.16,"low":100.75,"wap":101.07},{"date":"2024-10-28","price":101.08,"turnover":617373624.99,"volume":6106766.0,"open":101.16,"high":101.22,"low":100.97,"wap":101.1},{"date":"2024-10-29","price":100.95,"turnover":565781588.78,"volume":5604292.0,"open":101.13,"high":101.14,"low":100.83,"wap":100.96},{"date":"2024-10-30","price":100.57,"turnover":867449542.16,"volume":8618092.0,"open":100.93,"high":100.95,"low":100.49,"wap":100.65},{"date":"2024-10-31","price":98.64,"turnover":792771889.46,"volume":8023816.0,"open":98.95,"high":99.14,"low":98.53,"wap":98.8},{"date":"2024-11-01","price":98.13,"turnover":795577153.04,"volume":8102791.0,"open":98.69,"high":98.69,"low":98.09,"wap":98.19},{"date":"2024-11-02","price":97.91,"turnover":391802112.72,"volume":3996169.0,"open":98.23,"high":98.38,"low":97.9,"wap":98.04},{"date":"2024-11-05","price":96.71,"turnover":1166600628.83,"volume":12023215.0,"open":97.91,"high":97.98,"low":96.7,"wap":97.03},{"date":"2024-11-06","price":97.1,"turnover":440330911.45,"volume":4552699.0,"open":96.7,"high":97.12,"low":96.19,"wap":96.72},{"date":"2024-11-07","price":96.97,"turnover":229036286.92,"volume":2358612.0,"open":97.1,"high":97.39,"low":96.82,"wap":97.11},{"date":"2024-11-08","price":96.93,"turnover":142010117.18,"volume":1465284.0,"open":97.17,"high":97.17,"low":96.78,"wap":96.92},{"date":"2024-11-11","price":97.39,"turnover":216723671.81,"volume":2228168.0,"open":96.93,"high":97.39,"low":96.93,"wap":97.27},{"date":"2024-11-12","price":97.57,"turnover":199866121.96,"volume":2048840.0,"open":97.4,"high":97.67,"low":97.39,"wap":97.55},{"date":"2024-11-13","price":97.66,"turnover":187629497.96,"volume":1921269.0,"open":97.51,"high":97.78,"low":97.48,"wap":97.66},{"date":"2024-11-14","price":97.48,"turnover":157927072.97,"volume":1618588.0,"open":97.75,"high":97.76,"low":97.39,"wap":97.57},{"date":"2024-11-15","price":97.33,"turnover":223423853.53,"volume":2294049.0,"open":97.42,"high":97.6,"low":97.31,"wap":97.39},{"date":"2024-11-18","price":97.57,"turnover":232869150.91,"volume":2387828.0,"open":97.33,"high":97.68,"low":97.3,"wap":97.52},{"date":"2024-11-19","price":97.81,"turnover":134110328.02,"volume":1371569.0,"open":97.57,"high":97.89,"low":97.57,"wap":97.78},{"date":"2024-11-20","price":98.03,"turnover":181191506.16,"volume":1849962.0,"open":97.84,"high":98.06,"low":97.78,"wap":97.94},{"date":"2024-11-21","price":97.82,"turnover":178809235.62,"volume":1825932.0,"open":98.04,"high":98.12,"low":97.8,"wap":97.93},{"date":"2024-11-22","price":97.71,"turnover":197218270.45,"volume":2016634.0,"open":97.9,"high":97.97,"low":97.69,"wap":97.8},{"date":"2024-11-25","price":97.63,"turnover":348515385.85,"volume":3571240.0,"open":97.65,"high":97.88,"low":97.53,"wap":97.59},{"date":"2024-11-26","price":97.35,"turnover":392640166.92,"volume":4030619.0,"open":97.57,"high":97.78,"low":97.34,"wap":97.41},{"date":"2024-11-27","price":96.88,"turnover":460627712.04,"volume":4746846.0,"open":97.37,"high":97.46,"low":96.86,"wap":97.04},{"date":"2024-11-28","price":96.88,"turnover":330624043.07,"volume":3412231.0,"open":96.8,"high":97.25,"low":96.75,"wap":96.89},{"date":"2024-11-29","price":95.67,"turnover":346467105.86,"volume":3626124.0,"open":95.35,"high":95.76,"low":95.34,"wap":95.55},{"date":"2024-12-02","price":95.46,"turnover":301283319.85,"volume":3150397.0,"open":95.43,"high":96.0,"low":95.43,"wap":95.63},{"date":"2024-12-03","price":95.64,"turnover":306313717.52,"volume":3203312.0,"open":95.5,"high":95.73,"low":95.46,"wap":95.62},{"date":"2024-12-04","price":95.74,"turnover":234076158.37,"volume":2446010.0,"open":95.64,"high":95.91,"low":95.6,"wap":95.7},{"date":"2024-12-05","price":95.74,"turnover":232222291.58,"volume":2425740.0,"open":95.79,"high":95.89,"low":95.61,"wap":95.73},{"date":"2024-12-06","price":95.65,"turnover":173671344.21,"volume":1815481.0,"open":95.67,"high":96.0,"low":95.5,"wap":95.66},{"date":"2024-12-09","price":95.38,"turnover":244021091.53,"volume":2556207.0,"open":95.64,"high":95.85,"low":95.32,"wap":95.46},{"date":"2024-12-10","price":94.68,"turnover":346049971.47,"volume":3649508.0,"open":95.38,"high":95.4,"low":94.67,"wap":94.82},{"date":"2024-12-11","price":94.28,"turnover":340841806.52,"volume":3608268.0,"open":94.59,"high":94.86,"low":94.27,"wap":94.46},{"date":"2024-12-12","price":94.32,"turnover":247661972.33,"volume":2624418.0,"open":94.31,"high":94.66,"low":94.27,"wap":94.37},{"date":"2024-12-13","price":93.78,"turnover":287300780.75,"volume":3053798.0,"open":94.35,"high":94.59,"low":93.77,"wap":94.08},{"date":"2024-12-16","price":93.76,"turnover":266417618.34,"volume":2839217.0,"open":93.79,"high":94.28,"low":93.62,"wap":93.83},{"date":"2024-12-17","price":93.76,"turnover":177270403.35,"volume":1892084.0,"open":93.75,"high":93.96,"low":93.54,"wap":93.69},{"date":"2024-12-18","price":93.81,"turnover":218142499.89,"volume":2326380.0,"open":93.77,"high":93.96,"low":93.65,"wap":93.77},{"date":"2024-12-19","price":94.37,"turnover":287068047.63,"volume":3053171.0,"open":93.87,"high":94.43,"low":93.76,"wap":94.02},{"date":"2024-12-20","price":95.07,"turnover":335362438.2,"volume":3545394.0,"open":94.29,"high":95.07,"low":93.83,"wap":94.59},{"date":"2024-12-23","price":95.66,"turnover":239956443.62,"volume":2518457.0,"open":95.0,"high":97.72,"low":94.38,"wap":95.28},{"date":"2024-12-24","price":96.13,"turnover":251291179.62,"volume":2617118.0,"open":95.7,"high":96.16,"low":95.7,"wap":96.02},{"date":"2024-12-25","price":96.46,"turnover":237144642.42,"volume":2462144.0,"open":96.19,"high":96.46,"low":96.08,"wap":96.32},{"date":"2024-12-26","price":96.65,"turnover":257359728.06,"volume":2664515.0,"open":96.5,"high":96.7,"low":96.47,"wap":96.59},{"date":"2024-12-27","price":97.16,"turnover":314048366.95,"volume":3237284.0,"open":96.37,"high":97.17,"low":96.37,"wap":97.01},{"date":"2024-12-28","price":95.5,"turnover":392843845.69,"volume":4105415.0,"open":96.83,"high":97.4,"low":95.02,"wap":95.83},{"date":"2024-12-30","price":95.77,"turnover":187237545.13,"volume":1954901.0,"open":95.58,"high":95.92,"low":95.57,"wap":95.78},{"date":"2025-01-03","price":96.33,"turnover":131471312.04,"volume":1365883.0,"open":95.85,"high":96.99,"low":95.8,"wap":96.25},{"date":"2025-01-06","price":96.67,"turnover":144381588.41,"volume":1495018.0,"open":96.43,"high":96.69,"low":96.33,"wap":96.52},{"date":"2025-01-08","price":96.95,"turnover":226305087.0,"volume":2335102.0,"open":96.69,"high":97.08,"low":96.69,"wap":96.91},{"date":"2025-01-09","price":96.82,"turnover":174956927.93,"volume":1805525.0,"open":97.0,"high":97.06,"low":96.76,"wap":96.92},{"date":"2025-01-10","price":96.97,"turnover":164353149.41,"volume":1695864.0,"open":96.92,"high":96.97,"low":96.79,"wap":96.91},{"date":"2025-01-13","price":97.23,"turnover":241490247.19,"volume":2485189.0,"open":97.01,"high":97.25,"low":97.01,"wap":97.17},{"date":"2025-01-14","price":97.28,"turnover":148440537.82,"volume":1526214.0,"open":97.27,"high":97.37,"low":97.16,"wap":97.22},{"date":"2025-01-15","price":97.23,"turnover":231778621.28,"volume":2384980.0,"open":97.35,"high":97.35,"low":97.02,"wap":97.18},{"date":"2025-01-16","price":97.29,"turnover":239009338.96,"volume":2456941.0,"open":97.3,"high":97.41,"low":97.2,"wap":97.28},{"date":"2025-01-17","price":97.34,"turnover":137467857.64,"volume":1412662.0,"open":97.27,"high":97.35,"low":97.26,"wap":97.31},{"date":"2025-01-20","price":97.45,"turnover":207045288.81,"volume":2127258.0,"open":97.44,"high":97.48,"low":97.06,"wap":97.33},{"date":"2025-01-21","price":97.6,"turnover":162356912.77,"volume":1664435.0,"open":97.5,"high":97.61,"low":97.42,"wap":97.54},{"date":"2025-01-22","price":97.51,"turnover":165670421.14,"volume":1698123.0,"open":97.64,"high":97.65,"low":97.41,"wap":97.56},{"date":"2025-01-23","price":97.43,"turnover":192101117.27,"volume":1971186.0,"open":97.63,"high":97.63,"low":97.38,"wap":97.45},{"date":"2025-01-24","price":97.58,"turnover":168943039.39,"volume":1732649.0,"open":97.45,"high":97.6,"low":97.39,"wap":97.51},{"date":"2025-01-27","price":97.5,"turnover":188652469.51,"volume":1933638.0,"open":97.58,"high":97.88,"low":97.36,"wap":97.56},{"date":"2025-01-28","price":97.43,"turnover":174154864.69,"volume":1786539.0,"open":97.53,"high":97.62,"low":97.23,"wap":97.48},{"date":"2025-01-29","price":97.3,"turnover":221241047.32,"volume":2273060.0,"open":97.44,"high":97.51,"low":97.19,"wap":97.33},{"date":"2025-01-30","price":97.58,"turnover":246166869.12,"volume":2525426.0,"open":97.31,"high":97.59,"low":97.28,"wap":97.48},{"date":"2025-01-31","price":96.04,"turnover":283450097.63,"volume":2953886.0,"open":95.62,"high":96.06,"low":95.47,"wap":95.96},{"date":"2025-02-03","price":96.02,"turnover":220930594.7,"volume":2299537.0,"open":96.06,"high":96.2,"low":96.0,"wap":96.08},{"date":"2025-02-04","price":95.98,"turnover":188771859.06,"volume":1966341.0,"open":96.05,"high":96.11,"low":95.92,"wap":96.0},{"date":"2025-02-05","price":95.83,"turnover":241019035.9,"volume":2512760.0,"open":95.98,"high":96.13,"low":95.81,"wap":95.92},{"date":"2025-02-06","price":95.78,"turnover":219504666.79,"volume":2290656.0,"open":95.89,"high":95.97,"low":95.75,"wap":95.83},{"date":"2025-02-07","price":95.87,"turnover":146672055.22,"volume":1530576.0,"open":95.8,"high":95.96,"low":95.78,"wap":95.83},{"date":"2025-02-10","price":96.23,"turnover":185806473.94,"volume":1932145.0,"open":95.91,"high":96.32,"low":95.91,"wap":96.17},{"date":"2025-02-11","price":96.32,"turnover":221473529.78,"volume":2299281.0,"open":96.33,"high":96.43,"low":96.21,"wap":96.32},{"date":"2025-02-12","price":96.39,"turnover":503305507.54,"volume":5225564.0,"open":96.4,"high":96.45,"low":96.23,"wap":96.32},{"date":"2025-02-13","price":96.08,"turnover":290690677.16,"volume":3021740.0,"open":96.61,"high":96.61,"low":96.04,"wap":96.2},{"date":"2025-02-14","price":96.06,"turnover":276958845.68,"volume":2881613.0,"open":96.08,"high":96.32,"low":96.02,"wap":96.11},{"date":"2025-02-17","price":96.37,"turnover":221607256.58,"volume":2299945.0,"open":96.15,"high":96.5,"low":96.15,"wap":96.35},{"date":"2025-02-18","price":96.52,"turnover":185588731.02,"volume":1924255.0,"open":96.38,"high":96.55,"low":96.36,"wap":96.45},{"date":"2025-02-19","price":96.59,"turnover":133623984.0,"volume":1384524.0,"open":96.6,"high":96.63,"low":96.45,"wap":96.51},{"date":"2025-02-20","price":96.75,"turnover":206896211.92,"volume":2139826.0,"open":96.6,"high":96.75,"low":96.56,"wap":96.69},{"date":"2025-02-21","price":96.86,"turnover":185043894.25,"volume":1911927.0,"open":96.75,"high":96.87,"low":96.7,"wap":96.78},{"date":"2025-02-24","price":96.91,"turnover":234881232.18,"volume":2421393.0,"open":96.97,"high":97.11,"low":96.77,"wap":97.0},{"date":"2025-02-25","price":96.85,"turnover":207570530.8,"volume":2142893.0,"open":96.93,"high":97.0,"low":96.71,"wap":96.83},{"date":"2025-02-26","price":97.02,"turnover":235998559.48,"volume":2434963.0,"open":96.85,"high":97.03,"low":96.78,"wap":96.92},{"date":"2025-02-27","price":97.08,"turnover":202728075.62,"volume":2088896.0,"open":97.02,"high":97.14,"low":96.86,"wap":97.05},{"date":"2025-02-28","price":95.6,"turnover":336834205.17,"volume":3525277.0,"open":95.65,"high":95.65,"low":95.3,"wap":95.55},{"date":"2025-03-03","price":95.72,"turnover":260923972.04,"volume":2726141.0,"open":95.63,"high":95.85,"low":95.61,"wap":95.71},{"date":"2025-03-04","price":95.88,"turnover":215906084.88,"volume":2253341.0,"open":95.75,"high":95.9,"low":95.73,"wap":95.82},{"date":"2025-03-05","price":95.99,"turnover":161305026.06,"volume":1680948.0,"open":95.9,"high":96.0,"low":95.86,"wap":95.96},{"date":"2025-03-06","price":96.02,"turnover":191163220.54,"volume":1991985.0,"open":96.0,"high":96.09,"low":95.87,"wap":95.97},{"date":"2025-03-07","price":95.93,"turnover":180183415.02,"volume":1875985.0,"open":96.1,"high":96.1,"low":95.93,"wap":96.05},{"date":"2025-03-10","price":96.06,"turnover":230540572.18,"volume":2399569.0,"open":96.11,"high":96.23,"low":95.98,"wap":96.08},{"date":"2025-03-11","price":96.01,"turnover":342875613.2,"volume":3569076.0,"open":96.1,"high":96.18,"low":95.99,"wap":96.07},{"date":"2025-03-12","price":95.95,"turnover":210011962.66,"volume":2187756.0,"open":96.07,"high":96.11,"low":95.91,"wap":95.99},{"date":"2025-03-13","price":96.0,"turnover":203323026.55,"volume":2117696.0,"open":95.98,"high":96.1,"low":95.96,"wap":96.01},{"date":"2025-03-14","price":95.9,"turnover":173810287.54,"volume":1811675.0,"open":96.02,"high":96.07,"low":95.89,"wap":95.94},{"date":"2025-03-17","price":96.2,"turnover":269609678.66,"volume":2804512.0,"open":96.05,"high":96.21,"low":96.04,"wap":96.13},{"date":"2025-03-18","price":96.13,"turnover":125477032.2,"volume":1304823.0,"open":96.27,"high":96.3,"low":96.07,"wap":96.16},{"date":"2025-03-19","price":96.08,"turnover":183908006.77,"volume":1914651.0,"open":96.11,"high":96.19,"low":96.01,"wap":96.05},{"date":"2025-03-20","price":96.07,"turnover":175327245.8,"volume":1824258.0,"open":96.12,"high":96.23,"low":96.04,"wap":96.11},{"date":"2025-03-21","price":96.22,"turnover":172394166.5,"volume":1792300.0,"open":96.12,"high":96.25,"low":96.12,"wap":96.19},{"date":"2025-03-24","price":96.54,"turnover":178096350.6,"volume":1845085.0,"open":96.34,"high":96.78,"low":96.34,"wap":96.52},{"date":"2025-03-25","price":96.59,"turnover":300128236.82,"volume":3108956.0,"open":96.54,"high":96.68,"low":96.47,"wap":96.54},{"date":"2025-03-26","price":96.51,"turnover":494332711.91,"volume":5122010.0,"open":96.51,"high":96.64,"low":96.47,"wap":96.51},{"date":"2025-03-27","price":96.54,"turnover":235772498.17,"volume":2442052.0,"open":96.63,"high":96.69,"low":96.49,"wap":96.55},{"date":"2025-03-28","price":96.61,"turnover":271880638.17,"volume":2812695.0,"open":96.61,"high":96.85,"low":96.56,"wap":96.66},{"date":"2025-03-31","price":95.12,"turnover":259426161.85,"volume":2730738.0,"open":94.98,"high":95.12,"low":94.84,"wap":95.0},{"date":"2025-04-01","price":95.13,"turnover":146166797.89,"volume":1536143.0,"open":95.24,"high":95.25,"low":95.01,"wap":95.15},{"date":"2025-04-02","price":95.15,"turnover":129707740.47,"volume":1362861.0,"open":95.13,"high":95.33,"low":95.08,"wap":95.17},{"date":"2025-04-03","price":95.03,"turnover":145715319.42,"volume":1532493.0,"open":95.18,"high":95.29,"low":95.0,"wap":95.08},{"date":"2025-04-04","price":94.86,"turnover":139771787.23,"volume":1471604.0,"open":95.04,"high":95.2,"low":94.86,"wap":94.98},{"date":"2025-04-07","price":94.52,"turnover":223918850.77,"volume":2367474.0,"open":94.92,"high":95.09,"low":93.76,"wap":94.58},{"date":"2025-04-08","price":94.82,"turnover":152520293.0,"volume":1607596.0,"open":94.68,"high":95.01,"low":94.58,"wap":94.87},{"date":"2025-04-09","price":94.88,"turnover":152453800.35,"volume":1607914.0,"open":94.83,"high":95.1,"low":94.62,"wap":94.81},{"date":"2025-04-10","price":95.14,"turnover":112836054.53,"volume":1187909.0,"open":95.01,"high":95.18,"low":94.8,"wap":94.99},{"date":"2025-04-11","price":95.29,"turnover":93017527.73,"volume":976682.0,"open":95.11,"high":95.32,"low":95.11,"wap":95.24},{"date":"2025-04-14","price":95.36,"turnover":119378130.17,"volume":1251443.0,"open":95.29,"high":95.62,"low":95.22,"wap":95.39},{"date":"2025-04-15","price":95.45,"turnover":110570199.66,"volume":1159021.0,"open":95.39,"high":95.53,"low":95.34,"wap":95.4},{"date":"2025-04-16","price":95.68,"turnover":92446364.49,"volume":966193.0,"open":95.6,"high":95.75,"low":95.51,"wap":95.68},{"date":"2025-04-17","price":95.7,"turnover":106160262.41,"volume":1109185.0,"open":95.73,"high":95.77,"low":95.57,"wap":95.71},{"date":"2025-04-18","price":95.89,"turnover":116790697.16,"volume":1219207.0,"open":95.74,"high":95.91,"low":95.69,"wap":95.79},{"date":"2025-04-21","price":96.05,"turnover":153183709.5,"volume":1595997.0,"open":95.9,"high":96.09,"low":95.88,"wap":95.98},{"date":"2025-04-22","price":96.01,"turnover":142064638.65,"volume":1479718.0,"open":96.05,"high":96.15,"low":95.91,"wap":96.01},{"date":"2025-04-23","price":96.1,"turnover":126416493.54,"volume":1316269.0,"open":96.02,"high":96.12,"low":95.99,"wap":96.04},{"date":"2025-04-24","price":96.44,"turnover":111229761.18,"volume":1154457.0,"open":96.15,"high":96.47,"low":96.13,"wap":96.35},{"date":"2025-04-25","price":96.46,"turnover":311020335.95,"volume":3225312.0,"open":96.41,"high":96.62,"low":96.37,"wap":96.43},{"date":"2025-04-28","price":96.89,"turnover":230805646.47,"volume":2385946.0,"open":96.57,"high":96.91,"low":96.55,"wap":96.74},{"date":"2025-04-29","price":96.8,"turnover":156985552.64,"volume":1620874.0,"open":96.73,"high":97.0,"low":96.73,"wap":96.85},{"date":"2025-04-30","price":95.57,"turnover":201623558.65,"volume":2111824.0,"open":95.25,"high":95.57,"low":95.21,"wap":95.47},{"date":"2025-05-02","price":95.81,"turnover":106561115.7,"volume":1112394.0,"open":95.58,"high":95.83,"low":95.57,"wap":95.79},{"date":"2025-05-05","price":95.65,"turnover":226120222.59,"volume":2361123.0,"open":95.82,"high":96.0,"low":95.64,"wap":95.77},{"date":"2025-05-06","price":95.86,"turnover":188498189.83,"volume":1966300.0,"open":95.76,"high":96.02,"low":95.73,"wap":95.86},{"date":"2025-05-07","price":96.12,"turnover":107621640.81,"volume":1120303.0,"open":95.9,"high":96.17,"low":95.87,"wap":96.06},{"date":"2025-05-08","price":96.4,"turnover":87172422.06,"volume":904711.0,"open":96.2,"high":96.42,"low":96.17,"wap":96.35},{"date":"2025-05-12","price":96.44,"turnover":236302519.47,"volume":2449590.0,"open":96.52,"high":96.74,"low":96.38,"wap":96.47},{"date":"2025-05-13","price":96.63,"turnover":159507579.72,"volume":1651727.0,"open":96.51,"high":96.67,"low":96.49,"wap":96.57},{"date":"2025-05-14","price":96.92,"turnover":147207864.2,"volume":1520070.0,"open":96.72,"high":97.0,"low":96.71,"wap":96.84},{"date":"2025-05-15","price":96.89,"turnover":167019495.37,"volume":1722880.0,"open":97.1,"high":97.11,"low":96.86,"wap":96.94},{"date":"2025-05-16","price":96.89,"turnover":119068740.57,"volume":1228862.0,"open":97.01,"high":97.01,"low":96.83,"wap":96.89},{"date":"2025-05-19","price":97.23,"turnover":185393149.02,"volume":1909286.0,"open":96.95,"high":97.24,"low":96.95,"wap":97.1},{"date":"2025-05-20","price":97.33,"turnover":122856878.55,"volume":1262445.0,"open":97.36,"high":97.38,"low":97.23,"wap":97.32},{"date":"2025-05-21","price":97.4,"turnover":349937988.13,"volume":3592935.0,"open":97.5,"high":97.5,"low":97.35,"wap":97.4},{"date":"2025-05-22","price":97.24,"turnover":138060105.61,"volume":1417982.0,"open":97.43,"high":97.48,"low":97.22,"wap":97.36},{"date":"2025-05-23","price":97.16,"turnover":181110285.15,"volume":1863665.0,"open":97.3,"high":97.35,"low":97.12,"wap":97.21},{"date":"2025-05-26","price":97.28,"turnover":153898741.1,"volume":1581913.0,"open":97.35,"high":97.42,"low":97.2,"wap":97.29},{"date":"2025-05-27","price":97.23,"turnover":181416992.99,"volume":1864510.0,"open":97.31,"high":97.39,"low":97.21,"wap":97.3},{"date":"2025-05-28","price":97.52,"turnover":158959147.05,"volume":1631806.0,"open":97.27,"high":97.54,"low":97.26,"wap":97.41},{"date":"2025-05-29","price":97.37,"turnover":203358309.64,"volume":2085856.0,"open":97.53,"high":97.69,"low":97.34,"wap":97.49},{"date":"2025-05-30","price":96.08,"turnover":298695052.56,"volume":3108790.0,"open":95.86,"high":96.16,"low":95.85,"wap":96.08},{"date":"2025-06-02","price":96.24,"turnover":430628006.98,"volume":4476570.0,"open":96.2,"high":96.35,"low":96.08,"wap":96.2},{"date":"2025-06-03","price":96.42,"turnover":348286979.06,"volume":3615844.0,"open":96.3,"high":96.42,"low":96.27,"wap":96.32},{"date":"2025-06-04","price":96.58,"turnover":288244103.14,"volume":2987834.0,"open":96.45,"high":96.6,"low":96.36,"wap":96.47},{"date":"2025-06-05","price":96.88,"turnover":245205819.62,"volume":2534412.0,"open":96.65,"high":96.88,"low":96.62,"wap":96.75},{"date":"2025-06-06","price":97.12,"turnover":190496568.96,"volume":1963274.0,"open":96.9,"high":97.12,"low":96.9,"wap":97.03},{"date":"2025-06-09","price":97.13,"turnover":349899180.89,"volume":3601652.0,"open":97.3,"high":97.41,"low":96.95,"wap":97.15},{"date":"2025-06-10","price":97.25,"turnover":210229048.82,"volume":2162031.0,"open":97.32,"high":97.32,"low":97.17,"wap":97.24},{"date":"2025-06-11","price":97.59,"turnover":217352320.09,"volume":2230538.0,"open":97.31,"high":97.67,"low":97.29,"wap":97.44},{"date":"2025-06-13","price":98.12,"turnover":201654924.13,"volume":2057078.0,"open":97.9,"high":98.12,"low":97.64,"wap":98.03},{"date":"2025-06-16","price":97.99,"turnover":328225039.84,"volume":3345311.0,"open":98.23,"high":101.13,"low":97.88,"wap":98.11},{"date":"2025-06-17","price":98.03,"turnover":254349273.06,"volume":2594644.0,"open":98.03,"high":98.17,"low":97.9,"wap":98.04},{"date":"2025-06-18","price":98.16,"turnover":231543271.61,"volume":2360122.0,"open":98.1,"high":98.19,"low":98.05,"wap":98.11},{"date":"2025-06-19","price":98.18,"turnover":192238760.1,"volume":1957354.0,"open":98.23,"high":98.25,"low":98.15,"wap":98.21},{"date":"2025-06-20","price":98.27,"turnover":216029628.49,"volume":2197817.0,"open":98.23,"high":98.34,"low":98.19,"wap":98.29},{"date":"2025-06-23","price":98.69,"turnover":205063166.66,"volume":2079334.0,"open":98.4,"high":98.79,"low":98.39,"wap":98.62},{"date":"2025-06-24","price":98.89,"turnover":211445586.41,"volume":2140039.0,"open":98.82,"high":98.9,"low":98.72,"wap":98.8},{"date":"2025-06-25","price":99.09,"turnover":210880411.22,"volume":2129194.0,"open":98.96,"high":99.1,"low":98.95,"wap":99.04},{"date":"2025-06-26","price":99.07,"turnover":288882098.18,"volume":2912904.0,"open":99.18,"high":99.25,"low":99.03,"wap":99.14},{"date":"2025-06-27","price":99.2,"turnover":295821495.07,"volume":2982447.0,"open":99.1,"high":99.25,"low":99.1,"wap":99.19},{"date":"2025-06-30","price":97.79,"turnover":697382426.87,"volume":7134903.0,"open":97.69,"high":97.8,"low":97.4,"wap":97.74},{"date":"2025-07-01","price":98.05,"turnover":552031169.68,"volume":5635246.0,"open":97.89,"high":100.7,"low":97.8,"wap":97.84},{"date":"2025-07-02","price":98.01,"turnover":543300590.24,"volume":5538884.0,"open":98.13,"high":98.16,"low":97.97,"wap":98.09},{"date":"2025-07-03","price":98.16,"turnover":347048101.48,"volume":3536802.0,"open":98.1,"high":98.19,"low":98.08,"wap":98.12},{"date":"2025-07-04","price":98.23,"turnover":344054779.96,"volume":3501633.0,"open":98.24,"high":98.3,"low":98.22,"wap":98.16},{"date":"2025-07-07","price":98.48,"turnover":440141725.13,"volume":4468713.0,"open":98.4,"high":98.56,"low":98.39,"wap":98.49},{"date":"2025-07-08","price":98.58,"turnover":401950721.66,"volume":4078291.0,"open":98.61,"high":98.61,"low":98.5,"wap":98.56},{"date":"2025-07-09","price":98.38,"turnover":391813104.01,"volume":3979380.0,"open":98.66,"high":98.68,"low":98.27,"wap":98.46},{"date":"2025-07-10","price":98.55,"turnover":283464046.54,"volume":2878144.0,"open":98.43,"high":98.55,"low":98.43,"wap":98.42},{"date":"2025-07-11","price":98.73,"turnover":356578940.48,"volume":3614600.0,"open":98.64,"high":98.74,"low":98.57,"wap":98.65},{"date":"2025-07-14","price":99.12,"turnover":497876409.51,"volume":5033584.0,"open":98.85,"high":99.12,"low":98.79,"wap":98.91},{"date":"2025-07-15","price":99.39,"turnover":394314733.45,"volume":3971503.0,"open":99.14,"high":99.39,"low":99.12,"wap":99.29},{"date":"2025-07-16","price":99.53,"turnover":418867393.91,"volume":4209420.0,"open":99.51,"high":99.6,"low":99.42,"wap":99.49},{"date":"2025-07-17","price":99.87,"turnover":439699029.52,"volume":4409772.0,"open":99.58,"high":99.87,"low":99.58,"wap":99.66},{"date":"2025-07-18","price":99.97,"turnover":520590676.61,"volume":5207624.0,"open":99.99,"high":100.02,"low":99.87,"wap":99.97},{"date":"2025-07-21","price":100.32,"turnover":615815385.14,"volume":6142848.0,"open":100.14,"high":100.34,"low":100.12,"wap":100.16},{"date":"2025-07-22","price":100.36,"turnover":574926894.47,"volume":5727378.0,"open":100.44,"high":100.46,"low":100.34,"wap":100.38},{"date":"2025-07-23","price":100.43,"turnover":430079056.32,"volume":4281542.0,"open":100.47,"high":100.48,"low":100.36,"wap":100.45},{"date":"2025-07-24","price":100.68,"turnover":504467091.75,"volume":5013326.0,"open":100.5,"high":100.75,"low":100.5,"wap":100.6},{"date":"2025-07-25","price":100.94,"turnover":503620780.02,"volume":4993310.0,"open":100.84,"high":100.95,"low":100.77,"wap":100.86},{"date":"2025-07-28","price":101.12,"turnover":718471370.17,"volume":7105722.0,"open":101.18,"high":101.19,"low":100.97,"wap":101.11},{"date":"2025-07-29","price":101.3,"turnover":465851931.64,"volume":4603035.0,"open":101.18,"high":101.3,"low":101.15,"wap":101.16},{"date":"2025-07-30","price":101.3,"turnover":555512053.92,"volume":5481237.0,"open":101.39,"high":101.4,"low":101.18,"wap":101.35},{"date":"2025-07-31","price":99.91,"turnover":1291605081.68,"volume":12927376.0,"open":100.03,"high":100.08,"low":99.83,"wap":99.91},{"date":"2025-08-01","price":100.04,"turnover":685189727.23,"volume":6848580.0,"open":99.99,"high":100.08,"low":99.99,"wap":99.86},{"date":"2025-08-04","price":100.39,"turnover":793804431.25,"volume":7910926.0,"open":100.21,"high":100.39,"low":100.21,"wap":100.22},{"date":"2025-08-05","price":100.46,"turnover":824020524.55,"volume":8200979.0,"open":100.49,"high":100.54,"low":100.44,"wap":100.33},{"date":"2025-08-06","price":100.6,"turnover":598770273.35,"volume":5955348.0,"open":100.55,"high":100.6,"low":100.49,"wap":100.54},{"date":"2025-08-07","price":100.49,"turnover":1153044106.65,"volume":11465160.0,"open":100.67,"high":100.69,"low":100.39,"wap":100.57},{"date":"2025-08-08","price":100.51,"turnover":732511179.69,"volume":7285504.0,"open":100.6,"high":100.6,"low":100.5,"wap":100.54},{"date":"2025-08-11","price":100.72,"turnover":756141654.64,"volume":7512606.0,"open":100.62,"high":100.73,"low":100.54,"wap":100.65},{"date":"2025-08-12","price":100.76,"turnover":557574490.78,"volume":5534274.0,"open":100.78,"high":100.82,"low":100.67,"wap":100.75},{"date":"2025-08-13","price":101.06,"turnover":619240139.46,"volume":6136532.0,"open":100.82,"high":101.06,"low":100.8,"wap":100.91},{"date":"2025-08-14","price":101.12,"turnover":549293148.11,"volume":5432468.0,"open":101.13,"high":101.16,"low":101.07,"wap":101.11},{"date":"2025-08-15","price":101.08,"turnover":559139583.88,"volume":5528205.0,"open":101.13,"high":101.19,"low":101.01,"wap":101.14},{"date":"2025-08-18","price":101.43,"turnover":768017944.64,"volume":7577055.0,"open":101.3,"high":101.43,"low":101.26,"wap":101.36},{"date":"2025-08-19","price":101.58,"turnover":825969709.68,"volume":8135234.0,"open":101.48,"high":101.58,"low":101.47,"wap":101.53},{"date":"2025-08-20","price":101.61,"turnover":742023838.03,"volume":7302525.0,"open":101.66,"high":101.67,"low":101.54,"wap":101.52},{"date":"2025-08-21","price":101.36,"turnover":701745433.86,"volume":6912880.0,"open":101.68,"high":101.7,"low":101.32,"wap":101.49},{"date":"2025-08-22","price":101.36,"turnover":618175479.29,"volume":6094314.0,"open":101.44,"high":101.64,"low":101.34,"wap":101.43},{"date":"2025-08-25","price":101.78,"turnover":727903845.58,"volume":7159857.0,"open":101.51,"high":101.8,"low":101.49,"wap":101.66},{"date":"2025-08-26","price":101.7,"turnover":551937785.97,"volume":5425593.0,"open":101.82,"high":101.85,"low":101.61,"wap":101.73},{"date":"2025-08-27","price":101.62,"turnover":629770633.29,"volume":6195249.0,"open":101.75,"high":101.75,"low":101.54,"wap":101.65},{"date":"2025-08-28","price":101.48,"turnover":716200619.19,"volume":7050036.0,"open":101.62,"high":101.69,"low":101.46,"wap":101.59},{"date":"2025-08-29","price":100.53,"turnover":1014027336.35,"volume":10095351.0,"open":100.24,"high":100.54,"low":100.23,"wap":100.44},{"date":"2025-09-01","price":100.51,"turnover":664909897.63,"volume":6615650.0,"open":100.66,"high":100.66,"low":100.46,"wap":100.45},{"date":"2025-09-02","price":100.5,"turnover":374216970.42,"volume":3722480.0,"open":100.58,"high":100.58,"low":100.48,"wap":100.53},{"date":"2025-09-03","price":100.43,"turnover":763338780.07,"volume":7599605.0,"open":100.53,"high":100.56,"low":100.39,"wap":100.44},{"date":"2025-09-04","price":100.73,"turnover":567418591.9,"volume":5639322.0,"open":100.47,"high":100.74,"low":100.45,"wap":100.62},{"date":"2025-09-05","price":100.88,"turnover":454863910.09,"volume":4511207.0,"open":100.81,"high":100.96,"low":100.72,"wap":100.8},{"date":"2025-09-08","price":100.83,"turnover":577317773.82,"volume":5725654.0,"open":100.92,"high":100.93,"low":100.74,"wap":100.8},{"date":"2025-09-09","price":100.86,"turnover":464713662.49,"volume":4607359.0,"open":100.85,"high":100.93,"low":100.83,"wap":100.86},{"date":"2025-09-10","price":100.71,"turnover":820304506.74,"volume":8137699.0,"open":100.9,"high":100.94,"low":100.69,"wap":100.8},{"date":"2025-09-11","price":100.8,"turnover":560803107.6,"volume":5561916.0,"open":100.8,"high":100.87,"low":100.77,"wap":100.83},{"date":"2025-09-12","price":100.95,"turnover":718783828.84,"volume":7119716.0,"open":100.84,"high":101.02,"low":100.84,"wap":100.96},{"date":"2025-09-15","price":101.28,"turnover":423383453.33,"volume":4186653.0,"open":101.06,"high":101.28,"low":101.03,"wap":101.13},{"date":"2025-09-16","price":101.28,"turnover":329970109.88,"volume":3258893.0,"open":101.29,"high":101.31,"low":101.2,"wap":101.25},{"date":"2025-09-17","price":101.32,"turnover":323296520.69,"volume":3190452.0,"open":101.29,"high":101.39,"low":101.26,"wap":101.33},{"date":"2025-09-18","price":101.35,"turnover":254128702.22,"volume":2507613.0,"open":101.37,"high":101.38,"low":101.3,"wap":101.34},{"date":"2025-09-19","price":101.2,"turnover":323522881.43,"volume":3194323.0,"open":101.38,"high":101.39,"low":101.19,"wap":101.28},{"date":"2025-09-22","price":101.23,"turnover":380203043.31,"volume":3755629.0,"open":101.3,"high":101.38,"low":101.14,"wap":101.24},{"date":"2025-09-23","price":101.15,"turnover":349059220.51,"volume":3448984.0,"open":101.26,"high":101.3,"low":101.1,"wap":101.21},{"date":"2025-09-24","price":101.18,"turnover":355745100.73,"volume":3516295.0,"open":101.2,"high":101.24,"low":101.12,"wap":101.17},{"date":"2025-09-25","price":101.34,"turnover":267750737.19,"volume":2643462.0,"open":101.19,"high":101.36,"low":101.19,"wap":101.29},{"date":"2025-09-26","price":101.43,"turnover":516733248.48,"volume":5092121.0,"open":101.34,"high":101.52,"low":101.34,"wap":101.46},{"date":"2025-09-29","price":101.54,"turnover":527308419.93,"volume":5197544.0,"open":101.45,"high":101.57,"low":101.34,"wap":101.45},{"date":"2025-09-30","price":100.0,"turnover":786030582.08,"volume":7858545.0,"open":100.11,"high":100.11,"low":99.84,"wap":100.03},{"date":"2025-10-01","price":100.09,"turnover":422466031.37,"volume":4223399.0,"open":100.03,"high":100.09,"low":99.97,"wap":99.96},{"date":"2025-10-02","price":99.97,"turnover":364261100.57,"volume":3642234.0,"open":100.1,"high":100.11,"low":99.9,"wap":99.97},{"date":"2025-10-03","price":100.1,"turnover":273501220.43,"volume":2733727.0,"open":100.04,"high":100.11,"low":100.0,"wap":100.05},{"date":"2025-10-06","price":100.05,"turnover":655771086.34,"volume":6556372.0,"open":100.15,"high":100.21,"low":99.93,"wap":100.02},{"date":"2025-10-07","price":100.1,"turnover":317388630.95,"volume":3170648.0,"open":100.04,"high":100.15,"low":100.04,"wap":100.1},{"date":"2025-10-08","price":100.07,"turnover":316994135.09,"volume":3165874.0,"open":100.12,"high":100.18,"low":100.06,"wap":100.13},{"date":"2025-10-09","price":100.08,"turnover":303733169.53,"volume":3034519.0,"open":100.1,"high":100.15,"low":100.05,"wap":100.09},{"date":"2025-10-10","price":100.2,"turnover":278312858.27,"volume":2778078.0,"open":100.14,"high":100.22,"low":100.11,"wap":100.18},{"date":"2025-10-13","price":100.4,"turnover":309105019.81,"volume":3081052.0,"open":100.24,"high":100.4,"low":100.24,"wap":100.32},{"date":"2025-10-14","price":100.46,"turnover":212801916.32,"volume":2119020.0,"open":100.45,"high":100.48,"low":100.37,"wap":100.42},{"date":"2025-10-15","price":100.21,"turnover":288548603.34,"volume":2875967.0,"open":100.48,"high":100.5,"low":100.2,"wap":100.33},{"date":"2025-10-16","price":100.23,"turnover":402617943.79,"volume":4017560.0,"open":100.23,"high":100.34,"low":100.16,"wap":100.21},{"date":"2025-10-17","price":100.76,"turnover":481384514.06,"volume":4785363.0,"open":100.27,"high":100.8,"low":100.25,"wap":100.58},{"date":"2025-10-20","price":100.93,"turnover":331442290.57,"volume":3286404.0,"open":100.77,"high":100.94,"low":100.77,"wap":100.85},{"date":"2025-10-21","price":100.92,"turnover":300662349.45,"volume":2979548.0,"open":100.94,"high":101.1,"low":100.82,"wap":100.91},{"date":"2025-10-22","price":100.95,"turnover":268581405.9,"volume":2661066.0,"open":100.94,"high":100.99,"low":100.89,"wap":100.88},{"date":"2025-10-23","price":100.9,"turnover":261679479.08,"volume":2593703.0,"open":100.95,"high":100.98,"low":100.82,"wap":100.89},{"date":"2025-10-24","price":101.15,"turnover":285356219.29,"volume":2824395.0,"open":100.94,"high":101.16,"low":100.94,"wap":101.02},{"date":"2025-10-27","price":101.03,"turnover":366647665.07,"volume":3628269.0,"open":101.18,"high":101.18,"low":100.98,"wap":101.03},{"date":"2025-10-28","price":101.09,"turnover":333165173.49,"volume":3297041.0,"open":101.04,"high":101.12,"low":101.01,"wap":100.98},{"date":"2025-10-29","price":101.12,"turnover":369636090.56,"volume":3655238.0,"open":101.11,"high":101.17,"low":101.07,"wap":101.13},{"date":"2025-10-30","price":101.1,"turnover":358357840.05,"volume":3542473.0,"open":101.14,"high":101.2,"low":101.08,"wap":101.16},{"date":"2025-10-31","price":100.0,"turnover":655119284.08,"volume":6552826.0,"open":99.94,"high":100.03,"low":99.81,"wap":99.98},{"date":"2025-11-01","price":100.26,"turnover":309625076.62,"volume":3091601.0,"open":100.09,"high":100.27,"low":99.99,"wap":100.07},{"date":"2025-11-03","price":100.49,"turnover":231267117.05,"volume":2303847.0,"open":100.28,"high":100.49,"low":100.28,"wap":100.38},{"date":"2025-11-05","price":100.46,"turnover":427968121.04,"volume":4261632.0,"open":100.53,"high":100.54,"low":100.37,"wap":100.41},{"date":"2025-11-06","price":100.49,"turnover":323873456.42,"volume":3222052.0,"open":100.51,"high":100.57,"low":100.46,"wap":100.52},{"date":"2025-11-07","price":100.6,"turnover":397323453.52,"volume":3950455.0,"open":100.52,"high":100.65,"low":100.48,"wap":100.58},{"date":"2025-11-10","price":100.78,"turnover":405573445.57,"volume":4028121.0,"open":100.63,"high":100.78,"low":100.61,"wap":100.69},{"date":"2025-11-11","price":100.71,"turnover":452404436.62,"volume":4491749.0,"open":100.79,"high":100.81,"low":100.56,"wap":100.72},{"date":"2025-11-12","price":100.78,"turnover":322579127.43,"volume":3201650.0,"open":100.75,"high":100.79,"low":100.72,"wap":100.72},{"date":"2025-11-13","price":100.87,"turnover":330079636.77,"volume":3274282.0,"open":100.79,"high":100.87,"low":100.76,"wap":100.81},{"date":"2025-11-14","price":100.96,"turnover":287810032.25,"volume":2851445.0,"open":100.89,"high":101.0,"low":100.85,"wap":100.93},{"date":"2025-11-17","price":100.98,"turnover":319314830.62,"volume":3160876.0,"open":101.0,"high":101.05,"low":100.97,"wap":101.01},{"date":"2025-11-18","price":101.12,"turnover":369304956.17,"volume":3653372.0,"open":101.02,"high":101.13,"low":101.02,"wap":101.05},{"date":"2025-11-19","price":101.04,"turnover":452032610.54,"volume":4472355.0,"open":101.16,"high":101.17,"low":100.9,"wap":101.05},{"date":"2025-11-20","price":101.19,"turnover":371271390.27,"volume":3670637.0,"open":101.12,"high":101.19,"low":101.09,"wap":101.13},{"date":"2025-11-21","price":101.28,"turnover":328079266.73,"volume":3240776.0,"open":101.22,"high":101.29,"low":101.19,"wap":101.23},{"date":"2025-11-24","price":101.22,"turnover":347474457.7,"volume":3431515.0,"open":101.29,"high":101.34,"low":101.22,"wap":101.23},{"date":"2025-11-25","price":101.21,"turnover":336927696.0,"volume":3326794.0,"open":101.26,"high":101.32,"low":101.21,"wap":101.26},{"date":"2025-11-26","price":101.29,"turnover":358973561.13,"volume":3544511.0,"open":101.27,"high":101.3,"low":101.23,"wap":101.23},{"date":"2025-11-27","price":101.19,"turnover":398187578.36,"volume":3934634.0,"open":101.3,"high":101.31,"low":101.08,"wap":101.2},{"date":"2025-11-28","price":100.36,"turnover":721979272.31,"volume":7196991.0,"open":100.06,"high":100.45,"low":100.04,"wap":100.39},{"date":"2025-12-01","price":100.33,"turnover":527161871.75,"volume":5253339.0,"open":100.36,"high":100.44,"low":100.3,"wap":100.35},{"date":"2025-12-02","price":100.3,"turnover":352488913.48,"volume":3514391.0,"open":100.36,"high":100.39,"low":100.26,"wap":100.3},{"date":"2025-12-03","price":100.46,"turnover":425752442.32,"volume":4240653.0,"open":100.34,"high":100.47,"low":100.33,"wap":100.4},{"date":"2025-12-04","price":100.43,"turnover":312414086.6,"volume":3109572.0,"open":100.49,"high":100.54,"low":100.41,"wap":100.47},{"date":"2025-12-05","price":100.58,"turnover":429025638.68,"volume":4266125.0,"open":100.48,"high":100.62,"low":100.48,"wap":100.57},{"date":"2025-12-08","price":100.61,"turnover":442305888.33,"volume":4396287.0,"open":100.6,"high":100.71,"low":100.58,"wap":100.61},{"date":"2025-12-09","price":100.47,"turnover":527253480.94,"volume":5244446.0,"open":100.64,"high":100.7,"low":100.45,"wap":100.54},{"date":"2025-12-10","price":100.38,"turnover":442420867.7,"volume":4404698.0,"open":100.53,"high":100.53,"low":100.35,"wap":100.44},{"date":"2025-12-11","price":100.35,"turnover":609319518.98,"volume":6074642.0,"open":100.48,"high":100.49,"low":100.19,"wap":100.31},{"date":"2025-12-12","price":100.5,"turnover":319379038.44,"volume":3177881.0,"open":100.45,"high":100.59,"low":100.44,"wap":100.5},{"date":"2025-12-15","price":100.47,"turnover":402593187.4,"volume":4005922.0,"open":100.72,"high":100.72,"low":100.41,"wap":100.5},{"date":"2025-12-16","price":100.39,"turnover":386291768.66,"volume":3846393.0,"open":100.55,"high":100.55,"low":100.34,"wap":100.43},{"date":"2025-12-17","price":100.39,"turnover":249301653.5,"volume":2483230.0,"open":100.4,"high":100.48,"low":100.34,"wap":100.39},{"date":"2025-12-18","price":100.32,"turnover":291487664.88,"volume":2904173.0,"open":100.4,"high":100.44,"low":100.32,"wap":100.37},{"date":"2025-12-19","price":100.54,"turnover":592154170.78,"volume":5891561.0,"open":100.41,"high":100.61,"low":100.38,"wap":100.51},{"date":"2025-12-22","price":100.33,"turnover":303859194.16,"volume":3027704.0,"open":100.61,"high":100.62,"low":100.2,"wap":100.35},{"date":"2025-12-23","price":99.91,"turnover":410614762.73,"volume":4105676.0,"open":100.37,"high":100.37,"low":99.87,"wap":100.01},{"date":"2025-12-24","price":100.37,"turnover":287394215.6,"volume":2868470.0,"open":99.98,"high":100.41,"low":99.92,"wap":100.19},{"date":"2025-12-25","price":100.38,"turnover":412985733.12,"volume":4116419.0,"open":100.38,"high":100.53,"low":100.17,"wap":100.33},{"date":"2025-12-26","price":100.63,"turnover":294887003.99,"volume":2931744.0,"open":100.43,"high":100.63,"low":100.43,"wap":100.58},{"date":"2025-12-29","price":100.96,"turnover":735274137.39,"volume":7284992.0,"open":100.63,"high":101.17,"low":100.63,"wap":100.93},{"date":"2025-12-30","price":100.2,"turnover":482348278.43,"volume":4820394.0,"open":100.03,"high":100.2,"low":99.9,"wap":100.06},{"date":"2026-01-05","price":100.3,"turnover":262218643.3,"volume":2616690.0,"open":100.22,"high":100.33,"low":100.1,"wap":100.17},{"date":"2026-01-06","price":100.39,"turnover":169380757.73,"volume":1688141.0,"open":100.3,"high":100.41,"low":100.24,"wap":100.34},{"date":"2026-01-08","price":100.42,"turnover":245841721.04,"volume":2448532.0,"open":100.39,"high":100.46,"low":100.37,"wap":100.35},{"date":"2026-01-09","price":100.48,"turnover":193719214.78,"volume":1928018.0,"open":100.44,"high":100.55,"low":100.27,"wap":100.48},{"date":"2026-01-12","price":100.46,"turnover":393190345.19,"volume":3911542.0,"open":100.53,"high":100.65,"low":100.42,"wap":100.49},{"date":"2026-01-13","price":100.58,"turnover":272878185.42,"volume":2713692.0,"open":100.53,"high":100.6,"low":100.5,"wap":100.51},{"date":"2026-01-14","price":100.73,"turnover":241808554.83,"volume":2402063.0,"open":100.59,"high":100.77,"low":100.58,"wap":100.67},{"date":"2026-01-15","price":100.74,"turnover":283411703.24,"volume":2813464.0,"open":100.8,"high":100.8,"low":100.66,"wap":100.68},{"date":"2026-01-16","price":100.81,"turnover":261579830.93,"volume":2595442.0,"open":100.77,"high":100.83,"low":100.73,"wap":100.74},{"date":"2026-01-19","price":100.82,"turnover":351375338.59,"volume":3484329.0,"open":100.86,"high":100.94,"low":100.8,"wap":100.8},{"date":"2026-01-20","price":100.86,"turnover":347120328.17,"volume":3442329.0,"open":100.89,"high":100.9,"low":100.78,"wap":100.8},{"date":"2026-01-21","price":100.85,"turnover":274693493.89,"volume":2723296.0,"open":100.92,"high":100.92,"low":100.8,"wap":100.84},{"date":"2026-01-22","price":100.87,"turnover":411734171.68,"volume":4081388.0,"open":100.89,"high":100.92,"low":100.81,"wap":100.86},{"date":"2026-01-23","price":100.95,"turnover":336299562.24,"volume":3331971.0,"open":100.9,"high":100.97,"low":100.87,"wap":100.93},{"date":"2026-01-26","price":101.17,"turnover":408900775.35,"volume":4046695.0,"open":101.0,"high":101.18,"low":100.97,"wap":101.04},{"date":"2026-01-27","price":101.27,"turnover":273924231.84,"volume":2706765.0,"open":101.21,"high":101.27,"low":101.13,"wap":101.18},{"date":"2026-01-28","price":101.19,"turnover":401332515.78,"volume":3963879.0,"open":101.31,"high":101.31,"low":101.18,"wap":101.2},{"date":"2026-01-29","price":101.23,"turnover":487716232.61,"volume":4818283.0,"open":101.15,"high":101.28,"low":101.15,"wap":101.19},{"date":"2026-01-30","price":100.01,"turnover":954413028.62,"volume":9542369.0,"open":100.13,"high":100.13,"low":99.96,"wap":100.05},{"date":"2026-02-02","price":100.11,"turnover":598680784.55,"volume":5981335.0,"open":100.11,"high":100.16,"low":100.02,"wap":99.96},{"date":"2026-02-03","price":100.12,"turnover":394477700.77,"volume":3939498.0,"open":100.15,"high":100.17,"low":100.1,"wap":100.1},{"date":"2026-02-04","price":100.04,"turnover":467786624.56,"volume":4672565.0,"open":100.14,"high":100.17,"low":99.96,"wap":100.11},{"date":"2026-02-05","price":100.01,"turnover":319800553.17,"volume":3196894.0,"open":100.08,"high":100.09,"low":100.0,"wap":100.03},{"date":"2026-02-06","price":100.07,"turnover":351908144.67,"volume":3515613.0,"open":100.06,"high":100.14,"low":100.06,"wap":100.09},{"date":"2026-02-09","price":100.25,"turnover":443155560.69,"volume":4423548.0,"open":100.12,"high":100.25,"low":100.12,"wap":100.18},{"date":"2026-02-10","price":100.34,"turnover":391217124.33,"volume":3899633.0,"open":100.3,"high":100.36,"low":100.27,"wap":100.3},{"date":"2026-02-11","price":100.3,"turnover":356098342.02,"volume":3550296.0,"open":100.36,"high":100.39,"low":100.15,"wap":100.3},{"date":"2026-02-12","price":100.43,"turnover":326165794.06,"volume":3248978.0,"open":100.36,"high":100.43,"low":100.32,"wap":100.39},{"date":"2026-02-13","price":100.66,"turnover":397134184.78,"volume":3949202.0,"open":100.49,"high":100.68,"low":100.47,"wap":100.56},{"date":"2026-02-16","price":100.75,"turnover":357067312.43,"volume":3544743.0,"open":100.74,"high":100.78,"low":100.68,"wap":100.71},{"date":"2026-02-17","price":100.73,"turnover":302653749.14,"volume":3004481.0,"open":100.8,"high":100.8,"low":100.65,"wap":100.72},{"date":"2026-02-18","price":100.72,"turnover":249662806.31,"volume":2478852.0,"open":100.76,"high":100.77,"low":100.69,"wap":100.72},{"date":"2026-02-19","price":100.61,"turnover":357887682.82,"volume":3553839.0,"open":100.77,"high":100.77,"low":100.54,"wap":100.7},{"date":"2026-02-20","price":100.77,"turnover":347222091.87,"volume":3445785.0,"open":100.71,"high":100.86,"low":100.69,"wap":100.77},{"date":"2026-02-24","price":100.98,"turnover":366512273.51,"volume":3632231.0,"open":100.83,"high":100.99,"low":100.81,"wap":100.91},{"date":"2026-02-25","price":100.97,"turnover":378656236.79,"volume":3749015.0,"open":101.06,"high":101.08,"low":100.93,"wap":101.0},{"date":"2026-02-26","price":101.0,"turnover":402076318.49,"volume":3981774.0,"open":101.04,"high":101.05,"low":100.92,"wap":100.98},{"date":"2026-02-27","price":100.15,"turnover":711294812.65,"volume":7107734.0,"open":99.88,"high":100.16,"low":99.88,"wap":100.07},{"date":"2026-03-02","price":100.14,"turnover":580557052.73,"volume":5797498.0,"open":100.15,"high":100.22,"low":100.11,"wap":100.14},{"date":"2026-03-03","price":100.09,"turnover":280349896.11,"volume":2800047.0,"open":100.16,"high":100.17,"low":100.07,"wap":100.12},{"date":"2026-03-04","price":100.25,"turnover":359539450.91,"volume":3588562.0,"open":100.14,"high":100.25,"low":100.13,"wap":100.19},{"date":"2026-03-05","price":100.32,"turnover":291686973.86,"volume":2907980.0,"open":100.27,"high":100.33,"low":100.23,"wap":100.31},{"date":"2026-03-06","price":100.53,"turnover":369655721.41,"volume":3680695.0,"open":100.38,"high":100.59,"low":100.35,"wap":100.43},{"date":"2026-03-09","price":100.66,"turnover":267457139.25,"volume":2659334.0,"open":100.49,"high":100.67,"low":100.48,"wap":100.57},{"date":"2026-03-10","price":100.61,"turnover":427441981.5,"volume":4248054.0,"open":100.68,"high":100.68,"low":100.56,"wap":100.62},{"date":"2026-03-11","price":100.58,"turnover":370774235.94,"volume":3684275.0,"open":100.66,"high":100.68,"low":100.51,"wap":100.64},{"date":"2026-03-12","price":100.63,"turnover":309310037.28,"volume":3072666.0,"open":100.63,"high":100.71,"low":100.6,"wap":100.67},{"date":"2026-03-13","price":100.76,"turnover":387535593.07,"volume":3845921.0,"open":100.72,"high":100.84,"low":100.66,"wap":100.77},{"date":"2026-03-16","price":100.86,"turnover":404661930.75,"volume":4012854.0,"open":100.81,"high":100.89,"low":100.81,"wap":100.84},{"date":"2026-03-17","price":100.87,"turnover":340086807.61,"volume":3371598.0,"open":100.87,"high":100.91,"low":100.79,"wap":100.87},{"date":"2026-03-18","price":100.81,"turnover":454659594.63,"volume":4509047.0,"open":100.92,"high":100.92,"low":100.78,"wap":100.83},{"date":"2026-03-19","price":100.9,"turnover":346463604.16,"volume":3434427.0,"open":100.85,"high":100.91,"low":100.84,"wap":100.88},{"date":"2026-03-20","price":101.05,"turnover":444121628.92,"volume":4395551.0,"open":101.28,"high":101.28,"low":100.92,"wap":101.04},{"date":"2026-03-23","price":101.14,"turnover":317282715.91,"volume":3137478.0,"open":101.07,"high":101.28,"low":101.07,"wap":101.13},{"date":"2026-03-24","price":101.12,"turnover":192808130.96,"volume":1906011.0,"open":101.14,"high":101.18,"low":101.1,"wap":101.16},{"date":"2026-03-25","price":101.21,"turnover":230713029.56,"volume":2280162.0,"open":101.18,"high":101.21,"low":101.16,"wap":101.18},{"date":"2026-03-26","price":101.2,"turnover":291584476.84,"volume":2880248.0,"open":101.2,"high":101.29,"low":101.19,"wap":101.24},{"date":"2026-03-27","price":101.36,"turnover":392467852.83,"volume":3872518.0,"open":101.27,"high":101.39,"low":101.27,"wap":101.35},{"date":"2026-03-30","price":101.51,"turnover":586689228.24,"volume":5783734.0,"open":101.37,"high":101.57,"low":101.37,"wap":101.44},{"date":"2026-03-31","price":100.62,"turnover":947431229.1,"volume":9421716.0,"open":100.13,"high":100.85,"low":100.13,"wap":100.56},{"date":"2026-04-01","price":100.77,"turnover":344291856.38,"volume":3418026.0,"open":100.63,"high":100.77,"low":100.63,"wap":100.73},{"date":"2026-04-02","price":100.79,"turnover":365906187.37,"volume":3630716.0,"open":100.88,"high":100.9,"low":100.74,"wap":100.78},{"date":"2026-04-03","price":100.77,"turnover":434239029.47,"volume":4307918.0,"open":100.81,"high":100.89,"low":100.67,"wap":100.8},{"date":"2026-04-06","price":100.91,"turnover":324106832.68,"volume":3212194.0,"open":100.79,"high":100.94,"low":100.79,"wap":100.9},{"date":"2026-04-07","price":100.94,"turnover":244531709.37,"volume":2422229.0,"open":100.94,"high":101.0,"low":100.91,"wap":100.95},{"date":"2026-04-08","price":100.96,"turnover":290521266.25,"volume":2877654.0,"open":100.98,"high":100.99,"low":100.79,"wap":100.96},{"date":"2026-04-09","price":100.93,"turnover":266469528.93,"volume":2638690.0,"open":100.98,"high":101.08,"low":100.93,"wap":100.99},{"date":"2026-04-10","price":100.96,"turnover":342461473.42,"volume":3391411.0,"open":101.0,"high":101.02,"low":100.94,"wap":100.98},{"date":"2026-04-13","price":101.26,"turnover":297180431.34,"volume":2938337.0,"open":101.03,"high":101.28,"low":101.03,"wap":101.14},{"date":"2026-04-14","price":101.26,"turnover":221320885.1,"volume":2185717.0,"open":101.27,"high":101.31,"low":101.22,"wap":101.26},{"date":"2026-04-15","price":101.23,"turnover":331510831.07,"volume":3275249.0,"open":101.28,"high":101.32,"low":101.13,"wap":101.22},{"date":"2026-04-16","price":101.24,"turnover":206512623.15,"volume":2040398.0,"open":101.26,"high":101.3,"low":101.16,"wap":101.21},{"date":"2026-04-17","price":101.26,"turnover":253285471.79,"volume":2501193.0,"open":101.26,"high":101.32,"low":101.22,"wap":101.27},{"date":"2026-04-20","price":101.27,"turnover":347758435.14,"volume":3434079.0,"open":101.3,"high":101.33,"low":101.19,"wap":101.27},{"date":"2026-04-21","price":101.29,"turnover":295135644.67,"volume":2914057.0,"open":101.32,"high":101.37,"low":101.22,"wap":101.28},{"date":"2026-04-22","price":101.31,"turnover":273385039.12,"volume":2698794.0,"open":101.3,"high":101.36,"low":101.26,"wap":101.3},{"date":"2026-04-23","price":101.34,"turnover":291483925.27,"volume":2876393.0,"open":101.34,"high":101.37,"low":101.3,"wap":101.34},{"date":"2026-04-24","price":101.45,"turnover":294160060.85,"volume":2899290.0,"open":101.38,"high":101.52,"low":101.38,"wap":101.46},{"date":"2026-04-27","price":101.56,"turnover":255702501.28,"volume":2518521.0,"open":101.54,"high":101.59,"low":101.49,"wap":101.53},{"date":"2026-04-28","price":101.5,"turnover":322762864.31,"volume":3176541.0,"open":101.59,"high":101.71,"low":101.5,"wap":101.61},{"date":"2026-04-29","price":101.46,"turnover":370819715.45,"volume":3651963.0,"open":101.58,"high":101.62,"low":101.46,"wap":101.54},{"date":"2026-04-30","price":100.8,"turnover":744517629.75,"volume":7385385.0,"open":100.61,"high":100.92,"low":100.53,"wap":100.81},{"date":"2026-05-04","price":101.0,"turnover":569104776.09,"volume":5638979.0,"open":100.84,"high":101.0,"low":100.75,"wap":100.92},{"date":"2026-05-05","price":101.11,"turnover":304896552.13,"volume":3017307.0,"open":101.04,"high":101.14,"low":101.0,"wap":101.05},{"date":"2026-05-06","price":101.08,"turnover":175712211.36,"volume":1737957.0,"open":101.16,"high":101.16,"low":101.04,"wap":101.1},{"date":"2026-05-07","price":101.13,"turnover":205263332.34,"volume":2029932.0,"open":101.12,"high":101.15,"low":101.08,"wap":101.12},{"date":"2026-05-08","price":101.36,"turnover":263084197.77,"volume":2600144.0,"open":101.16,"high":101.37,"low":101.1,"wap":101.18},{"date":"2026-05-11","price":101.39,"turnover":191840106.17,"volume":1892065.0,"open":101.4,"high":101.44,"low":101.29,"wap":101.39},{"date":"2026-05-12","price":101.4,"turnover":222294108.48,"volume":2192301.0,"open":101.4,"high":101.45,"low":101.37,"wap":101.4},{"date":"2026-05-13","price":101.45,"turnover":178584478.49,"volume":1760726.0,"open":101.43,"high":101.45,"low":101.4,"wap":101.43},{"date":"2026-05-14","price":101.47,"turnover":209091231.02,"volume":2060459.0,"open":101.49,"high":101.5,"low":101.46,"wap":101.48},{"date":"2026-05-15","price":101.44,"turnover":423776016.86,"volume":4175645.0,"open":101.52,"high":101.54,"low":101.42,"wap":101.49},{"date":"2026-05-18","price":101.59,"turnover":434452290.91,"volume":4278353.0,"open":101.46,"high":101.62,"low":101.37,"wap":101.55},{"date":"2026-05-19","price":101.6,"turnover":174986397.02,"volume":1722354.0,"open":101.65,"high":101.65,"low":101.58,"wap":101.6},{"date":"2026-05-20","price":101.55,"turnover":265016710.28,"volume":2609574.0,"open":101.62,"high":101.62,"low":101.52,"wap":101.56},{"date":"2026-05-21","price":101.56,"turnover":367672572.54,"volume":3620517.0,"open":101.61,"high":101.62,"low":101.52,"wap":101.55},{"date":"2026-05-22","price":101.7,"turnover":423986492.63,"volume":4170185.0,"open":101.6,"high":101.8,"low":101.59,"wap":101.67},{"date":"2026-05-25","price":101.9,"turnover":382617518.55,"volume":3757230.0,"open":101.7,"high":101.91,"low":101.66,"wap":101.84},{"date":"2026-05-26","price":101.91,"turnover":234672784.34,"volume":2302303.0,"open":101.91,"high":102.0,"low":101.87,"wap":101.93},{"date":"2026-05-27","price":102.0,"turnover":349621347.95,"volume":3428781.0,"open":101.96,"high":102.02,"low":101.92,"wap":101.97},{"date":"2026-05-28","price":102.06,"turnover":400748236.56,"volume":3927058.0,"open":102.01,"high":102.09,"low":102.0,"wap":102.05},{"date":"2026-05-29","price":101.38,"turnover":698542158.72,"volume":6897667.0,"open":101.28,"high":101.38,"low":101.06,"wap":101.27},{"date":"2026-06-01","price":101.25,"turnover":628175846.75,"volume":6200415.0,"open":101.37,"high":101.44,"low":101.23,"wap":101.31},{"date":"2026-06-02","price":101.17,"turnover":291270680.73,"volume":2877369.0,"open":101.26,"high":101.29,"low":101.14,"wap":101.23},{"date":"2026-06-03","price":101.21,"turnover":299976648.49,"volume":2963167.0,"open":101.19,"high":101.28,"low":101.19,"wap":101.24},{"date":"2026-06-04","price":101.23,"turnover":226630171.26,"volume":2238339.0,"open":101.26,"high":101.27,"low":101.21,"wap":101.25},{"date":"2026-06-05","price":101.32,"turnover":292669127.39,"volume":2889395.0,"open":101.29,"high":101.34,"low":101.25,"wap":101.29},{"date":"2026-06-08","price":101.38,"turnover":438350920.19,"volume":4322967.0,"open":101.32,"high":101.46,"low":101.31,"wap":101.4},{"date":"2026-06-09","price":101.36,"turnover":234458803.75,"volume":2312374.0,"open":101.39,"high":101.43,"low":101.33,"wap":101.39},{"date":"2026-06-10","price":101.38,"turnover":326819905.44,"volume":3223292.0,"open":101.42,"high":101.43,"low":101.36,"wap":101.39},{"date":"2026-06-11","price":101.61,"turnover":265055540.66,"volume":2611630.0,"open":101.45,"high":101.66,"low":101.44,"wap":101.49},{"date":"2026-06-15","price":101.71,"turnover":561188441.24,"volume":5518728.0,"open":101.61,"high":101.9,"low":101.5,"wap":101.69},{"date":"2026-06-16","price":101.79,"turnover":243048940.86,"volume":2388315.0,"open":101.76,"high":101.79,"low":101.73,"wap":101.77},{"date":"2026-06-17","price":101.97,"turnover":242036493.71,"volume":2375303.0,"open":101.84,"high":101.99,"low":101.81,"wap":101.9},{"date":"2026-06-18","price":102.09,"turnover":224343949.39,"volume":2198542.0,"open":102.0,"high":102.16,"low":101.98,"wap":102.04},{"date":"2026-06-19","price":102.04,"turnover":251999632.67,"volume":2469012.0,"open":102.11,"high":102.12,"low":102.01,"wap":102.06},{"date":"2026-06-22","price":101.52,"turnover":443379663.29,"volume":4352850.0,"open":102.04,"high":102.06,"low":101.49,"wap":101.86},{"date":"2026-06-23","price":101.86,"turnover":395675623.65,"volume":3894865.0,"open":101.52,"high":101.92,"low":101.41,"wap":101.59},{"date":"2026-06-24","price":101.79,"turnover":233558770.37,"volume":2292527.0,"open":101.9,"high":101.98,"low":101.76,"wap":101.88},{"date":"2026-06-25","price":101.81,"turnover":285759679.3,"volume":2805838.0,"open":101.84,"high":101.93,"low":101.77,"wap":101.84},{"date":"2026-06-26","price":101.75,"turnover":307983049.99,"volume":3024635.0,"open":101.82,"high":101.94,"low":101.72,"wap":101.82},{"date":"2026-06-29","price":101.95,"turnover":556596786.99,"volume":5462037.0,"open":101.76,"high":101.99,"low":101.72,"wap":101.9},{"date":"2026-06-30","price":101.27,"turnover":601094209.61,"volume":5940896.0,"open":101.4,"high":101.4,"low":101.08,"wap":101.18},{"date":"2026-07-01","price":101.3,"turnover":289236882.28,"volume":2854800.0,"open":101.29,"high":101.36,"low":101.26,"wap":101.32},{"date":"2026-07-02","price":101.37,"turnover":291074811.7,"volume":2870743.0,"open":101.34,"high":101.46,"low":101.31,"wap":101.39},{"date":"2026-07-03","price":101.37,"turnover":223032017.37,"volume":2200398.0,"open":101.4,"high":101.44,"low":101.28,"wap":101.36},{"date":"2026-07-06","price":101.5,"turnover":334176978.22,"volume":3292927.0,"open":101.4,"high":101.57,"low":101.36,"wap":101.48},{"date":"2026-07-07","price":101.22,"turnover":213023024.22,"volume":2102819.0,"open":101.53,"high":101.54,"low":101.15,"wap":101.3},{"date":"2026-07-08","price":101.19,"turnover":254168824.62,"volume":2512006.0,"open":101.26,"high":101.3,"low":101.12,"wap":101.18},{"date":"2026-07-09","price":101.25,"turnover":300904206.59,"volume":2971789.0,"open":101.22,"high":101.32,"low":101.2,"wap":101.25},{"date":"2026-07-10","price":101.45,"turnover":259304189.86,"volume":2558172.0,"open":101.27,"high":101.49,"low":101.27,"wap":101.36},{"date":"2026-07-13","price":101.44,"turnover":355053685.23,"volume":3499898.0,"open":101.49,"high":101.55,"low":101.33,"wap":101.45}],"dividends":[],"latestDividend":null,"dividendYieldSource":"local","fundComposition":[{"label":"УК","value":"Т-Капитал"},{"label":"Структура","value":"Смешанный"},{"label":"Категория","value":"Прочее"},{"label":"Примечание","value":"—"}]}];
+    const state = { assetIndex: 0, range: "ALL", mode: "price" };
+    if (new URLSearchParams(location.search).get("drawer") === "1" || window.self !== window.top) document.body.classList.add("in-drawer");
+
+    const rub = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 });
+    const rubFine = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const rubTiny = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 0, maximumFractionDigits: 6 });
+    const trimFixed = (value, digits = 2) => {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      let out = Number(value).toFixed(digits);
+      if (out.includes(".")) out = out.replace(/0+$/g, "").replace(/\.$/g, "");
+      return out.replace(".", ",");
+    };
+    const pct = (value, digits = 2) => value === null || value === undefined || Number.isNaN(value) ? "—" : `${trimFixed(value, digits)}%`;
+    const num = (value, digits = 2) => trimFixed(value, digits);
+    const nb = value => String(value).replaceAll(" ", "\u00a0");
+    const normalizeAccent = value => /^#[0-9a-fA-F]{6}$/.test(value || "") ? value : "#7A1027";
+    const hexToSoft = value => `${normalizeAccent(value)}22`;
+    const currencyLabel = value => (value || "RUB").replace("SUR", "RUB") === "RUB" ? "₽" : (value || "RUB");
+    const money = (value, currency = "RUB", digits = 0) => {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      const abs = Math.abs(value);
+      const formatter = digits > 0 ? (abs > 0 && abs < 0.01 ? rubTiny : rubFine) : rub;
+      return `${nb(formatter.format(value))}\u00a0${currencyLabel(currency)}`;
+    };
+    const dividendMoney = (item, asset) => money(item.value, item.currency || asset.currency, 2);
+    const dividendYield = item => item.yieldPct === null || item.yieldPct === undefined || Number.isNaN(item.yieldPct) ? null : pct(item.yieldPct);
+    const dividendValue = (item, asset) => {
+      const yieldText = dividendYield(item);
+      return yieldText ? `${dividendMoney(item, asset)} · ${yieldText}` : dividendMoney(item, asset);
+    };
+    const dividendNote = item => item.yieldPct === null || item.yieldPct === undefined || Number.isNaN(item.yieldPct) ? "процент не рассчитан" : "история выплат";
+    const compactMoney = (value, currency = "RUB") => {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      const unit = currencyLabel(currency);
+      const abs = Math.abs(value);
+      if (abs >= 1_000_000_000_000) return `${num(value / 1_000_000_000_000, 2)}\u00a0трлн\u00a0${unit}`;
+      if (abs >= 1_000_000_000) return `${num(value / 1_000_000_000, 2)}\u00a0млрд\u00a0${unit}`;
+      if (abs >= 1_000_000) return `${num(value / 1_000_000, 1)}\u00a0млн\u00a0${unit}`;
+      return money(value, currency);
+    };
+    const couponStatus = value => value === "estimate" || value === "forecast" ? "прогноз" : value === "known" ? "по графику" : value === "schedule" ? "по графику" : "факт";
+    const signedPct = value => value === null || value === undefined || Number.isNaN(value) ? "—" : `${value >= 0 ? "+" : ""}${pct(value)}`;
+    const periodLabel = value => ({ D: "День", W: "Неделя", M: "Месяц", "3M": "3М", "6M": "6М", YTD: "YTD", "1Y": "Год", "3Y": "3Г", "5Y": "5Л", ALL: "Всё" }[value] || value);
+    const htmlEsc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+    const dateRu = value => {
+      if (!value) return "—";
+      const d = new Date(`${value}T00:00:00`);
+      return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString("ru-RU");
+    };
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(value => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+
+    function rgbSaturation(r, g, b) {
+      const high = Math.max(r, g, b) / 255;
+      const low = Math.min(r, g, b) / 255;
+      return high ? (high - low) / high : 0;
+    }
+
+    function applyLogoAccentFromImage() {
+      const img = document.querySelector("#logo img");
+      if (!img || !img.complete || !img.naturalWidth || !img.naturalHeight) return;
+      try {
+        const canvas = document.createElement("canvas");
+        const size = 48;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, size, size);
+        const data = ctx.getImageData(0, 0, size, size).data;
+        const buckets = new Map();
+        for (let i = 0; i < data.length; i += 4) {
+          const alpha = data[i + 3];
+          if (alpha < 80) continue;
+          const r = data[i], g = data[i + 1], b = data[i + 2];
+          const lightness = (Math.max(r, g, b) + Math.min(r, g, b)) / 510;
+          if (lightness > .92 || lightness < .08 || rgbSaturation(r, g, b) < .16) continue;
+          const key = `${Math.round(r / 18)}:${Math.round(g / 18)}:${Math.round(b / 18)}`;
+          const current = buckets.get(key) || { r: 0, g: 0, b: 0, weight: 0 };
+          const weight = alpha / 255 * (0.6 + rgbSaturation(r, g, b));
+          current.r += r * weight;
+          current.g += g * weight;
+          current.b += b * weight;
+          current.weight += weight;
+          buckets.set(key, current);
+        }
+        let best = null;
+        for (const bucket of buckets.values()) {
+          if (!best || bucket.weight > best.weight) best = bucket;
+        }
+        if (!best || best.weight <= 0) return;
+        const color = rgbToHex(best.r / best.weight, best.g / best.weight, best.b / best.weight);
+        document.documentElement.style.setProperty("--accent", normalizeAccent(color));
+        document.documentElement.style.setProperty("--accent-soft", hexToSoft(color));
+      } catch (error) {
+        return;
+      }
+    }
+
+    function adaptiveAxisRange(values, mode = "price") {
+      const clean = values.map(Number).filter(Number.isFinite);
+      if (clean.length < 2) return undefined;
+      const min = Math.min(...clean);
+      const max = Math.max(...clean);
+      if (min === max) {
+        const padFlat = Math.max(Math.abs(min) * .03, mode === "turnover" ? 1 : .01);
+        return [min - padFlat, max + padFlat];
+      }
+      const span = max - min;
+      const mid = (max + min) / 2;
+      const pad = Math.max(span * .12, Math.abs(mid) * .006, mode === "turnover" ? 1 : .01);
+      return [Math.max(0, min - pad), max + pad];
+    }
+
+    function setActiveButtons(containerId, attr, value) {
+      document.querySelectorAll(`#${containerId} button`).forEach(button => {
+        const selected = button.dataset[attr] === value;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-selected", String(selected));
+      });
+    }
+
+    function filteredHistory(asset) {
+      const rows = asset.history || [];
+      if (state.range === "ALL" || rows.length === 0) return rows;
+      const last = new Date(`${rows[rows.length - 1].date}T00:00:00`);
+      const start = new Date(last);
+      if (state.range === "D") start.setDate(start.getDate() - 1);
+      if (state.range === "W") start.setDate(start.getDate() - 7);
+      if (state.range === "1M") start.setMonth(start.getMonth() - 1);
+      if (state.range === "3M") start.setMonth(start.getMonth() - 3);
+      if (state.range === "6M") start.setMonth(start.getMonth() - 6);
+      if (state.range === "1Y") start.setFullYear(start.getFullYear() - 1);
+      if (state.range === "3Y") start.setFullYear(start.getFullYear() - 3);
+      if (state.range === "5Y") start.setFullYear(start.getFullYear() - 5);
+      if (state.range === "YTD") {
+        start.setMonth(0);
+        start.setDate(1);
+      }
+      return rows.filter(row => new Date(`${row.date}T00:00:00`) >= start);
+    }
+
+    function renderButtons() {
+      const wrap = document.getElementById("assetButtons");
+      const switcher = document.querySelector(".asset-switcher");
+      if (ASSETS.length < 2) {
+        if (switcher) switcher.style.display = "none";
+      }
+      wrap.innerHTML = ASSETS.map((asset, index) => `<button type="button" data-asset="${index}" aria-selected="${index === state.assetIndex}" class="${index === state.assetIndex ? "active" : ""}">${asset.title}</button>`).join("");
+      wrap.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+        state.assetIndex = Number(button.dataset.asset);
+        render();
+      }));
+      document.querySelectorAll("#rangeButtons button").forEach(button => button.addEventListener("click", () => {
+        state.range = button.dataset.range;
+        render();
+      }));
+      document.querySelectorAll("#modeButtons button").forEach(button => button.addEventListener("click", () => {
+        state.mode = button.dataset.mode;
+        render();
+      }));
+    }
+
+    function renderLogo(asset) {
+      const logo = document.getElementById("logo");
+      if (asset.logo) {
+        logo.innerHTML = `<img src="${asset.logo}" alt="">`;
+        const img = logo.querySelector("img");
+        if (img) img.addEventListener("load", () => {
+          applyLogoAccentFromImage();
+          renderChart(ASSETS[state.assetIndex]);
+        }, { once: true });
+      } else {
+        logo.innerHTML = `<span class="logo-fallback">${asset.title.slice(0, 3)}</span>`;
+      }
+    }
+
+    function isDateValue(value) {
+      return /^\d{2}\.\d{2}\.\d{4}$/.test(String(value || "").trim());
+    }
+
+    function metricValueClass(value) {
+      const textValue = !String(value).includes("%") && String(value).length > 8;
+      const longValue = !String(value).includes("%") && String(value).length > 13;
+      return ["metric-value", textValue ? "text" : "", longValue ? "long" : "", isDateValue(value) ? "date" : ""].filter(Boolean).join(" ");
+    }
+
+    function tileValueHtml(value) {
+      const raw = String(value ?? "—");
+      const parts = raw.split(" · ");
+      if (parts.length === 2 && isDateValue(parts[1])) {
+        return `<strong class="money">${parts[0]}<span class="tile-date">${parts[1]}</span></strong>`;
+      }
+      if (isDateValue(raw)) {
+        return `<strong class="tile-date solo">${raw}</strong>`;
+      }
+      const moneyLike = /[₽$€¥]|млн|млрд|тыс/i.test(raw);
+      const fit = raw.length > 14 || moneyLike;
+      const size = moneyLike && raw.length > 12 ? Math.max(13, 19 - (raw.length - 12) * 0.9).toFixed(1) + "px" : "";
+      const style = size ? ` style="--fit-size:${size}"` : "";
+      return `<strong class="${[fit ? "fit" : "", moneyLike ? "money" : ""].filter(Boolean).join(" ")}"${style}>${raw}</strong>`;
+    }
+
+    function renderTiles(rows) {
+      return rows.map(([value, label]) => `<div class="tile">${tileValueHtml(value)}<span>${label}</span></div>`).join("");
+    }
+
+    function valueTone(value) {
+      return value > 0 ? "positive" : value < 0 ? "negative" : "";
+    }
+
+    function setDelta(value, text) {
+      const delta = document.getElementById("delta");
+      delta.textContent = text;
+      delta.className = `delta ${valueTone(value)}`;
+    }
+
+    function renderPeriodReturns(asset) {
+      const wrap = document.getElementById("periodReturns");
+      if (!asset.assetType || asset.assetType === "bond") {
+        wrap.innerHTML = "";
+        return;
+      }
+      const periods = ["D", "W", "M", "3M", "6M", "YTD", "1Y", "3Y", "5Y", "ALL"];
+      wrap.innerHTML = periods.map(period => {
+        const value = asset.returns?.[period];
+        const note = period === "ALL" && asset.firstObservation ? `с ${dateRu(asset.firstObservation)}` : "";
+        return `<div class="return-pill"><div class="return-label">${periodLabel(period)}</div><div class="return-value ${valueTone(value)}">${signedPct(value)}</div>${note ? `<div class="return-note">${note}</div>` : ""}</div>`;
+      }).join("");
+    }
+
+    function renderSummary(asset) {
+      const hasYieldSeries = (asset.history || []).some(row => Number(row.yield || 0) > 0);
+      if (!hasYieldSeries && state.mode === "yield") state.mode = "price";
+      document.querySelector('[data-mode="yield"]').style.display = hasYieldSeries ? "" : "none";
+      document.documentElement.style.setProperty("--accent", normalizeAccent(asset.accent));
+      document.documentElement.style.setProperty("--accent-soft", hexToSoft(asset.accent));
+      document.getElementById("title").textContent = asset.title;
+      if (asset.assetType && asset.assetType !== "bond") {
+        renderPeriodReturns(asset);
+        const isFund = asset.assetType === "fund";
+        document.getElementById("subtitle").textContent = asset.subtitle || "";
+        document.getElementById("chips").innerHTML = [
+          asset.isin,
+          asset.secid,
+          asset.board,
+          isFund ? "БПИФ" : "Акция",
+          isFund ? asset.etfStructure : asset.sector,
+          asset.currency
+        ].filter(Boolean).map((item, i) => `<span class="chip ${i === 2 || i === 3 ? "tint" : ""}">${item}</span>`).join("");
+        document.getElementById("price").textContent = money(asset.price, asset.currency, 2);
+        document.getElementById("dirtyPrice").textContent = isFund ? "Расчётная цена пая" : "Цена закрытия";
+        const dayDelta = asset.priceDeltaDay;
+        const dayDeltaPct = asset.priceDeltaDayPct;
+        const sign = (dayDelta || 0) >= 0 ? "+" : "";
+        setDelta(dayDelta, dayDelta === null || dayDelta === undefined ? "—" : `${sign}${money(Math.abs(dayDelta), asset.currency, 2)} за день (${sign}${pct(dayDeltaPct)})`);
+        const metrics = isFund ? [
+          ["Годовая доходность", pct(asset.annualReturn), asset.note || "из портфельной модели", false],
+          ["Риск", pct(asset.annualVol), "годовая волатильность", false],
+          [asset.rating ? "Рейтинг" : "УК", asset.rating || asset.etfCompany || "—", asset.rating ? "MOEX" : "", false],
+          ["Структура", asset.etfStructure || "—", "", false],
+        ] : [
+          ["День", signedPct(asset.priceDeltaDayPct), "изменение цены закрытия", false],
+          ["Риск", pct(asset.annualVol), "годовая волатильность", false],
+          ["Оборот", asset.turnover ? compactMoney(asset.turnover) : "—", "последний торговый день", false],
+          [asset.rating ? "Рейтинг" : "Сектор", asset.rating || asset.sector || "—", asset.rating ? "MOEX" : "", false],
+        ];
+        document.getElementById("metrics").innerHTML = metrics.map(([label, value, note, hot]) => {
+          return `<div class="metric ${hot ? "hot" : ""}"><div class="${metricValueClass(value)}">${value}</div><div class="metric-label">${label}</div>${note ? `<div class="metric-note">${note}</div>` : ""}</div>`;
+        }).join("");
+        const lastDividend = asset.latestDividend ? `${dividendValue(asset.latestDividend, asset)} · ${dateRu(asset.latestDividend.date)}` : "—";
+        document.getElementById("tiles").innerHTML = renderTiles(isFund ? [
+          [asset.etfCompany || "—", "Управляющая компания"],
+          [asset.etfStructure || "—", "Структура"],
+          [asset.avgTurnover ? compactMoney(asset.avgTurnover) : "—", "Средний оборот за 60 торговых дней"],
+          [pct(asset.annualReturn), "Ожидаемая доходность"],
+          [pct(asset.annualVol), "Риск"],
+          [asset.isin || "—", "ISIN"],
+        ] : [
+          [asset.marketCap ? compactMoney(asset.marketCap) : "—", "Капитализация"],
+          [asset.turnover ? compactMoney(asset.turnover) : "—", "Оборот за день"],
+          [asset.volume ? nb(rub.format(asset.volume)) : "—", "Объем, шт."],
+          [asset.open ? money(asset.open, asset.currency, 2) : "—", "Цена открытия"],
+          [asset.high && asset.low ? `${money(asset.high, asset.currency, 2)} / ${money(asset.low, asset.currency, 2)}` : "—", "High / Low"],
+          [lastDividend, "Последний дивиденд"],
+        ]);
+        const extra = isFund
+          ? `<div class="formula"><strong>${asset.etfStructure || "Состав БПИФ"}</strong><span>УК: ${asset.etfCompany || "—"}</span>${asset.note ? `<span>${asset.note}</span>` : ""}</div>`
+          : `<div class="formula"><strong>${asset.sector || "Сектор"}</strong><span>${[asset.industry, asset.issuer].filter(Boolean).join(" · ") || "Отраслевые данные из локального справочника"}</span></div>`;
+        document.getElementById("description").innerHTML = `${asset.description || "Описание недоступно."}${extra}`;
+        document.getElementById("footerNote").textContent = `Источник: local moex_library/packages/${asset.secid} · portfolio_interactive · данные на ${dateRu(asset.asof)}`;
+        return;
+      }
+      renderPeriodReturns(asset);
+      document.getElementById("subtitle").textContent = `${asset.subtitle} · ${asset.issuer}`;
+      document.getElementById("chips").innerHTML = [
+        asset.isin,
+        asset.board,
+        asset.isCurrencyBond ? "Валютная" : "",
+        asset.couponType,
+        asset.class,
+        asset.currency
+      ].filter(Boolean).map((item, i) => `<span class="chip ${i >= 2 && i <= 4 ? "tint" : ""}">${item}</span>`).join("");
+      document.getElementById("price").textContent = pct(asset.price, 2);
+      document.getElementById("dirtyPrice").textContent = asset.dirtyPrice !== null && asset.dirtyPrice !== undefined
+        ? money(asset.dirtyPrice, asset.currency, 2)
+        : asset.price !== null && asset.price !== undefined
+          ? `${num(asset.price * (asset.faceValue || 1000) / 100, 2)}\u00a0${currencyLabel(asset.currency)}`
+          : "Котировка MOEX отсутствует";
+      const dayDelta = asset.priceDeltaDay;
+      const dayDeltaPct = asset.priceDeltaDayPct;
+      const sign = (dayDelta || 0) >= 0 ? "+" : "";
+      setDelta(dayDelta, dayDelta === null || dayDelta === undefined ? "—" : `${sign}${num(dayDelta)} п.п. за день (${sign}${pct(dayDeltaPct)})`);
+      const floatingRateReference = asset.couponBenchmark === "Ключевая ставка Банка России" && asset.keyRate
+        ? ` · КС ЦБ ${pct(asset.keyRate.value)}`
+        : "";
+      const floatingYieldNote = asset.couponFormulaShort
+        ? `${asset.couponFormulaShort}${floatingRateReference}`
+        : "";
+      const couponNote = asset.couponValue ? `${money(asset.couponValue, asset.currency, 2)} · ${dateRu(asset.nextCouponDate)} · ${couponStatus(asset.couponStatus)}` : "";
+      const metrics = [];
+      if (asset.couponType === "Структурная") {
+        metrics.push(["Тип", "Структурная", "купон/доходность зависят от условий продукта", false]);
+        metrics.push(["Погашение", dateRu(asset.maturityDate), "", false]);
+        metrics.push(["НКД", money(asset.accint), "", false]);
+        metrics.push(["Рейтинг", asset.rating || "—", "", false]);
+      } else if (asset.couponType === "Флоатер") {
+        metrics.push(["Купонная доходность", pct(asset.couponRate), couponNote || floatingYieldNote, false]);
+        metrics.push(["Текущая доходность", pct(asset.currentYield), floatingYieldNote || "годовой купон / чистая цена", false]);
+        metrics.push(["НКД", money(asset.accint), "", false]);
+        metrics.push(["Рейтинг", asset.rating || "—", "", false]);
+      } else {
+        metrics.push(["Купон", pct(asset.couponRate), couponNote, false]);
+        metrics.push(["Текущая доходность", pct(asset.currentYield), "годовой купон / чистая цена", false]);
+        metrics.push(["Доходность к погашению / MOEX", pct(asset.ytm), "", false]);
+        metrics.push(["Рейтинг", asset.rating || "—", "", false]);
+      }
+      document.getElementById("metrics").innerHTML = metrics.map(([label, value, note, hot]) => {
+        return `<div class="metric ${hot ? "hot" : ""}"><div class="${metricValueClass(value)}">${value}</div><div class="metric-label">${label}</div>${note ? `<div class="metric-note">${note}</div>` : ""}</div>`;
+      }).join("");
+      document.getElementById("tiles").innerHTML = renderTiles([
+        [money(asset.faceValue, asset.currency), "Номинал"],
+        [asset.avgTurnover ? compactMoney(asset.avgTurnover) : "—", "Средний оборот за 60 торговых дней"],
+        [asset.frequency ? num(asset.frequency, 0) : "—", "Купонов в год"],
+        [dateRu(asset.issueDate), "Начало торгов"],
+        [dateRu(asset.nextCouponDate), "Ближайший купон"],
+        [dateRu(asset.maturityDate), `Погашение${asset.yearsToMaturity ? ` · ${num(asset.yearsToMaturity, 1)} г.` : ""}`]
+      ]);
+      const formulaReference = asset.couponBenchmark === "Ключевая ставка Банка России" && asset.keyRate
+        ? `<span>Ориентир: ключевая ставка Банка России ${pct(asset.keyRate.value)} на ${dateRu(asset.keyRate.date)}.</span>`
+        : asset.couponBenchmark
+          ? `<span>Ориентир: ${asset.couponBenchmark}.</span>`
+          : "";
+      document.getElementById("description").innerHTML = `${asset.description}${asset.couponFormula ? `<div class="formula"><strong>${asset.couponFormulaShort || asset.couponType}</strong><span>${asset.couponFormula}</span>${formulaReference}</div>` : ""}`;
+      document.getElementById("footerNote").textContent = `Источник: local moex_library/packages/${asset.secid} · данные на ${dateRu(asset.asof)}`;
+    }
+
+    function renderDetailCta(asset) {
+      const wrap = document.getElementById("detailCta");
+      const url = asset.assetType === "stock" ? asset.detailPageUrl : "";
+      if (!url) {
+        wrap.style.display = "none";
+        wrap.innerHTML = "";
+        return;
+      }
+      wrap.style.display = "block";
+      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Подробнее</a>`;
+    }
+
+    function renderCashflow(asset) {
+      if (asset.assetType === "stock") {
+        document.getElementById("cashflowTitle").textContent = "Дивиденды";
+        const rows = (asset.dividends || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
+        document.getElementById("cashflow").innerHTML = rows.length ? rows.map(item => `<div class="flow-row">
+          <div class="flow-date">${dateRu(item.date)}</div>
+          <div class="flow-main"><div class="flow-title">Дивиденд</div><div class="flow-note">${dividendNote(item)}</div></div>
+          <div class="flow-value">${dividendValue(item, asset)}</div>
+        </div>`).join("") : `<div class="desc">В локальном пакете нет дивидендного календаря.</div>`;
+        return;
+      }
+      if (asset.assetType === "fund") {
+        document.getElementById("cashflowTitle").textContent = "Состав БПИФ";
+        document.getElementById("cashflow").innerHTML = (asset.fundComposition || []).map(item => `<div class="flow-row">
+          <div class="flow-date">${item.label}</div>
+          <div class="flow-main"><div class="flow-title">${item.value || "—"}</div><div class="flow-note">${asset.secid}</div></div>
+          <div class="flow-value"></div>
+        </div>`).join("");
+        return;
+      }
+      document.getElementById("cashflowTitle").textContent = "Денежный поток";
+      const couponRows = (asset.futureCoupons || []).map(item => ({ ...item, type: "Купон" })).sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      const yearEnd = `${new Date().getFullYear()}-12-31`;
+      const coupons = asset.couponType === "Флоатер" ? couponRows.filter(item => String(item.date) <= yearEnd) : couponRows.slice(0, 6);
+      const amort = (asset.futureAmortizations || []).map(item => ({ ...item, type: "Погашение" })).sort((a, b) => String(a.date).localeCompare(String(b.date))).slice(0, 2);
+      if (!amort.length && asset.maturityDate) amort.push({ date: asset.maturityDate, value: asset.faceValue, rate: 100, currency: asset.currency, type: "Погашение" });
+      const rows = [...coupons, ...amort].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      const historyRows = (asset.allCoupons || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const missingCouponHtml = !couponRows.length
+        ? `<div class="desc">Будущие купоны не раскрыты в локальном пакете${asset.couponType === "Флоатер" ? ": ставка появится ближе к купонному периоду." : "."}</div>`
+        : "";
+      const cashflowHtml = rows.length ? rows.map(item => {
+        return `<div class="flow-row">
+          <div class="flow-date">${dateRu(item.date)}</div>
+          <div class="flow-main"><div class="flow-title">${item.type}${item.type === "Купон" && item.rate ? ` · ${pct(item.rate)}` : ""}</div><div class="flow-note">${item.type === "Погашение" ? "номинал · плановая выплата" : item.status ? couponStatus(item.status) : "плановая выплата"}</div></div>
+          <div class="flow-value">${money(item.value, item.currency || asset.currency, item.type === "Купон" ? 2 : 0)}</div>
+        </div>`;
+      }).join("") : `<div class="desc">Будущие купоны не раскрыты в локальном пакете. Для флоатеров это нормально: ставка часто появляется ближе к купонному периоду.</div>`;
+      const historyHtml = historyRows.length ? `<details class="coupon-history"><summary><span>Прошлые купоны</span><span>${historyRows.length} выплат</span></summary><div class="coupon-table">${historyRows.map(item => {
+        return `<div class="flow-row past">
+          <div class="flow-date">${dateRu(item.date)}</div>
+          <div class="flow-main"><div class="flow-title">Купон${item.rate ? ` · ${pct(item.rate)}` : ""}</div><div class="flow-note">факт</div></div>
+          <div class="flow-value">${money(item.value, item.currency || asset.currency, 2)}</div>
+        </div>`;
+      }).join("")}</div></details>` : "";
+      document.getElementById("cashflow").innerHTML = missingCouponHtml + cashflowHtml + historyHtml;
+    }
+
+    function renderChart(asset) {
+      const allRows = filteredHistory(asset);
+      const valueKey = state.mode === "yield" ? "yield" : "price";
+      const rows = allRows.filter(row => Number(row[valueKey]) > 0);
+      const x = rows.map(row => row.date);
+      const price = rows.map(row => row.price);
+      const yieldClose = rows.map(row => row.yield);
+      const turnover = rows.map(row => row.turnover || 0);
+      const y = state.mode === "yield" ? yieldClose : price;
+      const yTitle = state.mode === "yield" ? "Доходность, %" : (asset.assetType && asset.assetType !== "bond" ? `Цена, ${asset.currency || "RUB"}` : "Цена, %");
+      const yRange = adaptiveAxisRange(y, state.mode === "yield" ? "yield" : "price");
+      const turnoverRange = adaptiveAxisRange(turnover, "turnover");
+      const lineColor = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+      const hasPlotly = typeof Plotly !== "undefined";
+      if (!hasPlotly) {
+        document.getElementById("chart").innerHTML = "<div class='desc'>Plotly.js не загрузился. Подключите интернет или положите локальный plotly.min.js рядом с HTML.</div>";
+        return;
+      }
+      if (!rows.length) {
+        Plotly.purge("chart");
+        document.getElementById("chart").innerHTML = `<div class="chart-empty">${state.mode === "yield" ? "История доходности MOEX отсутствует" : "История котировок MOEX отсутствует"}</div>`;
+        return;
+      }
+      Plotly.react("chart", [
+        {
+          type: "bar",
+          x,
+          y: turnover,
+          yaxis: "y2",
+          marker: { color: "rgba(16,18,21,.10)", line: { width: 0 } },
+          hovertemplate: "%{x}<br>Оборот: %{y:,.0f} ₽<extra></extra>",
+          name: "Оборот"
+        },
+        {
+          type: "scatter",
+          mode: "lines",
+          x,
+          y,
+          connectgaps: true,
+          line: { color: lineColor, width: 4, shape: "spline", smoothing: 1.15 },
+          fill: "none",
+          fillcolor: `${lineColor}18`,
+          hovertemplate: `%{x}<br>${yTitle}: %{y:.2f}<extra></extra>`,
+          name: yTitle
+        }
+      ], {
+        margin: { l: 42, r: 42, t: 10, b: 38 },
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        hovermode: "x unified",
+        showlegend: false,
+        xaxis: {
+          tickfont: { color: "rgba(16,18,21,.48)", size: 11 },
+          gridcolor: "rgba(16,18,21,.06)",
+          zeroline: false,
+          rangeslider: { visible: false }
+        },
+        yaxis: {
+          title: "",
+          tickfont: { color: "rgba(16,18,21,.50)", size: 11 },
+          gridcolor: "rgba(16,18,21,.08)",
+          zeroline: false,
+          range: yRange
+        },
+        yaxis2: {
+          overlaying: "y",
+          side: "right",
+          showgrid: false,
+          tickfont: { color: "rgba(16,18,21,.38)", size: 11 },
+          zeroline: false,
+          range: turnoverRange
+        },
+        hoverlabel: {
+          bgcolor: "rgba(255,255,255,.92)",
+          bordercolor: "rgba(255,255,255,.9)",
+          font: { color: "#101215" }
+        }
+      }, { responsive: true, displayModeBar: false });
+    }
+
+    function render() {
+      const asset = ASSETS[state.assetIndex];
+      renderLogo(asset);
+      renderSummary(asset);
+      renderDetailCta(asset);
+      renderCashflow(asset);
+      renderChart(asset);
+      setActiveButtons("assetButtons", "asset", String(state.assetIndex));
+      setActiveButtons("rangeButtons", "range", state.range);
+      setActiveButtons("modeButtons", "mode", state.mode);
+      requestAnimationFrame(() => {
+        applyLogoAccentFromImage();
+        renderChart(ASSETS[state.assetIndex]);
+      });
+    }
+
+    renderButtons();
+    render();
+    window.addEventListener("resize", () => renderChart(ASSETS[state.assetIndex]));
+  </script>
+</body>
+</html>
