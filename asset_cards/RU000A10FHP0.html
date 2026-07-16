@@ -67,7 +67,7 @@
     .switch-group, .range-group, .mode-group { display: flex; gap: 7px; flex-wrap: wrap; }
     button {
       border: 0;
-      min-height: 44px;
+      min-height: 38px;
       border-radius: 15px;
       padding: 0 14px;
       font: 700 13px/1 system-ui, sans-serif;
@@ -130,7 +130,7 @@
     h1 {
       margin: 0;
       font-size: clamp(30px, 5vw, 58px);
-      line-height: 1.02;
+      line-height: .92;
       letter-spacing: 0;
     }
     .subtitle {
@@ -415,6 +415,114 @@
       body.in-drawer #chart { height: 270px; }
       body.in-drawer .footer-note { padding: 0 12px 16px; }
     }
+  
+    :root {
+      --bg-a: #F2F2F2 !important;
+      --bg-b: #FFFFFF !important;
+      --ink: #111111 !important;
+      --muted: rgba(43,43,43,.62) !important;
+      --faint: rgba(43,43,43,.42) !important;
+      --line: rgba(17,17,17,.10) !important;
+      --glass: rgba(255,255,255,.62) !important;
+      --glass-strong: rgba(255,255,255,.82) !important;
+      --radius: 28px !important;
+    }
+    body {
+      background:
+        linear-gradient(rgba(255,255,255,.34) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.30) 1px, transparent 1px),
+        radial-gradient(circle at 16% 8%, color-mix(in srgb, var(--accent), transparent 88%), transparent 27%),
+        radial-gradient(circle at 84% 4%, rgba(138,138,138,.18), transparent 24%),
+        linear-gradient(180deg, #F2F2F2 0%, #FFFFFF 46%, #D9D9D9 100%) !important;
+      background-size: 112px 112px, 112px 112px, auto, auto, auto !important;
+    }
+    html.drawer-mode,
+    html.drawer-mode body,
+    body.in-drawer {
+      padding: 0 !important;
+      height: auto !important;
+      min-height: 100% !important;
+      background: #FFFFFF !important;
+      overflow: auto !important;
+      overscroll-behavior: contain !important;
+    }
+    html.drawer-mode body::before,
+    body.in-drawer::before {
+      display: none !important;
+    }
+    html.drawer-mode body .shell,
+    body.in-drawer .shell {
+      width: 100% !important;
+      min-height: 100% !important;
+      gap: 0 !important;
+    }
+    html.drawer-mode body .card,
+    body.in-drawer .card {
+      min-height: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+      background: #FFFFFF !important;
+      border-radius: var(--radius) !important;
+      overflow: visible !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+    }
+    html.drawer-mode body .card::before,
+    body.in-drawer .card::before {
+      display: none !important;
+    }
+    html.drawer-mode body .content,
+    body.in-drawer .content {
+      position: relative !important;
+      z-index: 1 !important;
+      padding-bottom: 0 !important;
+    }
+    .asset-switcher,
+    .footer-note,
+    html.drawer-mode body .asset-switcher,
+    html.drawer-mode body .footer-note,
+    body.in-drawer .asset-switcher,
+    body.in-drawer .footer-note {
+      display: none !important;
+    }
+    .card,
+    .asset-switcher,
+    .quote,
+    .metric,
+    .return-pill,
+    .chart-panel,
+    .side-card,
+    .flow-row,
+    .scenario-card,
+    .section-card,
+    .chip,
+    button,
+    .detail-link {
+      border-radius: var(--radius) !important;
+      border-color: rgba(17,17,17,.10) !important;
+    }
+    .card {
+      background:
+        radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--accent), transparent 88%), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.86), rgba(242,242,242,.66)) !important;
+      box-shadow: 0 24px 70px rgba(17,17,17,.12), inset 0 1px 0 rgba(255,255,255,.86) !important;
+    }
+    .logo {
+      border-radius: var(--radius) !important;
+      background: var(--accent) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.34), 0 16px 38px color-mix(in srgb, var(--accent), transparent 76%) !important;
+    }
+    button.active,
+    .detail-link {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent), #111111 8%), color-mix(in srgb, var(--accent), #111111 22%)) !important;
+      color: #FFFFFF !important;
+    }
+    .chip.tint {
+      color: color-mix(in srgb, var(--accent), #111111 36%) !important;
+      background: var(--accent-soft) !important;
+    }
+
   </style>
 <script>try{if(new URLSearchParams(location.search).get("drawer")==="1"){document.documentElement.classList.add("drawer-mode");}}catch(error){}</script>
 </head>
@@ -449,20 +557,20 @@
           <div class="chart-panel">
             <div class="chart-toolbar">
               <div class="mode-group" id="modeButtons">
-                <button type="button" data-mode="price" class="active" aria-selected="true">Цена</button>
-                <button type="button" data-mode="yield" aria-selected="false">Доходность</button>
+                <button data-mode="price" class="active">Цена</button>
+                <button data-mode="yield">Доходность</button>
               </div>
               <div class="range-group" id="rangeButtons">
-                <button type="button" data-range="D" aria-label="День">День</button>
-                <button type="button" data-range="W" aria-label="Неделя">Неделя</button>
-                <button type="button" data-range="1M" aria-label="Один месяц">1М</button>
-                <button type="button" data-range="3M" aria-label="Три месяца">3М</button>
-                <button type="button" data-range="6M" aria-label="Шесть месяцев">6М</button>
-                <button type="button" data-range="YTD" aria-label="С начала года">YTD</button>
-                <button type="button" data-range="1Y" aria-label="Один год">Год</button>
-                <button type="button" data-range="3Y" aria-label="Три года">3Г</button>
-                <button type="button" data-range="5Y" aria-label="Пять лет">5Л</button>
-                <button type="button" data-range="ALL" class="active" aria-label="Весь период">Всё</button>
+                <button data-range="D">День</button>
+                <button data-range="W">Неделя</button>
+                <button data-range="1M">1М</button>
+                <button data-range="3M">3М</button>
+                <button data-range="6M">6М</button>
+                <button data-range="YTD">YTD</button>
+                <button data-range="1Y">Год</button>
+                <button data-range="3Y">3Г</button>
+                <button data-range="5Y">5Л</button>
+                <button data-range="ALL" class="active">Всё</button>
               </div>
             </div>
             <div id="chart"></div>
@@ -487,7 +595,7 @@
   </main>
 
   <script>
-    const ASSETS = [{"assetType":"bond","secid":"RU000A10FHP0","title":"ВТБ Б1-400","subtitle":"Банк ВТБ (ПАО) Б-1-400","isin":"RU000A10FHP0","board":"TQCB","class":"Облигация","couponType":"Фикс","isCurrencyBond":false,"issuer":"Банк ВТБ (публичное акционерное общество)","logo":"../assets/logos/RU000A10FHP0.png","accent":"#445D9B","asof":"2026-07-13","price":100.23,"dirtyPrice":null,"accint":null,"priceDelta":-0.5499999999999972,"priceDeltaPct":-0.5457432030164686,"couponRate":13.5,"couponValue":33.66,"couponStatus":"known","couponFormula":"","couponFormulaShort":"","couponBenchmark":"","couponSpread":null,"couponSourceNote":"","keyRate":{"date":"2026-07-14","value":14.25},"currentYield":13.433103861119426,"ytm":14.46,"duration":null,"rating":"AAA","faceValue":1000.0,"currency":"RUB","issueDate":"2026-06-25","maturityDate":"2026-12-24","nextCouponDate":"2026-09-24","frequency":4.0,"yearsToMaturity":0.4462696783025325,"avgTurnover":191457.775,"annualCoupon":134.64,"description":"Биржевые облигации процентные неконвертируемые бездокументарные серии Б-1-400 Банк ВТБ (публичное акционерное общество), рег. № 4B02-400-01000-B-001P","issuerDescription":"","history":[{"date":"2026-06-26","price":100.78,"turnover":14108.9,"volume":14.0,"yield":12.04},{"date":"2026-06-29","price":99.41,"turnover":207756.5,"volume":209.0,"yield":16.57},{"date":"2026-06-30","price":100.62,"turnover":1001204.3,"volume":995.0,"yield":12.72},{"date":"2026-07-01","price":100.6,"turnover":424023.4,"volume":428.0,"yield":13.54},{"date":"2026-07-02","price":100.56,"turnover":124080.2,"volume":124.0,"yield":14.19},{"date":"2026-07-03","price":100.54,"turnover":47052.5,"volume":47.0,"yield":13.69},{"date":"2026-07-06","price":100.49,"turnover":140077.2,"volume":140.0,"yield":14.18},{"date":"2026-07-07","price":100.47,"turnover":64083.0,"volume":64.0,"yield":12.14},{"date":"2026-07-08","price":100.46,"turnover":50091.5,"volume":50.0,"yield":15.35},{"date":"2026-07-09","price":100.21,"turnover":194840.9,"volume":194.0,"yield":12.11},{"date":"2026-07-10","price":100.22,"turnover":21120.8,"volume":21.0,"yield":12.68},{"date":"2026-07-13","price":100.23,"turnover":9054.1,"volume":9.0,"yield":14.46}],"futureCoupons":[{"date":"2026-09-24","startDate":"2026-06-25","value":33.66,"rate":13.5,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-12-24","startDate":"2026-09-24","value":33.66,"rate":13.5,"face":1000.0,"currency":"RUB","status":"known"}],"pastCoupons":[],"allCoupons":[],"futureAmortizations":[{"date":"2026-12-24","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
+    const ASSETS = [{"assetType":"bond","secid":"RU000A10FHP0","title":"ВТБ Б1-400","subtitle":"Банк ВТБ (ПАО) Б-1-400","isin":"RU000A10FHP0","board":"TQCB","class":"Облигация","couponType":"Фикс","isCurrencyBond":false,"issuer":"Банк ВТБ (публичное акционерное общество)","logo":"../assets/logos/RU000A10FHP0.png","accent":"#445D9B","asof":"2026-07-01","price":100.6,"dirtyPrice":null,"accint":null,"priceDelta":-0.18000000000000682,"priceDeltaPct":-0.17860686644176108,"couponRate":13.5,"couponValue":33.66,"couponStatus":"known","couponFormula":"","couponFormulaShort":"","couponBenchmark":"","couponSpread":null,"couponSourceNote":"","keyRate":{"date":"2026-07-02","value":14.25},"currentYield":13.38369781312127,"ytm":13.54,"duration":null,"rating":"AAA","faceValue":1000.0,"currency":"RUB","issueDate":"2026-06-25","maturityDate":"2026-12-24","nextCouponDate":"2026-09-24","frequency":4.0,"yearsToMaturity":0.4791238877481177,"avgTurnover":411773.275,"annualCoupon":134.64,"description":"Биржевые облигации процентные неконвертируемые бездокументарные серии Б-1-400 Банк ВТБ (публичное акционерное общество), рег. № 4B02-400-01000-B-001P","issuerDescription":"","history":[{"date":"2026-06-26","price":100.78,"turnover":14108.9,"volume":14.0,"yield":12.04},{"date":"2026-06-29","price":99.41,"turnover":207756.5,"volume":209.0,"yield":16.57},{"date":"2026-06-30","price":100.62,"turnover":1001204.3,"volume":995.0,"yield":12.72},{"date":"2026-07-01","price":100.6,"turnover":424023.4,"volume":428.0,"yield":13.54}],"futureCoupons":[{"date":"2026-09-24","startDate":"2026-06-25","value":33.66,"rate":13.5,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-12-24","startDate":"2026-09-24","value":33.66,"rate":13.5,"face":1000.0,"currency":"RUB","status":"known"}],"pastCoupons":[],"allCoupons":[],"futureAmortizations":[{"date":"2026-12-24","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
     const state = { assetIndex: 0, range: "ALL", mode: "price" };
     if (new URLSearchParams(location.search).get("drawer") === "1" || window.self !== window.top) document.body.classList.add("in-drawer");
 
@@ -528,7 +636,7 @@
       if (abs >= 1_000_000) return `${num(value / 1_000_000, 1)}\u00a0млн\u00a0${unit}`;
       return money(value, currency);
     };
-    const couponStatus = value => value === "estimate" || value === "forecast" ? "прогноз" : value === "known" ? "известно" : value === "schedule" ? "график" : "факт";
+    const couponStatus = value => value === "estimate" || value === "forecast" ? "прогноз" : value === "known" ? "по графику" : value === "schedule" ? "по графику" : "факт";
     const signedPct = value => value === null || value === undefined || Number.isNaN(value) ? "—" : `${value >= 0 ? "+" : ""}${pct(value)}`;
     const periodLabel = value => ({ D: "День", W: "Неделя", M: "Месяц", "3M": "3М", "6M": "6М", YTD: "YTD", "1Y": "Год", "3Y": "3Г", "5Y": "5Л", ALL: "Всё" }[value] || value);
     const htmlEsc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
@@ -605,11 +713,7 @@
     }
 
     function setActiveButtons(containerId, attr, value) {
-      document.querySelectorAll(`#${containerId} button`).forEach(button => {
-        const selected = button.dataset[attr] === value;
-        button.classList.toggle("active", selected);
-        button.setAttribute("aria-selected", String(selected));
-      });
+      document.querySelectorAll(`#${containerId} button`).forEach(button => button.classList.toggle("active", button.dataset[attr] === value));
     }
 
     function filteredHistory(asset) {
@@ -638,7 +742,7 @@
       if (ASSETS.length < 2) {
         if (switcher) switcher.style.display = "none";
       }
-      wrap.innerHTML = ASSETS.map((asset, index) => `<button type="button" data-asset="${index}" aria-selected="${index === state.assetIndex}" class="${index === state.assetIndex ? "active" : ""}">${asset.title}</button>`).join("");
+      wrap.innerHTML = ASSETS.map((asset, index) => `<button data-asset="${index}" class="${index === state.assetIndex ? "active" : ""}">${asset.title}</button>`).join("");
       wrap.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
         state.assetIndex = Number(button.dataset.asset);
         render();
@@ -721,12 +825,82 @@
       }).join("");
     }
 
+
+    function logoHex(r, g, b) {
+      return "#" + [r, g, b].map(value => Math.max(0, Math.min(255, value)).toString(16).padStart(2, "0")).join("");
+    }
+    function dominantLogoColor(img) {
+      try {
+        const canvas = document.createElement("canvas");
+        const size = 48;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        if (!ctx) return "";
+        ctx.drawImage(img, 0, 0, size, size);
+        const data = ctx.getImageData(0, 0, size, size).data;
+        const buckets = new Map();
+        for (let i = 0; i < data.length; i += 4) {
+          const alpha = data[i + 3];
+          if (alpha < 180) continue;
+          const r = data[i], g = data[i + 1], b = data[i + 2];
+          const max = Math.max(r, g, b), min = Math.min(r, g, b);
+          const light = (max + min) / 510;
+          const saturation = max === 0 ? 0 : (max - min) / max;
+          if (light > 0.88 || saturation < 0.16) continue;
+          const key = [r, g, b].map(value => Math.round(value / 16) * 16).join(",");
+          const previous = buckets.get(key) || { count: 0, score: 0, r: 0, g: 0, b: 0 };
+          previous.count += 1;
+          previous.score += 1 + saturation * 1.7;
+          previous.r += r;
+          previous.g += g;
+          previous.b += b;
+          buckets.set(key, previous);
+        }
+        const best = [...buckets.values()].sort((a, b) => b.score - a.score)[0];
+        if (!best) return "";
+        return logoHex(Math.round(best.r / best.count), Math.round(best.g / best.count), Math.round(best.b / best.count));
+      } catch (error) {
+        return "";
+      }
+    }
+    function applyLogoAccentFromImage() {
+      const img = document.querySelector(".logo img");
+      if (!img) return;
+      const apply = () => {
+        const color = dominantLogoColor(img);
+        if (!color) return;
+        document.documentElement.style.setProperty("--accent", normalizeAccent(color));
+        document.documentElement.style.setProperty("--accent-soft", hexToSoft(color));
+        renderChart(ASSETS[state.assetIndex]);
+      };
+      if (img.complete && img.naturalWidth) apply();
+      else img.addEventListener("load", apply, { once: true });
+    }
+    function adaptiveChartRange(values, mode) {
+      const clean = values.map(Number).filter(value => Number.isFinite(value));
+      if (!clean.length) return undefined;
+      let low = Math.min(...clean);
+      let high = Math.max(...clean);
+      let span = high - low;
+      if (span < 1e-9) {
+        const base = Math.max(Math.abs(high), 1);
+        span = base * 0.04;
+        low -= span / 2;
+        high += span / 2;
+      }
+      const pad = Math.max(span * 0.08, Math.max(Math.abs(low), 1) * 0.015);
+      const bottom = mode === "price" ? Math.max(0, low - pad) : low - pad;
+      return [bottom, high + pad];
+    }
+
     function renderSummary(asset) {
       const hasYieldSeries = (asset.history || []).some(row => Number(row.yield || 0) > 0);
       if (!hasYieldSeries && state.mode === "yield") state.mode = "price";
       document.querySelector('[data-mode="yield"]').style.display = hasYieldSeries ? "" : "none";
       document.documentElement.style.setProperty("--accent", normalizeAccent(asset.accent));
       document.documentElement.style.setProperty("--accent-soft", hexToSoft(asset.accent));
+      requestAnimationFrame(applyLogoAccentFromImage);
       document.getElementById("title").textContent = asset.title;
       if (asset.assetType && asset.assetType !== "bond") {
         renderPeriodReturns(asset);
@@ -818,7 +992,7 @@
       } else {
         metrics.push(["Купон", pct(asset.couponRate), couponNote, false]);
         metrics.push(["Текущая доходность", pct(asset.currentYield), "годовой купон / чистая цена", false]);
-        metrics.push(["YTM / MOEX", pct(asset.ytm), "", false]);
+        metrics.push(["Доходность к погашению / MOEX", pct(asset.ytm), "", false]);
         metrics.push(["Рейтинг", asset.rating || "—", "", false]);
       }
       document.getElementById("metrics").innerHTML = metrics.map(([label, value, note, hot]) => {
@@ -914,7 +1088,7 @@
       const lineColor = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
       const hasPlotly = typeof Plotly !== "undefined";
       if (!hasPlotly) {
-        document.getElementById("chart").innerHTML = "<div class='desc'>Plotly.js не загрузился. Подключите интернет или положите локальный plotly.min.js рядом с HTML.</div>";
+        document.getElementById("chart").innerHTML = "<div class='desc'>График недоступен: библиотека Plotly не загружена.</div>";
         return;
       }
       Plotly.react("chart", [
