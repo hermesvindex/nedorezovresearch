@@ -2,6 +2,7 @@ const nav = document.querySelector('.glass-nav');
 const menuToggle = document.querySelector('.menu-toggle');
 const links = [...document.querySelectorAll('.project-nav a')];
 const projects = [...document.querySelectorAll('[data-project]')];
+const revealSections = [...document.querySelectorAll('.intro, .project')];
 
 const updateDepth = () => {
   nav.classList.toggle('is-deep', window.scrollY > window.innerHeight * 0.72);
@@ -13,6 +14,7 @@ const updateDepth = () => {
   const to = [7, 23, 34];
   const color = from.map((channel, index) => Math.round(channel + (to[index] - channel) * eased));
   document.documentElement.style.setProperty('--scroll-depth', `rgb(${color.join(', ')})`);
+  document.documentElement.style.setProperty('--page-progress', String(window.scrollY / maxScroll));
 };
 
 const setMenu = (open) => {
@@ -45,5 +47,18 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: [0.25, 0.5, 0.75] });
 
 projects.forEach((project) => observer.observe(project));
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('is-visible');
+    revealObserver.unobserve(entry.target);
+  });
+}, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+
+revealSections.forEach((section) => {
+  section.classList.add('reveal-ready');
+  revealObserver.observe(section);
+});
 window.addEventListener('scroll', updateDepth, { passive: true });
 updateDepth();
