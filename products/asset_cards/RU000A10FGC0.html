@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ГПН005Р-10 · Карточка актива</title>
+  <link rel="stylesheet" href="../assets/integration-shell.css">
   <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
   <style>
     :root {
@@ -225,23 +226,26 @@
     }
     .detail-cta {
       display: none;
-      margin-top: 14px;
+      margin-top: 16px;
+      justify-content: flex-start;
     }
     .detail-link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
+      min-height: 38px;
+      padding: 0 15px;
       border-radius: 999px;
-      background: #101827;
+      border: 1px solid color-mix(in srgb, var(--accent), transparent 72%);
+      background: var(--accent);
       color: #fff;
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 900;
-      box-shadow: 0 18px 34px rgba(16,24,39,.18);
+      font-size: 12px;
+      font-weight: 760;
+      box-shadow: 0 10px 22px color-mix(in srgb, var(--accent), transparent 76%);
     }
     .detail-link:hover {
-      background: #1f2a3d;
+      background: color-mix(in srgb, var(--accent), #101827 15%);
     }
     #chart { height: 354px; width: 100%; }
     .chart-toolbar {
@@ -439,6 +443,8 @@
             </div>
           </div>
 
+          <div class="detail-cta" id="detailCta"></div>
+
           <div class="price-panel">
             <div class="quote">
               <div class="quote-value" id="price"></div>
@@ -470,7 +476,6 @@
             </div>
             <div id="chart"></div>
           </div>
-          <div class="detail-cta" id="detailCta"></div>
         </section>
 
         <aside class="side">
@@ -490,7 +495,7 @@
   </main>
 
   <script>
-    const ASSETS = [{"assetType":"bond","secid":"RU000A10FGC0","title":"ГПН005Р-10","subtitle":"Газпром нефть 005Р-10R","isin":"RU000A10FGC0","board":"TQCB","class":"Облигация","couponType":"Флоатер","isCurrencyBond":false,"issuer":"Публичное акционерное общество \"Газпром нефть\"","logo":"../assets/logos/RU000A10FGC0.png","accent":"#0070C0","asof":"2026-07-17","price":100.0,"dirtyPrice":1000.0,"accint":null,"priceDelta":0.0,"priceDeltaPct":0.0,"priceDeltaDay":-0.06999999999999318,"priceDeltaDayPct":-0.06995103427599998,"couponRate":null,"couponValue":null,"couponStatus":"","couponFormula":"Купон привязан к рыночному процентному ориентиру.","couponFormulaShort":"Плавающий купон","couponBenchmark":"денежный рынок","couponSpread":null,"couponSourceNote":"Формула и ближайшие купоны собраны из локальной базы moex_library/moex_bonds; прогнозные купоны считаются по базовому макросценарию.","keyRate":{"date":"2026-07-20","value":14.25},"currentYield":null,"ytm":16.43,"duration":null,"rating":"AAA","faceValue":1000.0,"currency":"RUB","issueDate":"2026-06-19","maturityDate":"2028-06-08","nextCouponDate":"2026-07-19","frequency":12.0,"yearsToMaturity":1.8863791923340179,"avgTurnover":26820724.876190476,"annualCoupon":null,"description":"Биржевые облигации процентные неконвертируемые бездокументарные  серии 005P-10R Публичное акционерное общество \"Газпром нефть\", рег. № 4B02-10-00146-A-004P","issuerDescription":"","history":[{"date":"2026-06-19","price":100.0,"turnover":112585993.4,"volume":112586.0,"yield":14.71},{"date":"2026-06-22","price":100.05,"turnover":253328453.6,"volume":253204.0,"yield":14.75},{"date":"2026-06-23","price":100.03,"turnover":37255346.5,"volume":37244.0,"yield":14.73},{"date":"2026-06-24","price":100.05,"turnover":350208.5,"volume":349.0,"yield":14.81},{"date":"2026-06-25","price":100.06,"turnover":161537.3,"volume":161.0,"yield":15.19},{"date":"2026-06-26","price":100.05,"turnover":59949.8,"volume":60.0,"yield":15.19},{"date":"2026-06-29","price":100.38,"turnover":350985.9,"volume":351.0,"yield":14.6},{"date":"2026-06-30","price":100.03,"turnover":116499927.4,"volume":116467.0,"yield":15.76},{"date":"2026-07-01","price":100.05,"turnover":220634.9,"volume":219.0,"yield":15.61},{"date":"2026-07-02","price":100.35,"turnover":988402.0,"volume":985.0,"yield":16.1},{"date":"2026-07-03","price":100.42,"turnover":89280.1,"volume":89.0,"yield":16.11},{"date":"2026-07-06","price":100.42,"turnover":175150.7,"volume":175.0,"yield":16.06},{"date":"2026-07-07","price":100.29,"turnover":443206.2,"volume":442.0,"yield":16.17},{"date":"2026-07-08","price":100.27,"turnover":41099.6,"volume":41.0,"yield":16.24},{"date":"2026-07-09","price":100.27,"turnover":382268.5,"volume":381.0,"yield":16.01},{"date":"2026-07-10","price":100.2,"turnover":35286430.0,"volume":35216.0,"yield":15.84},{"date":"2026-07-13","price":100.2,"turnover":458117.5,"volume":457.0,"yield":15.95},{"date":"2026-07-14","price":100.2,"turnover":116077.0,"volume":116.0,"yield":16.0},{"date":"2026-07-15","price":100.2,"turnover":30030.4,"volume":30.0,"yield":16.06},{"date":"2026-07-16","price":100.07,"turnover":52095.5,"volume":52.0,"yield":16.08},{"date":"2026-07-17","price":100.0,"turnover":4360027.6,"volume":4360.0,"yield":16.43}],"futureCoupons":[],"pastCoupons":[],"allCoupons":[],"futureAmortizations":[{"date":"2028-06-08","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
+    const ASSETS = [{"assetType":"bond","secid":"RU000A10FGC0","title":"ГПН005Р-10","subtitle":"Газпром нефть 005Р-10R","isin":"RU000A10FGC0","board":"TQCB","class":"Облигация","couponType":"Флоатер","isCurrencyBond":false,"issuer":"Публичное акционерное общество \"Газпром нефть\"","logo":"../assets/logos/RU000A10FGC0.png","accent":"#0070C0","asof":"2026-07-20","price":100.16,"dirtyPrice":1001.6,"accint":null,"priceDelta":0.1599999999999966,"priceDeltaPct":0.1599999999999966,"priceDeltaDay":0.1599999999999966,"priceDeltaDayPct":0.1599999999999966,"couponRate":null,"couponValue":null,"couponStatus":"","couponFormula":"Купон привязан к рыночному процентному ориентиру.","couponFormulaShort":"Плавающий купон","couponBenchmark":"денежный рынок","couponSpread":null,"couponSourceNote":"Формула и ближайшие купоны собраны из локальной базы moex_library/moex_bonds; прогнозные купоны считаются по базовому макросценарию.","keyRate":{"date":"2026-07-21","value":14.25},"currentYield":null,"ytm":16.38,"duration":null,"rating":"AAA","faceValue":1000.0,"currency":"RUB","issueDate":"2026-06-19","maturityDate":"2028-06-08","nextCouponDate":"2026-07-19","frequency":12.0,"yearsToMaturity":1.8836413415468858,"avgTurnover":25636282.21818182,"annualCoupon":null,"description":"Биржевые облигации процентные неконвертируемые бездокументарные  серии 005P-10R Публичное акционерное общество \"Газпром нефть\", рег. № 4B02-10-00146-A-004P","issuerDescription":"","history":[{"date":"2026-06-19","price":100.0,"turnover":112585993.4,"volume":112586.0,"yield":14.71},{"date":"2026-06-22","price":100.05,"turnover":253328453.6,"volume":253204.0,"yield":14.75},{"date":"2026-06-23","price":100.03,"turnover":37255346.5,"volume":37244.0,"yield":14.73},{"date":"2026-06-24","price":100.05,"turnover":350208.5,"volume":349.0,"yield":14.81},{"date":"2026-06-25","price":100.06,"turnover":161537.3,"volume":161.0,"yield":15.19},{"date":"2026-06-26","price":100.05,"turnover":59949.8,"volume":60.0,"yield":15.19},{"date":"2026-06-29","price":100.38,"turnover":350985.9,"volume":351.0,"yield":14.6},{"date":"2026-06-30","price":100.03,"turnover":116499927.4,"volume":116467.0,"yield":15.76},{"date":"2026-07-01","price":100.05,"turnover":220634.9,"volume":219.0,"yield":15.61},{"date":"2026-07-02","price":100.35,"turnover":988402.0,"volume":985.0,"yield":16.1},{"date":"2026-07-03","price":100.42,"turnover":89280.1,"volume":89.0,"yield":16.11},{"date":"2026-07-06","price":100.42,"turnover":175150.7,"volume":175.0,"yield":16.06},{"date":"2026-07-07","price":100.29,"turnover":443206.2,"volume":442.0,"yield":16.17},{"date":"2026-07-08","price":100.27,"turnover":41099.6,"volume":41.0,"yield":16.24},{"date":"2026-07-09","price":100.27,"turnover":382268.5,"volume":381.0,"yield":16.01},{"date":"2026-07-10","price":100.2,"turnover":35286430.0,"volume":35216.0,"yield":15.84},{"date":"2026-07-13","price":100.2,"turnover":458117.5,"volume":457.0,"yield":15.95},{"date":"2026-07-14","price":100.2,"turnover":116077.0,"volume":116.0,"yield":16.0},{"date":"2026-07-15","price":100.2,"turnover":30030.4,"volume":30.0,"yield":16.06},{"date":"2026-07-16","price":100.07,"turnover":52095.5,"volume":52.0,"yield":16.08},{"date":"2026-07-17","price":100.0,"turnover":4360027.6,"volume":4360.0,"yield":16.43},{"date":"2026-07-20","price":100.16,"turnover":762986.4,"volume":760.0,"yield":16.38}],"futureCoupons":[],"pastCoupons":[],"allCoupons":[],"futureAmortizations":[{"date":"2028-06-08","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
     const state = { assetIndex: 0, range: "ALL", mode: "price" };
     if (new URLSearchParams(location.search).get("drawer") === "1" || window.self !== window.top) document.body.classList.add("in-drawer");
 
@@ -858,8 +863,8 @@
         wrap.innerHTML = "";
         return;
       }
-      wrap.style.display = "block";
-      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Подробнее</a>`;
+      wrap.style.display = "flex";
+      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Финансовая отчетность</a>`;
     }
 
     function renderCashflow(asset) {
@@ -1010,5 +1015,6 @@
     render();
     window.addEventListener("resize", () => renderChart(ASSETS[state.assetIndex]));
   </script>
+  <script src="../assets/integration-shell.js" defer></script>
 </body>
 </html>

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>КВС БО-01 · Карточка актива</title>
+  <link rel="stylesheet" href="../assets/integration-shell.css">
   <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
   <style>
     :root {
@@ -225,23 +226,26 @@
     }
     .detail-cta {
       display: none;
-      margin-top: 14px;
+      margin-top: 16px;
+      justify-content: flex-start;
     }
     .detail-link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
+      min-height: 38px;
+      padding: 0 15px;
       border-radius: 999px;
-      background: #101827;
+      border: 1px solid color-mix(in srgb, var(--accent), transparent 72%);
+      background: var(--accent);
       color: #fff;
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 900;
-      box-shadow: 0 18px 34px rgba(16,24,39,.18);
+      font-size: 12px;
+      font-weight: 760;
+      box-shadow: 0 10px 22px color-mix(in srgb, var(--accent), transparent 76%);
     }
     .detail-link:hover {
-      background: #1f2a3d;
+      background: color-mix(in srgb, var(--accent), #101827 15%);
     }
     #chart { height: 354px; width: 100%; }
     .chart-toolbar {
@@ -439,6 +443,8 @@
             </div>
           </div>
 
+          <div class="detail-cta" id="detailCta"></div>
+
           <div class="price-panel">
             <div class="quote">
               <div class="quote-value" id="price"></div>
@@ -470,7 +476,6 @@
             </div>
             <div id="chart"></div>
           </div>
-          <div class="detail-cta" id="detailCta"></div>
         </section>
 
         <aside class="side">
@@ -490,7 +495,7 @@
   </main>
 
   <script>
-    const ASSETS = [{"assetType":"bond","secid":"RU000A1018G9","title":"КВС БО-01","subtitle":"Концессии водсн Саратов БО-01","isin":"RU000A1018G9","board":"TQRD","class":"Облигация","couponType":"Флоатер","isCurrencyBond":false,"issuer":"Общество с ограниченной ответственностью \"Концессии водоснабжения - Саратов\"","logo":"","accent":"#974456","asof":"2024-09-06","price":19.1,"dirtyPrice":191.0,"accint":null,"priceDelta":0.0,"priceDeltaPct":0.0,"priceDeltaDay":null,"priceDeltaDayPct":null,"couponRate":20.0,"couponValue":132.97,"couponStatus":"known","couponFormula":"Купон привязан к рыночному процентному ориентиру.","couponFormulaShort":"Плавающий купон","couponBenchmark":"денежный рынок","couponSpread":null,"couponSourceNote":"Формула и ближайшие купоны собраны из локальной базы moex_library/moex_bonds; прогнозные купоны считаются по базовому макросценарию.","keyRate":{"date":"2026-07-20","value":14.25},"currentYield":69.61780104712042,"ytm":null,"duration":null,"rating":"","faceValue":1000.0,"currency":"RUB","issueDate":"2019-12-25","maturityDate":"2033-12-08","nextCouponDate":"2026-12-17","frequency":1.0,"yearsToMaturity":7.38672142368241,"avgTurnover":null,"annualCoupon":132.97,"description":"документарные процентные неконвертируемые биржевые облигации на предъявителя серии БО-01 с обязательным централизованным хранением Общество с ограниченной ответственностью \"Концессии водоснабжения - Саратов\", рег. № 4B02-01-00409-R","issuerDescription":"","history":[{"date":"2024-09-06","price":19.1,"turnover":0,"volume":0,"yield":null}],"futureCoupons":[{"date":"2026-12-17","startDate":"2025-12-18","face":666.68,"currency":"RUB","status":"known","value":132.97,"rate":20.0}],"pastCoupons":[{"date":"2020-12-24","startDate":"2019-12-25","value":91.0,"rate":9.1,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2021-12-23","startDate":"2020-12-24","value":77.29,"rate":7.75,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2022-12-22","startDate":"2021-12-23","value":109.7,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2023-12-21","startDate":"2022-12-22","value":100.56,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2024-12-19","startDate":"2023-12-21","value":153.75,"rate":18.5,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2025-12-18","startDate":"2024-12-19","value":183.25,"rate":24.5,"face":666.68,"currency":"RUB","status":"fact"}],"allCoupons":[{"date":"2020-12-24","startDate":"2019-12-25","value":91.0,"rate":9.1,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2021-12-23","startDate":"2020-12-24","value":77.29,"rate":7.75,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2022-12-22","startDate":"2021-12-23","value":109.7,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2023-12-21","startDate":"2022-12-22","value":100.56,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2024-12-19","startDate":"2023-12-21","value":153.75,"rate":18.5,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2025-12-18","startDate":"2024-12-19","value":183.25,"rate":24.5,"face":666.68,"currency":"RUB","status":"fact"}],"futureAmortizations":[{"date":"2026-12-17","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2027-12-16","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2028-12-14","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2029-12-13","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2030-12-12","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2031-12-11","value":83.33,"rate":8.33,"currency":"RUB"}]}];
+    const ASSETS = [{"assetType":"bond","secid":"RU000A1018G9","title":"КВС БО-01","subtitle":"Концессии водсн Саратов БО-01","isin":"RU000A1018G9","board":"TQRD","class":"Облигация","couponType":"Флоатер","isCurrencyBond":false,"issuer":"Общество с ограниченной ответственностью \"Концессии водоснабжения - Саратов\"","logo":"","accent":"#974456","asof":"2024-09-06","price":19.1,"dirtyPrice":191.0,"accint":null,"priceDelta":0.0,"priceDeltaPct":0.0,"priceDeltaDay":null,"priceDeltaDayPct":null,"couponRate":20.0,"couponValue":132.97,"couponStatus":"known","couponFormula":"Купон привязан к рыночному процентному ориентиру.","couponFormulaShort":"Плавающий купон","couponBenchmark":"денежный рынок","couponSpread":null,"couponSourceNote":"Формула и ближайшие купоны собраны из локальной базы moex_library/moex_bonds; прогнозные купоны считаются по базовому макросценарию.","keyRate":{"date":"2026-07-21","value":14.25},"currentYield":69.61780104712042,"ytm":null,"duration":null,"rating":"","faceValue":1000.0,"currency":"RUB","issueDate":"2019-12-25","maturityDate":"2033-12-08","nextCouponDate":"2026-12-17","frequency":1.0,"yearsToMaturity":7.383983572895278,"avgTurnover":null,"annualCoupon":132.97,"description":"документарные процентные неконвертируемые биржевые облигации на предъявителя серии БО-01 с обязательным централизованным хранением Общество с ограниченной ответственностью \"Концессии водоснабжения - Саратов\", рег. № 4B02-01-00409-R","issuerDescription":"","history":[{"date":"2024-09-06","price":19.1,"turnover":0,"volume":0,"yield":null}],"futureCoupons":[{"date":"2026-12-17","startDate":"2025-12-18","face":666.68,"currency":"RUB","status":"known","value":132.97,"rate":20.0}],"pastCoupons":[{"date":"2020-12-24","startDate":"2019-12-25","value":91.0,"rate":9.1,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2021-12-23","startDate":"2020-12-24","value":77.29,"rate":7.75,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2022-12-22","startDate":"2021-12-23","value":109.7,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2023-12-21","startDate":"2022-12-22","value":100.56,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2024-12-19","startDate":"2023-12-21","value":153.75,"rate":18.5,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2025-12-18","startDate":"2024-12-19","value":183.25,"rate":24.5,"face":666.68,"currency":"RUB","status":"fact"}],"allCoupons":[{"date":"2020-12-24","startDate":"2019-12-25","value":91.0,"rate":9.1,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2021-12-23","startDate":"2020-12-24","value":77.29,"rate":7.75,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2022-12-22","startDate":"2021-12-23","value":109.7,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2023-12-21","startDate":"2022-12-22","value":100.56,"rate":11.0,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2024-12-19","startDate":"2023-12-21","value":153.75,"rate":18.5,"face":666.68,"currency":"RUB","status":"fact"},{"date":"2025-12-18","startDate":"2024-12-19","value":183.25,"rate":24.5,"face":666.68,"currency":"RUB","status":"fact"}],"futureAmortizations":[{"date":"2026-12-17","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2027-12-16","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2028-12-14","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2029-12-13","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2030-12-12","value":83.33,"rate":8.33,"currency":"RUB"},{"date":"2031-12-11","value":83.33,"rate":8.33,"currency":"RUB"}]}];
     const state = { assetIndex: 0, range: "ALL", mode: "price" };
     if (new URLSearchParams(location.search).get("drawer") === "1" || window.self !== window.top) document.body.classList.add("in-drawer");
 
@@ -858,8 +863,8 @@
         wrap.innerHTML = "";
         return;
       }
-      wrap.style.display = "block";
-      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Подробнее</a>`;
+      wrap.style.display = "flex";
+      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Финансовая отчетность</a>`;
     }
 
     function renderCashflow(asset) {
@@ -1010,5 +1015,6 @@
     render();
     window.addEventListener("resize", () => renderChart(ASSETS[state.assetIndex]));
   </script>
+  <script src="../assets/integration-shell.js" defer></script>
 </body>
 </html>

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ИСП 001Р-01 · Карточка актива</title>
+  <link rel="stylesheet" href="../assets/integration-shell.css">
   <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
   <style>
     :root {
@@ -225,23 +226,26 @@
     }
     .detail-cta {
       display: none;
-      margin-top: 14px;
+      margin-top: 16px;
+      justify-content: flex-start;
     }
     .detail-link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
+      min-height: 38px;
+      padding: 0 15px;
       border-radius: 999px;
-      background: #101827;
+      border: 1px solid color-mix(in srgb, var(--accent), transparent 72%);
+      background: var(--accent);
       color: #fff;
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 900;
-      box-shadow: 0 18px 34px rgba(16,24,39,.18);
+      font-size: 12px;
+      font-weight: 760;
+      box-shadow: 0 10px 22px color-mix(in srgb, var(--accent), transparent 76%);
     }
     .detail-link:hover {
-      background: #1f2a3d;
+      background: color-mix(in srgb, var(--accent), #101827 15%);
     }
     #chart { height: 354px; width: 100%; }
     .chart-toolbar {
@@ -439,6 +443,8 @@
             </div>
           </div>
 
+          <div class="detail-cta" id="detailCta"></div>
+
           <div class="price-panel">
             <div class="quote">
               <div class="quote-value" id="price"></div>
@@ -470,7 +476,6 @@
             </div>
             <div id="chart"></div>
           </div>
-          <div class="detail-cta" id="detailCta"></div>
         </section>
 
         <aside class="side">
@@ -490,7 +495,7 @@
   </main>
 
   <script>
-    const ASSETS = [{"assetType":"bond","secid":"RU000A10FAL4","title":"ИСП 001Р-01","subtitle":"ИСП 001Р-01","isin":"RU000A10FAL4","board":"TQCB","class":"Корпоративные","couponType":"Фикс","isCurrencyBond":false,"issuer":"Общество с ограниченной ответственностью \"ИННОВАЦИОННЫЕ СИСТЕМЫ ПОЖАРОБЕЗОПАСНОСТИ\"","logo":"","accent":"#7A1027","asof":"2026-07-17","price":102.79,"dirtyPrice":1035.95,"accint":8.05,"priceDelta":1.1099999999999994,"priceDeltaPct":1.091660110149488,"priceDeltaDay":-1.1599999999999966,"priceDeltaDayPct":-1.1159211159211126,"couponRate":21.0,"couponValue":17.26,"couponStatus":"known","couponFormula":"","couponFormulaShort":"","couponBenchmark":"","couponSpread":null,"couponSourceNote":"","keyRate":{"date":"2026-07-20","value":14.25},"currentYield":20.14982002140286,"ytm":21.3,"duration":2.205479,"rating":"","faceValue":1000.0,"currency":"RUB","issueDate":"2026-06-03","maturityDate":"2029-05-18","nextCouponDate":"2026-08-02","frequency":12.0,"yearsToMaturity":2.8281998631074607,"avgTurnover":4178071.8193548387,"annualCoupon":207.12,"description":"Биржевые облигации процентные неконвертируемые бездокументарные серии 001P-01 Общество с ограниченной ответственностью \"ИННОВАЦИОННЫЕ СИСТЕМЫ ПОЖАРОБЕЗОПАСНОСТИ\", рег. № 4B02-01-00278-L-001P","issuerDescription":"","history":[{"date":"2026-06-03","price":101.68,"turnover":45940361.2,"volume":45132.0,"yield":21.61},{"date":"2026-06-04","price":103.44,"turnover":16560940.9,"volume":16023.0,"yield":21.01},{"date":"2026-06-05","price":103.86,"turnover":10080625.3,"volume":9707.0,"yield":21.31},{"date":"2026-06-08","price":103.04,"turnover":8658632.9,"volume":8390.0,"yield":21.45},{"date":"2026-06-09","price":103.04,"turnover":3010794.4,"volume":2923.0,"yield":21.25},{"date":"2026-06-10","price":103.87,"turnover":2280051.8,"volume":2196.0,"yield":21.2},{"date":"2026-06-11","price":103.74,"turnover":2395508.4,"volume":2309.0,"yield":21.07},{"date":"2026-06-15","price":103.93,"turnover":2627054.1,"volume":2527.0,"yield":20.93},{"date":"2026-06-16","price":104.28,"turnover":1944336.5,"volume":1865.0,"yield":20.91},{"date":"2026-06-17","price":104.31,"turnover":1261302.1,"volume":1209.0,"yield":20.83},{"date":"2026-06-18","price":104.38,"turnover":1673447.2,"volume":1603.0,"yield":20.75},{"date":"2026-06-19","price":104.74,"turnover":2811072.6,"volume":2686.0,"yield":20.56},{"date":"2026-06-22","price":104.58,"turnover":5325310.6,"volume":5092.0,"yield":20.61},{"date":"2026-06-23","price":104.19,"turnover":2368442.2,"volume":2285.0,"yield":20.36},{"date":"2026-06-24","price":104.86,"turnover":1130101.1,"volume":1077.0,"yield":20.37},{"date":"2026-06-25","price":104.1,"turnover":1476323.8,"volume":1417.0,"yield":21.24},{"date":"2026-06-26","price":104.3,"turnover":2152396.2,"volume":2063.0,"yield":20.55},{"date":"2026-06-29","price":104.04,"turnover":1721872.0,"volume":1651.0,"yield":20.71},{"date":"2026-06-30","price":104.28,"turnover":1675351.2,"volume":1605.0,"yield":20.72},{"date":"2026-07-01","price":104.47,"turnover":1703690.7,"volume":1629.0,"yield":20.44},{"date":"2026-07-02","price":105.01,"turnover":1542273.5,"volume":1468.0,"yield":20.06},{"date":"2026-07-03","price":105.55,"turnover":1188466.0,"volume":1126.0,"yield":20.31},{"date":"2026-07-06","price":105.35,"turnover":1963383.1,"volume":1862.0,"yield":20.01},{"date":"2026-07-07","price":104.73,"turnover":1511045.3,"volume":1443.0,"yield":20.73},{"date":"2026-07-08","price":104.64,"turnover":885117.6,"volume":847.0,"yield":20.86},{"date":"2026-07-09","price":104.45,"turnover":621250.4,"volume":595.0,"yield":20.52},{"date":"2026-07-10","price":104.31,"turnover":987083.6,"volume":945.0,"yield":20.58},{"date":"2026-07-13","price":104.73,"turnover":887152.5,"volume":849.0,"yield":20.41},{"date":"2026-07-15","price":104.25,"turnover":736578.0,"volume":706.0,"yield":20.57},{"date":"2026-07-16","price":103.95,"turnover":1461201.9,"volume":1410.0,"yield":21.53},{"date":"2026-07-17","price":102.79,"turnover":939059.3,"volume":915.0,"yield":21.3}],"futureCoupons":[{"date":"2026-08-02","startDate":"2026-07-03","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-09-01","startDate":"2026-08-02","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-10-01","startDate":"2026-09-01","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-10-31","startDate":"2026-10-01","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-11-30","startDate":"2026-10-31","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-12-30","startDate":"2026-11-30","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-01-29","startDate":"2026-12-30","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-02-28","startDate":"2027-01-29","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-03-30","startDate":"2027-02-28","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-04-29","startDate":"2027-03-30","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-05-29","startDate":"2027-04-29","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-06-28","startDate":"2027-05-29","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-07-28","startDate":"2027-06-28","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-08-27","startDate":"2027-07-28","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"}],"pastCoupons":[{"date":"2026-07-03","startDate":"2026-06-03","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"fact"}],"allCoupons":[{"date":"2026-07-03","startDate":"2026-06-03","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"fact"}],"futureAmortizations":[{"date":"2029-05-18","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
+    const ASSETS = [{"assetType":"bond","secid":"RU000A10FAL4","title":"ИСП 001Р-01","subtitle":"ИСП 001Р-01","isin":"RU000A10FAL4","board":"TQCB","class":"Корпоративные","couponType":"Фикс","isCurrencyBond":false,"issuer":"Общество с ограниченной ответственностью \"ИННОВАЦИОННЫЕ СИСТЕМЫ ПОЖАРОБЕЗОПАСНОСТИ\"","logo":"","accent":"#7A1027","asof":"2026-07-20","price":102.99,"dirtyPrice":1037.95,"accint":8.05,"priceDelta":1.309999999999988,"priceDeltaPct":1.288355625491727,"priceDeltaDay":0.19999999999998863,"priceDeltaDayPct":0.19457145636733983,"couponRate":21.0,"couponValue":17.26,"couponStatus":"known","couponFormula":"","couponFormulaShort":"","couponBenchmark":"","couponSpread":null,"couponSourceNote":"","keyRate":{"date":"2026-07-21","value":14.25},"currentYield":20.11069035828721,"ytm":21.39,"duration":2.205479,"rating":"","faceValue":1000.0,"currency":"RUB","issueDate":"2026-06-03","maturityDate":"2029-05-18","nextCouponDate":"2026-08-02","frequency":12.0,"yearsToMaturity":2.8254620123203287,"avgTurnover":4131546.853125,"annualCoupon":207.12,"description":"Биржевые облигации процентные неконвертируемые бездокументарные серии 001P-01 Общество с ограниченной ответственностью \"ИННОВАЦИОННЫЕ СИСТЕМЫ ПОЖАРОБЕЗОПАСНОСТИ\", рег. № 4B02-01-00278-L-001P","issuerDescription":"","history":[{"date":"2026-06-03","price":101.68,"turnover":45940361.2,"volume":45132.0,"yield":21.61},{"date":"2026-06-04","price":103.44,"turnover":16560940.9,"volume":16023.0,"yield":21.01},{"date":"2026-06-05","price":103.86,"turnover":10080625.3,"volume":9707.0,"yield":21.31},{"date":"2026-06-08","price":103.04,"turnover":8658632.9,"volume":8390.0,"yield":21.45},{"date":"2026-06-09","price":103.04,"turnover":3010794.4,"volume":2923.0,"yield":21.25},{"date":"2026-06-10","price":103.87,"turnover":2280051.8,"volume":2196.0,"yield":21.2},{"date":"2026-06-11","price":103.74,"turnover":2395508.4,"volume":2309.0,"yield":21.07},{"date":"2026-06-15","price":103.93,"turnover":2627054.1,"volume":2527.0,"yield":20.93},{"date":"2026-06-16","price":104.28,"turnover":1944336.5,"volume":1865.0,"yield":20.91},{"date":"2026-06-17","price":104.31,"turnover":1261302.1,"volume":1209.0,"yield":20.83},{"date":"2026-06-18","price":104.38,"turnover":1673447.2,"volume":1603.0,"yield":20.75},{"date":"2026-06-19","price":104.74,"turnover":2811072.6,"volume":2686.0,"yield":20.56},{"date":"2026-06-22","price":104.58,"turnover":5325310.6,"volume":5092.0,"yield":20.61},{"date":"2026-06-23","price":104.19,"turnover":2368442.2,"volume":2285.0,"yield":20.36},{"date":"2026-06-24","price":104.86,"turnover":1130101.1,"volume":1077.0,"yield":20.37},{"date":"2026-06-25","price":104.1,"turnover":1476323.8,"volume":1417.0,"yield":21.24},{"date":"2026-06-26","price":104.3,"turnover":2152396.2,"volume":2063.0,"yield":20.55},{"date":"2026-06-29","price":104.04,"turnover":1721872.0,"volume":1651.0,"yield":20.71},{"date":"2026-06-30","price":104.28,"turnover":1675351.2,"volume":1605.0,"yield":20.72},{"date":"2026-07-01","price":104.47,"turnover":1703690.7,"volume":1629.0,"yield":20.44},{"date":"2026-07-02","price":105.01,"turnover":1542273.5,"volume":1468.0,"yield":20.06},{"date":"2026-07-03","price":105.55,"turnover":1188466.0,"volume":1126.0,"yield":20.31},{"date":"2026-07-06","price":105.35,"turnover":1963383.1,"volume":1862.0,"yield":20.01},{"date":"2026-07-07","price":104.73,"turnover":1511045.3,"volume":1443.0,"yield":20.73},{"date":"2026-07-08","price":104.64,"turnover":885117.6,"volume":847.0,"yield":20.86},{"date":"2026-07-09","price":104.45,"turnover":621250.4,"volume":595.0,"yield":20.52},{"date":"2026-07-10","price":104.31,"turnover":987083.6,"volume":945.0,"yield":20.58},{"date":"2026-07-13","price":104.73,"turnover":887152.5,"volume":849.0,"yield":20.41},{"date":"2026-07-15","price":104.25,"turnover":736578.0,"volume":706.0,"yield":20.57},{"date":"2026-07-16","price":103.95,"turnover":1461201.9,"volume":1410.0,"yield":21.53},{"date":"2026-07-17","price":102.79,"turnover":939059.3,"volume":915.0,"yield":21.3},{"date":"2026-07-20","price":102.99,"turnover":2689272.9,"volume":2634.0,"yield":21.39}],"futureCoupons":[{"date":"2026-08-02","startDate":"2026-07-03","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-09-01","startDate":"2026-08-02","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-10-01","startDate":"2026-09-01","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-10-31","startDate":"2026-10-01","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-11-30","startDate":"2026-10-31","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-12-30","startDate":"2026-11-30","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-01-29","startDate":"2026-12-30","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-02-28","startDate":"2027-01-29","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-03-30","startDate":"2027-02-28","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-04-29","startDate":"2027-03-30","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-05-29","startDate":"2027-04-29","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-06-28","startDate":"2027-05-29","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-07-28","startDate":"2027-06-28","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-08-27","startDate":"2027-07-28","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"known"}],"pastCoupons":[{"date":"2026-07-03","startDate":"2026-06-03","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"fact"}],"allCoupons":[{"date":"2026-07-03","startDate":"2026-06-03","value":17.26,"rate":21.0,"face":1000.0,"currency":"RUB","status":"fact"}],"futureAmortizations":[{"date":"2029-05-18","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
     const state = { assetIndex: 0, range: "ALL", mode: "price" };
     if (new URLSearchParams(location.search).get("drawer") === "1" || window.self !== window.top) document.body.classList.add("in-drawer");
 
@@ -858,8 +863,8 @@
         wrap.innerHTML = "";
         return;
       }
-      wrap.style.display = "block";
-      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Подробнее</a>`;
+      wrap.style.display = "flex";
+      wrap.innerHTML = `<a class="detail-link" href="${htmlEsc(url)}" target="_top">Финансовая отчетность</a>`;
     }
 
     function renderCashflow(asset) {
@@ -1010,5 +1015,6 @@
     render();
     window.addEventListener("resize", () => renderChart(ASSETS[state.assetIndex]));
   </script>
+  <script src="../assets/integration-shell.js" defer></script>
 </body>
 </html>
