@@ -175,6 +175,9 @@
     .delta { margin-top: 12px; font-size: 17px; font-weight: 850; color: #6a7077; }
     .delta.positive { color: #04884f; }
     .delta.negative { color: #c5203d; }
+    body.key-rate-card .delta,
+    body.key-rate-card .delta.positive,
+    body.key-rate-card .delta.negative { color: #6a7077; }
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -325,6 +328,115 @@
     .flow-main { min-width: 0; }
     .flow-title { font-size: 13px; font-weight: 850; color: rgba(16,18,21,.74); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .flow-value { font-size: 14px; font-weight: 850; text-align: right; white-space: nowrap; }
+    body.key-rate-card .content {
+      grid-template-columns: minmax(0, 1.18fr) minmax(330px, .82fr);
+    }
+    body.key-rate-card .price-panel {
+      grid-template-columns: minmax(0, 1fr);
+      margin-top: clamp(22px, 3vw, 34px);
+    }
+    body.key-rate-card .quote {
+      min-height: 0;
+      padding: 22px 24px;
+    }
+    body.key-rate-card .metric-grid,
+    body.key-rate-card .returns-grid,
+    body.key-rate-card .tiles,
+    body.key-rate-card .side > .section:first-of-type {
+      display: none;
+    }
+    body.key-rate-card .side {
+      align-content: stretch;
+    }
+    body.key-rate-card .side > .section:last-child {
+      min-height: 100%;
+      padding: 20px;
+    }
+    body.key-rate-card .side > .section:last-child h2 {
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    body.key-rate-card .cashflow {
+      max-height: none;
+      gap: 10px;
+      overflow: visible;
+      padding-right: 0;
+    }
+    body.key-rate-card .flow-row {
+      grid-template-columns: 98px minmax(0, 1fr) auto;
+      min-height: 64px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.68);
+    }
+    body.key-rate-card .flow-row.rate-forecast {
+      background: color-mix(in srgb, var(--accent-soft), white 54%);
+    }
+    body.key-rate-card .flow-date {
+      color: rgba(16,18,21,.78);
+      font-size: 13px;
+      font-weight: 850;
+    }
+    body.key-rate-card .flow-title {
+      font-size: 14px;
+    }
+    body.key-rate-card .flow-note {
+      margin-top: 4px;
+      font-size: 11px;
+    }
+    body.key-rate-card .flow-value {
+      font-size: 17px;
+    }
+    body.key-rate-card .rate-change {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    body.key-rate-card .rate-history-disclosure {
+      margin-top: 12px;
+    }
+    body.key-rate-card .rate-history-disclosure summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      border: 1px solid rgba(16,18,21,.09);
+      border-radius: 14px;
+      color: rgba(16,18,21,.72);
+      background: rgba(255,255,255,.52);
+      font-size: 12px;
+      font-weight: 820;
+      cursor: pointer;
+      list-style: none;
+    }
+    body.key-rate-card .rate-history-disclosure summary::-webkit-details-marker {
+      display: none;
+    }
+    body.key-rate-card .rate-history-disclosure summary::after {
+      content: "⌄";
+      font-size: 18px;
+      line-height: 1;
+      transform: translateY(-2px);
+      transition: transform .2s ease;
+    }
+    body.key-rate-card .rate-history-disclosure[open] summary::after {
+      transform: rotate(180deg) translateY(2px);
+    }
+    body.key-rate-card .rate-history-disclosure .when-open,
+    body.key-rate-card .rate-history-disclosure[open] .when-closed {
+      display: none;
+    }
+    body.key-rate-card .rate-history-disclosure[open] .when-open {
+      display: inline;
+    }
+    body.key-rate-card .rate-history-rows {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
     .status {
       display: inline-flex;
       align-items: center;
@@ -398,6 +510,7 @@
     body.in-drawer .footer-note { padding: 0 14px 18px; }
     @media (max-width: 980px) {
       .content { grid-template-columns: 1fr; }
+      body.key-rate-card .content { grid-template-columns: 1fr; }
       .side { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
@@ -412,6 +525,7 @@
       .chart-toolbar .range-group { justify-content: flex-start; }
       #chart { height: 316px; }
       .flow-row { grid-template-columns: 82px minmax(0, 1fr) auto; }
+      body.key-rate-card .flow-row { grid-template-columns: 92px minmax(0, 1fr) auto; }
       button { flex: 1 1 auto; }
     }
     @media (max-width: 640px), (max-height: 760px) {
@@ -495,7 +609,7 @@
   </main>
 
   <script>
-    const ASSETS = [{"assetType":"bond","secid":"RU000A10ETQ6","title":"Промсвязьбанк 004P-02","subtitle":"Промсвязьбанк 004P-02","isin":"RU000A10ETQ6","board":"TQCB","class":"Корпоративные","couponType":"Фикс","isCurrencyBond":false,"issuer":"Публичное акционерное общество \"Банк ПСБ\"","logo":"../assets/logos/RU000A10ETQ6.png","accent":"#51519B","asof":"2026-07-22","price":99.14,"dirtyPrice":992.94,"accint":1.54,"priceDelta":-0.9200000000000017,"priceDeltaPct":-0.9194483310014009,"priceDeltaDay":0.9500000000000028,"priceDeltaDayPct":0.9675119665953792,"couponRate":14.05,"couponValue":11.55,"couponStatus":"known","couponFormula":"","couponFormulaShort":"","couponBenchmark":"","couponSpread":null,"couponSourceNote":"","keyRate":{"date":"2026-07-23","value":14.25},"currentYield":13.980229977809158,"ytm":15.46,"duration":2.317808,"rating":"AAA","faceValue":1000.0,"currency":"RUB","issueDate":"2026-04-14","maturityDate":"2029-03-29","nextCouponDate":"2026-08-12","frequency":12.0,"yearsToMaturity":2.6830937713894594,"avgTurnover":31654550.983333334,"annualCoupon":138.6,"description":"Биржевые облигации процентные неконвертируемые бездокументарные серии 004P-02 Публичное акционерное общество \"Банк ПСБ\", рег. № 4B02-02-03251-B-004P","issuerDescription":"","history":[{"date":"2026-04-14","price":100.06,"turnover":125585157.0,"volume":125509.0,"yield":15.0},{"date":"2026-04-15","price":99.89,"turnover":569465223.2,"volume":570065.0,"yield":14.96},{"date":"2026-04-16","price":99.96,"turnover":353544121.6,"volume":353665.0,"yield":15.0},{"date":"2026-04-17","price":100.0,"turnover":301132619.0,"volume":301124.0,"yield":14.95},{"date":"2026-04-20","price":100.05,"turnover":317785833.9,"volume":317585.0,"yield":14.92},{"date":"2026-04-21","price":100.31,"turnover":109109180.8,"volume":108771.0,"yield":14.81},{"date":"2026-04-22","price":100.46,"turnover":164333837.1,"volume":163571.0,"yield":14.66},{"date":"2026-04-23","price":100.56,"turnover":250527520.5,"volume":249135.0,"yield":14.69},{"date":"2026-04-24","price":100.47,"turnover":256242786.7,"volume":254979.0,"yield":14.8},{"date":"2026-04-27","price":100.19,"turnover":204589253.2,"volume":204180.0,"yield":14.8},{"date":"2026-04-28","price":100.4,"turnover":28296805.1,"volume":28182.0,"yield":14.83},{"date":"2026-04-29","price":100.55,"turnover":29132285.4,"volume":28974.0,"yield":14.75},{"date":"2026-04-30","price":100.6,"turnover":26350212.7,"volume":26194.0,"yield":14.73},{"date":"2026-05-04","price":101.0,"turnover":27226996.8,"volume":26956.0,"yield":14.48},{"date":"2026-05-05","price":100.94,"turnover":15284928.7,"volume":15132.0,"yield":14.52},{"date":"2026-05-06","price":100.98,"turnover":10028879.2,"volume":9928.0,"yield":14.52},{"date":"2026-05-07","price":100.89,"turnover":22339037.9,"volume":22140.0,"yield":14.57},{"date":"2026-05-08","price":100.93,"turnover":25723451.3,"volume":25485.0,"yield":14.52},{"date":"2026-05-11","price":100.99,"turnover":6547681.3,"volume":6484.0,"yield":14.53},{"date":"2026-05-12","price":101.0,"turnover":58385944.6,"volume":57805.0,"yield":14.4},{"date":"2026-05-13","price":101.34,"turnover":23010532.2,"volume":22693.0,"yield":14.38},{"date":"2026-05-14","price":101.28,"turnover":25234289.9,"volume":24916.0,"yield":14.38},{"date":"2026-05-15","price":101.37,"turnover":3488796.4,"volume":3442.0,"yield":14.37},{"date":"2026-05-18","price":101.65,"turnover":297549149.1,"volume":292737.0,"yield":14.32},{"date":"2026-05-19","price":101.63,"turnover":114611309.9,"volume":112774.0,"yield":14.25},{"date":"2026-05-20","price":101.49,"turnover":2850957.0,"volume":2809.0,"yield":14.21},{"date":"2026-05-21","price":101.38,"turnover":3157581.8,"volume":3114.0,"yield":14.25},{"date":"2026-05-22","price":101.5,"turnover":4772322.8,"volume":4701.0,"yield":14.23},{"date":"2026-05-25","price":101.39,"turnover":38466640.5,"volume":37938.0,"yield":14.32},{"date":"2026-05-26","price":101.26,"turnover":2587668.1,"volume":2555.0,"yield":14.35},{"date":"2026-05-27","price":101.31,"turnover":2131671.4,"volume":2104.0,"yield":14.35},{"date":"2026-05-28","price":101.36,"turnover":48807138.0,"volume":48153.0,"yield":14.29},{"date":"2026-05-29","price":101.31,"turnover":4380312.2,"volume":4324.0,"yield":14.34},{"date":"2026-06-01","price":101.01,"turnover":16479115.7,"volume":16305.0,"yield":14.38},{"date":"2026-06-02","price":101.32,"turnover":9525273.9,"volume":9406.0,"yield":14.32},{"date":"2026-06-03","price":101.33,"turnover":5336643.4,"volume":5263.0,"yield":14.22},{"date":"2026-06-04","price":101.21,"turnover":14322329.1,"volume":14152.0,"yield":14.46},{"date":"2026-06-05","price":101.44,"turnover":39782997.4,"volume":39218.0,"yield":14.29},{"date":"2026-06-08","price":101.14,"turnover":61499757.4,"volume":60805.0,"yield":14.51},{"date":"2026-06-09","price":100.95,"turnover":6908268.5,"volume":6843.0,"yield":14.51},{"date":"2026-06-10","price":101.16,"turnover":11811553.7,"volume":11677.0,"yield":14.51},{"date":"2026-06-11","price":101.09,"turnover":18010856.9,"volume":17812.0,"yield":14.29},{"date":"2026-06-15","price":101.49,"turnover":33471766.5,"volume":32981.0,"yield":14.27},{"date":"2026-06-16","price":101.48,"turnover":12324641.8,"volume":12145.0,"yield":14.26},{"date":"2026-06-17","price":101.4,"turnover":6993920.9,"volume":6898.0,"yield":14.36},{"date":"2026-06-18","price":101.48,"turnover":8386060.1,"volume":8264.0,"yield":14.26},{"date":"2026-06-19","price":101.46,"turnover":9235925.1,"volume":9104.0,"yield":14.54},{"date":"2026-06-22","price":100.52,"turnover":11511359.3,"volume":11453.0,"yield":14.75},{"date":"2026-06-23","price":100.09,"turnover":7873388.9,"volume":7869.0,"yield":14.85},{"date":"2026-06-24","price":100.35,"turnover":36416884.8,"volume":36290.0,"yield":14.72},{"date":"2026-06-25","price":100.02,"turnover":2867408.7,"volume":2866.0,"yield":14.87},{"date":"2026-06-26","price":99.73,"turnover":11352269.5,"volume":11392.0,"yield":15.26},{"date":"2026-06-29","price":99.8,"turnover":8079550.9,"volume":8094.0,"yield":14.97},{"date":"2026-06-30","price":100.02,"turnover":37013001.3,"volume":37008.0,"yield":14.95},{"date":"2026-07-01","price":99.99,"turnover":13026307.4,"volume":13027.0,"yield":15.09},{"date":"2026-07-02","price":99.88,"turnover":1824003.3,"volume":1826.0,"yield":14.99},{"date":"2026-07-03","price":99.88,"turnover":14101537.8,"volume":14119.0,"yield":15.03},{"date":"2026-07-06","price":99.75,"turnover":13308477.5,"volume":13337.0,"yield":15.3},{"date":"2026-07-07","price":99.0,"turnover":2214609.6,"volume":2237.0,"yield":15.5},{"date":"2026-07-08","price":98.81,"turnover":103208698.2,"volume":104452.0,"yield":15.51},{"date":"2026-07-09","price":99.01,"turnover":35011584.9,"volume":35359.0,"yield":15.4},{"date":"2026-07-10","price":99.13,"turnover":2662550.3,"volume":2686.0,"yield":15.43},{"date":"2026-07-13","price":98.95,"turnover":8723237.3,"volume":8814.0,"yield":15.4},{"date":"2026-07-15","price":98.44,"turnover":11169575.0,"volume":11346.0,"yield":15.78},{"date":"2026-07-16","price":98.05,"turnover":3470082.4,"volume":3540.0,"yield":16.04},{"date":"2026-07-17","price":97.73,"turnover":4589739.7,"volume":4696.0,"yield":16.14},{"date":"2026-07-20","price":98.23,"turnover":130787151.6,"volume":133147.0,"yield":15.88},{"date":"2026-07-21","price":98.19,"turnover":147612550.9,"volume":150331.0,"yield":15.69},{"date":"2026-07-22","price":99.14,"turnover":13406133.8,"volume":13523.0,"yield":15.46}],"futureCoupons":[{"date":"2026-08-12","startDate":"2026-07-13","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-09-11","startDate":"2026-08-12","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-10-11","startDate":"2026-09-11","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-11-10","startDate":"2026-10-11","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-12-10","startDate":"2026-11-10","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-01-09","startDate":"2026-12-10","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-02-08","startDate":"2027-01-09","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-03-10","startDate":"2027-02-08","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-04-09","startDate":"2027-03-10","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-05-09","startDate":"2027-04-09","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-06-08","startDate":"2027-05-09","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-07-08","startDate":"2027-06-08","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-08-07","startDate":"2027-07-08","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-09-06","startDate":"2027-08-07","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"}],"pastCoupons":[{"date":"2026-05-14","startDate":"2026-04-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-06-13","startDate":"2026-05-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-07-13","startDate":"2026-06-13","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"}],"allCoupons":[{"date":"2026-05-14","startDate":"2026-04-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-06-13","startDate":"2026-05-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-07-13","startDate":"2026-06-13","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"}],"futureAmortizations":[{"date":"2029-03-29","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
+    const ASSETS = [{"assetType":"bond","secid":"RU000A10ETQ6","title":"Промсвязьбанк 004P-02","subtitle":"Промсвязьбанк 004P-02","isin":"RU000A10ETQ6","board":"TQCB","class":"Корпоративные","couponType":"Фикс","isCurrencyBond":false,"issuer":"Публичное акционерное общество \"Банк ПСБ\"","logo":"../assets/logos/RU000A10ETQ6.png","accent":"#404080","asof":"2026-07-23","price":98.43,"dirtyPrice":985.84,"accint":1.54,"priceDelta":-1.6299999999999955,"priceDeltaPct":-1.6290225864481267,"priceDeltaDay":-0.7099999999999937,"priceDeltaDayPct":-0.7161589671172017,"couponRate":14.05,"couponValue":11.55,"couponStatus":"known","couponFormula":"","couponFormulaShort":"","couponBenchmark":"","couponSpread":null,"couponSourceNote":"","keyRate":{"date":"2026-07-24","value":14.0},"currentYield":14.081072843645229,"ytm":15.68,"duration":2.317808,"rating":"AAA","faceValue":1000.0,"currency":"RUB","issueDate":"2026-04-14","maturityDate":"2029-03-29","nextCouponDate":"2026-08-12","frequency":12.0,"yearsToMaturity":2.6803559206023273,"avgTurnover":28270414.045,"annualCoupon":138.6,"description":"Биржевые облигации процентные неконвертируемые бездокументарные серии 004P-02 Публичное акционерное общество \"Банк ПСБ\", рег. № 4B02-02-03251-B-004P","issuerDescription":"","history":[{"date":"2026-04-14","price":100.06,"turnover":125585157.0,"volume":125509.0,"yield":15.0},{"date":"2026-04-15","price":99.89,"turnover":569465223.2,"volume":570065.0,"yield":14.96},{"date":"2026-04-16","price":99.96,"turnover":353544121.6,"volume":353665.0,"yield":15.0},{"date":"2026-04-17","price":100.0,"turnover":301132619.0,"volume":301124.0,"yield":14.95},{"date":"2026-04-20","price":100.05,"turnover":317785833.9,"volume":317585.0,"yield":14.92},{"date":"2026-04-21","price":100.31,"turnover":109109180.8,"volume":108771.0,"yield":14.81},{"date":"2026-04-22","price":100.46,"turnover":164333837.1,"volume":163571.0,"yield":14.66},{"date":"2026-04-23","price":100.56,"turnover":250527520.5,"volume":249135.0,"yield":14.69},{"date":"2026-04-24","price":100.47,"turnover":256242786.7,"volume":254979.0,"yield":14.8},{"date":"2026-04-27","price":100.19,"turnover":204589253.2,"volume":204180.0,"yield":14.8},{"date":"2026-04-28","price":100.4,"turnover":28296805.1,"volume":28182.0,"yield":14.83},{"date":"2026-04-29","price":100.55,"turnover":29132285.4,"volume":28974.0,"yield":14.75},{"date":"2026-04-30","price":100.6,"turnover":26350212.7,"volume":26194.0,"yield":14.73},{"date":"2026-05-04","price":101.0,"turnover":27226996.8,"volume":26956.0,"yield":14.48},{"date":"2026-05-05","price":100.94,"turnover":15284928.7,"volume":15132.0,"yield":14.52},{"date":"2026-05-06","price":100.98,"turnover":10028879.2,"volume":9928.0,"yield":14.52},{"date":"2026-05-07","price":100.89,"turnover":22339037.9,"volume":22140.0,"yield":14.57},{"date":"2026-05-08","price":100.93,"turnover":25723451.3,"volume":25485.0,"yield":14.52},{"date":"2026-05-11","price":100.99,"turnover":6547681.3,"volume":6484.0,"yield":14.53},{"date":"2026-05-12","price":101.0,"turnover":58385944.6,"volume":57805.0,"yield":14.4},{"date":"2026-05-13","price":101.34,"turnover":23010532.2,"volume":22693.0,"yield":14.38},{"date":"2026-05-14","price":101.28,"turnover":25234289.9,"volume":24916.0,"yield":14.38},{"date":"2026-05-15","price":101.37,"turnover":3488796.4,"volume":3442.0,"yield":14.37},{"date":"2026-05-18","price":101.65,"turnover":297549149.1,"volume":292737.0,"yield":14.32},{"date":"2026-05-19","price":101.63,"turnover":114611309.9,"volume":112774.0,"yield":14.25},{"date":"2026-05-20","price":101.49,"turnover":2850957.0,"volume":2809.0,"yield":14.21},{"date":"2026-05-21","price":101.38,"turnover":3157581.8,"volume":3114.0,"yield":14.25},{"date":"2026-05-22","price":101.5,"turnover":4772322.8,"volume":4701.0,"yield":14.23},{"date":"2026-05-25","price":101.39,"turnover":38466640.5,"volume":37938.0,"yield":14.32},{"date":"2026-05-26","price":101.26,"turnover":2587668.1,"volume":2555.0,"yield":14.35},{"date":"2026-05-27","price":101.31,"turnover":2131671.4,"volume":2104.0,"yield":14.35},{"date":"2026-05-28","price":101.36,"turnover":48807138.0,"volume":48153.0,"yield":14.29},{"date":"2026-05-29","price":101.31,"turnover":4380312.2,"volume":4324.0,"yield":14.34},{"date":"2026-06-01","price":101.01,"turnover":16479115.7,"volume":16305.0,"yield":14.38},{"date":"2026-06-02","price":101.32,"turnover":9525273.9,"volume":9406.0,"yield":14.32},{"date":"2026-06-03","price":101.33,"turnover":5336643.4,"volume":5263.0,"yield":14.22},{"date":"2026-06-04","price":101.21,"turnover":14322329.1,"volume":14152.0,"yield":14.46},{"date":"2026-06-05","price":101.44,"turnover":39782997.4,"volume":39218.0,"yield":14.29},{"date":"2026-06-08","price":101.14,"turnover":61499757.4,"volume":60805.0,"yield":14.51},{"date":"2026-06-09","price":100.95,"turnover":6908268.5,"volume":6843.0,"yield":14.51},{"date":"2026-06-10","price":101.16,"turnover":11811553.7,"volume":11677.0,"yield":14.51},{"date":"2026-06-11","price":101.09,"turnover":18010856.9,"volume":17812.0,"yield":14.29},{"date":"2026-06-15","price":101.49,"turnover":33471766.5,"volume":32981.0,"yield":14.27},{"date":"2026-06-16","price":101.48,"turnover":12324641.8,"volume":12145.0,"yield":14.26},{"date":"2026-06-17","price":101.4,"turnover":6993920.9,"volume":6898.0,"yield":14.36},{"date":"2026-06-18","price":101.48,"turnover":8386060.1,"volume":8264.0,"yield":14.26},{"date":"2026-06-19","price":101.46,"turnover":9235925.1,"volume":9104.0,"yield":14.54},{"date":"2026-06-22","price":100.52,"turnover":11511359.3,"volume":11453.0,"yield":14.75},{"date":"2026-06-23","price":100.09,"turnover":7873388.9,"volume":7869.0,"yield":14.85},{"date":"2026-06-24","price":100.35,"turnover":36416884.8,"volume":36290.0,"yield":14.72},{"date":"2026-06-25","price":100.02,"turnover":2867408.7,"volume":2866.0,"yield":14.87},{"date":"2026-06-26","price":99.73,"turnover":11352269.5,"volume":11392.0,"yield":15.26},{"date":"2026-06-29","price":99.8,"turnover":8079550.9,"volume":8094.0,"yield":14.97},{"date":"2026-06-30","price":100.02,"turnover":37013001.3,"volume":37008.0,"yield":14.95},{"date":"2026-07-01","price":99.99,"turnover":13026307.4,"volume":13027.0,"yield":15.09},{"date":"2026-07-02","price":99.88,"turnover":1824003.3,"volume":1826.0,"yield":14.99},{"date":"2026-07-03","price":99.88,"turnover":14101537.8,"volume":14119.0,"yield":15.03},{"date":"2026-07-06","price":99.75,"turnover":13308477.5,"volume":13337.0,"yield":15.3},{"date":"2026-07-07","price":99.0,"turnover":2214609.6,"volume":2237.0,"yield":15.5},{"date":"2026-07-08","price":98.81,"turnover":103208698.2,"volume":104452.0,"yield":15.51},{"date":"2026-07-09","price":99.01,"turnover":35011584.9,"volume":35359.0,"yield":15.4},{"date":"2026-07-10","price":99.13,"turnover":2662550.3,"volume":2686.0,"yield":15.43},{"date":"2026-07-13","price":98.95,"turnover":8723237.3,"volume":8814.0,"yield":15.4},{"date":"2026-07-15","price":98.44,"turnover":11169575.0,"volume":11346.0,"yield":15.78},{"date":"2026-07-16","price":98.05,"turnover":3470082.4,"volume":3540.0,"yield":16.04},{"date":"2026-07-17","price":97.73,"turnover":4589739.7,"volume":4696.0,"yield":16.14},{"date":"2026-07-20","price":98.23,"turnover":130787151.6,"volume":133147.0,"yield":15.88},{"date":"2026-07-21","price":98.19,"turnover":147612550.9,"volume":150331.0,"yield":15.69},{"date":"2026-07-22","price":99.14,"turnover":13406133.8,"volume":13523.0,"yield":15.46},{"date":"2026-07-23","price":98.43,"turnover":1541036.9,"volume":1565.0,"yield":15.68}],"futureCoupons":[{"date":"2026-08-12","startDate":"2026-07-13","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-09-11","startDate":"2026-08-12","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-10-11","startDate":"2026-09-11","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-11-10","startDate":"2026-10-11","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2026-12-10","startDate":"2026-11-10","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-01-09","startDate":"2026-12-10","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-02-08","startDate":"2027-01-09","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-03-10","startDate":"2027-02-08","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-04-09","startDate":"2027-03-10","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-05-09","startDate":"2027-04-09","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-06-08","startDate":"2027-05-09","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-07-08","startDate":"2027-06-08","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-08-07","startDate":"2027-07-08","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"},{"date":"2027-09-06","startDate":"2027-08-07","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"known"}],"pastCoupons":[{"date":"2026-05-14","startDate":"2026-04-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-06-13","startDate":"2026-05-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-07-13","startDate":"2026-06-13","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"}],"allCoupons":[{"date":"2026-05-14","startDate":"2026-04-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-06-13","startDate":"2026-05-14","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"},{"date":"2026-07-13","startDate":"2026-06-13","value":11.55,"rate":14.05,"face":1000.0,"currency":"RUB","status":"fact"}],"futureAmortizations":[{"date":"2029-03-29","value":1000.0,"rate":100.0,"currency":"RUB"}]}];
     const state = { assetIndex: 0, range: "ALL", mode: "price" };
     if (new URLSearchParams(location.search).get("drawer") === "1" || window.self !== window.top) document.body.classList.add("in-drawer");
 
@@ -542,12 +656,31 @@
       : Math.abs(value) < .005
         ? "0%"
         : `${value >= 0 ? "+" : ""}${pct(value)}`;
+    const signedPoints = value => value === null || value === undefined || Number.isNaN(value)
+      ? "—"
+      : Math.abs(value) < .005
+        ? "0 п.п."
+        : `${value > 0 ? "+" : "−"}${num(Math.abs(value), 2)} п.п.`;
     const periodLabel = value => ({ D: "День", W: "Неделя", M: "Месяц", "3M": "3М", "6M": "6М", YTD: "YTD", "1Y": "Год", "3Y": "3Г", "5Y": "5Л", ALL: "Всё" }[value] || value);
     const htmlEsc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
     const dateRu = value => {
       if (!value) return "—";
       const d = new Date(`${value}T00:00:00`);
       return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString("ru-RU");
+    };
+    const dateShort = value => {
+      if (!value) return "—";
+      const d = new Date(`${value}T00:00:00`);
+      return Number.isNaN(d.getTime())
+        ? "—"
+        : d.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" });
+    };
+    const dateWithYear = value => {
+      if (!value) return "—";
+      const d = new Date(`${value}T00:00:00`);
+      return Number.isNaN(d.getTime())
+        ? "—"
+        : d.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric" });
     };
 
     function rgbToHex(r, g, b) {
@@ -739,8 +872,30 @@
       document.querySelector('[data-mode="yield"]').style.display = hasYieldSeries ? "" : "none";
       document.documentElement.style.setProperty("--accent", normalizeAccent(asset.accent));
       document.documentElement.style.setProperty("--accent-soft", hexToSoft(asset.accent));
+      document.body.classList.toggle("key-rate-card", asset.assetType === "rate");
       document.getElementById("title").textContent = asset.title;
       if (asset.assetType && asset.assetType !== "bond") {
+        if (asset.assetType === "rate") {
+          document.getElementById("periodReturns").innerHTML = "";
+          document.getElementById("subtitle").textContent = asset.subtitle || "";
+          document.getElementById("chips").innerHTML = [
+            asset.publisher || "Банк России",
+            asset.quoteUnit || "% годовых",
+          ].map(item => `<span class="chip tint">${item}</span>`).join("");
+          document.querySelector('[data-mode="price"]').textContent = "Ставка";
+          document.getElementById("price").textContent = `${num(asset.price, asset.valueDigits ?? 2)} %`;
+          document.getElementById("dirtyPrice").textContent = "Ключевая ставка Банка России";
+          setDelta(
+            asset.deltaPoints,
+            `${signedPoints(asset.deltaPoints)} · решение ${dateShort(asset.lastDecisionDate)}`
+          );
+          document.getElementById("metrics").innerHTML = "";
+          document.getElementById("tiles").innerHTML = "";
+          document.getElementById("description").innerHTML = "";
+          document.getElementById("footerNote").textContent =
+            `Фактический ряд — Банк России · прогноз вынесен из графика · данные на ${dateRu(asset.asof)}`;
+          return;
+        }
         renderPeriodReturns(asset);
         const isFund = asset.assetType === "fund";
         const isMarketAsset = ["currency", "index", "commodity", "rate"].includes(asset.assetType);
@@ -893,6 +1048,38 @@
     }
 
     function renderCashflow(asset) {
+      if (asset.assetType === "rate") {
+        document.getElementById("cashflowTitle").textContent = "Решения и прогноз";
+        const rows = asset.rateSchedule || [];
+        const scheduleHtml = rows.map(item => {
+          const isForecast = item.status === "forecast";
+          const note = isForecast
+            ? "Прогноз"
+            : `Факт · действует с ${dateWithYear(item.effectiveDate)}`;
+          return `<div class="flow-row ${isForecast ? "rate-forecast" : "past"}">
+            <div class="flow-date">${dateWithYear(item.date)}</div>
+            <div class="flow-main">
+              <div class="flow-title">${isForecast ? "Заседание" : "Последнее решение"}</div>
+              <div class="flow-note">${note}</div>
+            </div>
+            <div class="flow-value">${item.rate === null || item.rate === undefined ? "—" : `${num(item.rate, 2)}%`}<span class="rate-change">${signedPoints(item.changePoints)}</span></div>
+          </div>`;
+        }).join("");
+        const historyRows = (asset.rateDecisionHistory || []).slice().reverse();
+        const historyHtml = historyRows.length ? `<details class="rate-history-disclosure">
+          <summary><span class="when-closed">Показать последние 10 заседаний</span><span class="when-open">Скрыть историю заседаний</span></summary>
+          <div class="rate-history-rows">${historyRows.map(item => `<div class="flow-row past">
+            <div class="flow-date">${dateWithYear(item.date)}</div>
+            <div class="flow-main">
+              <div class="flow-title">Решение</div>
+              <div class="flow-note">Факт · действует с ${dateWithYear(item.effectiveDate)}</div>
+            </div>
+            <div class="flow-value">${item.rate === null || item.rate === undefined ? "—" : `${num(item.rate, 2)}%`}<span class="rate-change">${signedPoints(item.changePoints)}</span></div>
+          </div>`).join("")}</div>
+        </details>` : "";
+        document.getElementById("cashflow").innerHTML = scheduleHtml + historyHtml;
+        return;
+      }
       if (["currency", "index", "commodity", "rate"].includes(asset.assetType)) {
         document.getElementById("cashflowTitle").textContent = "Характеристики";
         document.getElementById("cashflow").innerHTML = (asset.marketDetails || []).map(item => `<div class="flow-row">
@@ -1019,9 +1206,16 @@
         if (!row) return hide(true);
         binding.touchLocked = lock;
         const displayDate = dateRu(row.date);
-        const metricValue = state.mode === "yield" ? pct(row.yield, 2) : `${num(row.price, 2)}${asset.assetType === "bond" ? "%" : ` ${currencyLabel(asset.currency)}`}`;
+        const metricValue = state.mode === "yield"
+          ? pct(row.yield, 2)
+          : asset.assetType === "rate"
+            ? `${num(row.price, 2)}%`
+            : `${num(row.price, 2)}${asset.assetType === "bond" ? "%" : ` ${currencyLabel(asset.currency)}`}`;
+        const turnoverMetric = asset.assetType === "rate"
+          ? ""
+          : `<span class="asset-chart-tooltip__metric"><i style="--tooltip-color:rgba(16,18,21,.20)"></i>Оборот</span><strong>${htmlEsc(money(row.turnover || 0, "RUB", 0))}</strong>`;
         tooltip.innerHTML = `<span class="asset-chart-tooltip__period">${htmlEsc(displayDate)}</span>
-          <span class="asset-chart-tooltip__metric"><i style="--tooltip-color:rgba(16,18,21,.20)"></i>Оборот</span><strong>${htmlEsc(money(row.turnover || 0, "RUB", 0))}</strong>
+          ${turnoverMetric}
           <span class="asset-chart-tooltip__metric"><i style="--tooltip-color:${htmlEsc(lineColor)}"></i>${htmlEsc(yTitle)}</span><strong>${htmlEsc(metricValue)}</strong>`;
         tooltip.classList.add("is-visible");
         requestAnimationFrame(() => place(point, event.event || {}));
@@ -1049,6 +1243,7 @@
       const price = rows.map(row => row.price);
       const yieldClose = rows.map(row => row.yield);
       const turnover = rows.map(row => row.turnover || 0);
+      const showTurnover = asset.assetType !== "rate" && turnover.some(value => Number(value) > 0);
       const y = state.mode === "yield" ? yieldClose : price;
       const yTitle = state.mode === "yield" ? "Доходность, %" : (asset.chartLabel || (asset.assetType && asset.assetType !== "bond" ? `Цена, ${asset.currency || "RUB"}` : "Цена, %"));
       const yRange = adaptiveAxisRange(y, state.mode === "yield" ? "yield" : "price");
@@ -1064,8 +1259,8 @@
         document.getElementById("chart").innerHTML = `<div class="chart-empty">${state.mode === "yield" ? "История доходности MOEX отсутствует" : "История котировок MOEX отсутствует"}</div>`;
         return;
       }
-      Plotly.react("chart", [
-        {
+      const traces = [
+        ...(showTurnover ? [{
           type: "bar",
           x,
           y: turnover,
@@ -1073,21 +1268,27 @@
           marker: { color: "rgba(16,18,21,.10)", line: { width: 0 } },
           hoverinfo: "none",
           name: "Оборот"
-        },
+        }] : []),
         {
           type: "scatter",
           mode: "lines",
           x,
           y,
           connectgaps: true,
-          line: { color: lineColor, width: 4, shape: "spline", smoothing: 1.15 },
+          line: {
+            color: lineColor,
+            width: 4,
+            shape: asset.assetType === "rate" ? "hv" : "spline",
+            smoothing: asset.assetType === "rate" ? 0 : 1.15
+          },
           fill: "none",
           fillcolor: `${lineColor}18`,
           hoverinfo: "none",
           name: yTitle
         }
-      ], {
-        margin: { l: 42, r: 42, t: 10, b: 38 },
+      ];
+      Plotly.react("chart", traces, {
+        margin: { l: 42, r: showTurnover ? 42 : 18, t: 10, b: 38 },
         paper_bgcolor: "rgba(0,0,0,0)",
         plot_bgcolor: "rgba(0,0,0,0)",
         hovermode: "x unified",
@@ -1106,6 +1307,7 @@
           range: yRange
         },
         yaxis2: {
+          visible: showTurnover,
           overlaying: "y",
           side: "right",
           showgrid: false,
