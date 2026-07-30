@@ -172,6 +172,7 @@
     if (pathname.endsWith('/main/index.html')) return publicHref('/');
     if (pathname.endsWith('/heatmap/heatmap.html')) return publicHref('/shares');
     if (pathname.endsWith('/statements/statements.html')) return publicHref('/reports');
+    if (pathname.endsWith('/statements.html')) return publicHref('/reports');
     if (pathname.endsWith('/bondsmap/bondsmap.html')) {
       const destination = new URL(publicHref('/bonds'));
       target.searchParams.forEach((value, key) => {
@@ -468,12 +469,14 @@
           ? 'is-positive'
           : 'is-neutral';
     const localHref = siteHref(item.href);
-    const href = publicRouteFor(new URL(localHref)) || localHref;
+    const publicHrefValue = publicRouteFor(new URL(localHref));
+    const href = publicHrefValue || localHref;
+    const target = publicHrefValue ? ' target="_top"' : '';
     const marketMeta = marketValue
       ? `<span class="quantis-search-result__market"><strong>${esc(marketValue)}</strong>${dayDelta ? `<small class="${deltaTone}">${esc(dayDelta)}</small>` : ''}</span>`
       : `<span class="quantis-search-result__type">${esc(item.isin || item.currency || '')}</span>`;
     return `<article class="quantis-search-result ${fullTicker && !item.logo ? 'quantis-search-result--market-identity' : ''}" role="option" aria-selected="${position === selected}">
-      <a class="quantis-search-result__main" href="${href}" target="_top">
+      <a class="quantis-search-result__main" href="${esc(href)}"${target}>
         <span class="quantis-search-result__ticker">${item.logo ? `<img src="${url(item.logo)}" alt="">` : esc(fullTicker ? item.ticker : item.ticker.slice(0, 5))}</span>
         <span class="quantis-search-result__copy"><strong>${esc(item.shortName && normalize(item.shortName) !== normalize(item.ticker) ? item.shortName : item.name)}</strong><small>${esc(item.ticker)} · ${esc(item.kindLabel)}${esc(detail)}</small></span>
         ${marketMeta}
@@ -917,6 +920,20 @@
     unifyPaginationLayout(root);
   }
 
+  function keepFirstPeriodInset() {
+    ['bondsPeriodToolbar', 'heatmapPeriodTabs'].forEach(id => {
+      const toolbar = document.getElementById(id);
+      if (!toolbar || toolbar.dataset.qnPeriodInset === 'true') return;
+      toolbar.dataset.qnPeriodInset = 'true';
+      toolbar.addEventListener('click', event => {
+        const button = event.target.closest('button');
+        if (!button || button !== toolbar.querySelector('button')) return;
+        requestAnimationFrame(() => toolbar.scrollTo({ left: 0, behavior: 'auto' }));
+      });
+    });
+  }
+
+  keepFirstPeriodInset();
   compactActions();
   const observer = new MutationObserver(records => {
     for (const record of records) {

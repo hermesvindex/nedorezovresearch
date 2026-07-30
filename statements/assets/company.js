@@ -150,6 +150,10 @@
   function yoy(list) { const [previous,current]=comparisonPair(list); if(!previous||!current)return null; const a=Number(previous.value),b=Number(current.value); return a?(b/a-1)*100:null; }
   function ppChange(list) { const [previous,current]=comparisonPair(list); return !previous||!current?null:Number(current.value)-Number(previous.value); }
   function baseLayout(height) { return {height,margin:{l:58,r:20,t:20,b:45},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',font:{family:'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',size:12,color:'#17374b'},hovermode:'x',hoverdistance:-1,spikedistance:-1,legend:{orientation:'h',x:0,y:1.13},xaxis:{gridcolor:'rgba(0,0,0,0)',tickfont:{color:'#667986'}},yaxis:{gridcolor:palette.grid,zerolinecolor:palette.grid,tickfont:{color:'#667986'}},bargap:.22}; }
+  function chartHeight(id, fallback) {
+    const height=Math.round(document.getElementById(id)?.getBoundingClientRect().height||0);
+    return height>0?height:fallback;
+  }
   function periodLabel(value) {
     const raw=String(value||'');
     const quarter=raw.match(/^(\d{4})Q([1-4])$/i);
@@ -292,7 +296,7 @@
     const periods=unique(sets.flatMap(x=>x.data.map(r=>r.period))).sort((a,b)=>rank(a)-rank(b));
     if(!sets.length){empty(document.getElementById('resultsChart'));return;}
     const traces=sets.map(x=>({type:'bar',name:x.name,x:periods,y:periods.map(p=>Number(x.data.find(r=>r.period===p)?.value)||null),marker:{color:x.color,line:{width:0}},customdata:periods.map(p=>{const r=x.data.find(v=>v.period===p);return r?display(r):'—'}),hoverinfo:'none'}));
-    const layout=baseLayout(440); layout.barmode='group'; layout.showlegend=true; layout.xaxis=periodAxis(periods); Plotly.react('resultsChart',traces,layout,config);
+    const layout=baseLayout(chartHeight('resultsChart',440)); layout.barmode='group'; layout.showlegend=true; layout.xaxis=periodAxis(periods); Plotly.react('resultsChart',traces,layout,config);
     bindChartTooltip('resultsChart',point=>({period:periodLabel(point.x),rows:sets.map(set=>{const row=set.data.find(item=>String(item.period)===String(point.x));return {label:set.name,value:row?display(row):'—',color:set.color};})}));
     document.getElementById('resultsPeriod').textContent=`${state.standard==='IFRS'?'МСФО':state.standard} · ${state.periodType==='annual'?'годовые':'квартальные'}`;
   }
@@ -301,7 +305,7 @@
     const sets=defs.map(([key,name,color])=>{const data=seriesByRole(key).filter(r=>r.period!=='LTM');return {name,color,data:state.periodType==='annual'?data:data.slice(-24)}}).filter(x=>x.data.length);
     if(!sets.length){empty(document.getElementById('marginChart'));document.getElementById('marginFacts').innerHTML='';return;}
     const marginPeriods=unique(sets.flatMap(x=>x.data.map(r=>r.period))).sort((a,b)=>rank(a)-rank(b));
-    Plotly.react('marginChart',sets.map(x=>({type:'scatter',mode:'lines+markers',name:x.name,x:x.data.map(r=>r.period),y:x.data.map(r=>Number(r.value)),line:{color:x.color,width:3},marker:{size:6},hoverinfo:'none'})),{...baseLayout(310),showlegend:true,margin:{l:50,r:15,t:20,b:42},legend:{orientation:'h',x:0,y:1.2},xaxis:periodAxis(marginPeriods)},config);
+    Plotly.react('marginChart',sets.map(x=>({type:'scatter',mode:'lines+markers',name:x.name,x:x.data.map(r=>r.period),y:x.data.map(r=>Number(r.value)),line:{color:x.color,width:3},marker:{size:6},hoverinfo:'none'})),{...baseLayout(chartHeight('marginChart',310)),showlegend:true,margin:{l:50,r:15,t:20,b:42},legend:{orientation:'h',x:0,y:1.2},xaxis:periodAxis(marginPeriods)},config);
     bindChartTooltip('marginChart',point=>({period:periodLabel(point.x),rows:sets.map(set=>{const row=set.data.find(item=>String(item.period)===String(point.x));return {label:set.name,value:row?display(row):'—',color:set.color};})}));
     document.getElementById('marginFacts').innerHTML=sets.map(x=>{const r=latest(x.data),d=ppChange(x.data);return `<div><span>${esc(x.name)}</span><strong>${esc(display(r))}</strong><small>${d===null?'Изменение н/д':`${d>=0?'+':''}${nf.format(d)} п.п.`}</small></div>`}).join('');
   }
@@ -314,7 +318,7 @@
     const items=peers.map(p=>{const m=p.metrics?.[state.peerMetric]; if(!m)return null; const value=money?Number(m.normalized_value):Number(m.value); return Number.isFinite(value)?{...p,value,raw:m}:null;}).filter(Boolean).sort((a,b)=>b.value-a.value).slice(0,8);
     const current=String(DATA.ticker||'').toUpperCase(); const metricColor=semanticColor(state.peerMetric); const colors=items.map(x=>x.ticker===current?metricColor:palette.muted);
     const displayPeer=i=>money?`${compact.format(i.value)} ₽`:state.peerMetric.includes('margin')||['nim','cir','roe'].includes(state.peerMetric)?`${nf.format(i.value)}%`:`${nf.format(i.value)}x`;
-    Plotly.react('peerChart',[{type:'bar',orientation:'h',x:items.map(i=>i.value),y:items.map(i=>i.ticker),marker:{color:colors},customdata:items.map(displayPeer),hoverinfo:'none'}],{...baseLayout(380),hovermode:'closest',hoverdistance:18,spikedistance:18,margin:{l:70,r:25,t:15,b:45},showlegend:false,yaxis:{autorange:'reversed',gridcolor:'rgba(0,0,0,0)',tickfont:{weight:700,color:'#17374b'}},xaxis:{gridcolor:palette.grid,tickformat:money?'.2s':undefined}},config);
+    Plotly.react('peerChart',[{type:'bar',orientation:'h',x:items.map(i=>i.value),y:items.map(i=>i.ticker),marker:{color:colors},customdata:items.map(displayPeer),hoverinfo:'none'}],{...baseLayout(chartHeight('peerChart',380)),hovermode:'closest',hoverdistance:18,spikedistance:18,margin:{l:70,r:25,t:15,b:45},showlegend:false,yaxis:{autorange:'reversed',gridcolor:'rgba(0,0,0,0)',tickfont:{weight:700,color:'#17374b'}},xaxis:{gridcolor:palette.grid,tickformat:money?'.2s':undefined}},config);
     bindChartTooltip('peerChart',point=>({period:point.y,label:peerLabels[state.peerMetric],value:point.customdata,color:colors[point.pointNumber]||palette.muted,guide:false,hit:'horizontal-bar'}));
     const median=[...items].sort((a,b)=>a.value-b.value)[Math.floor(items.length/2)]?.value;
     const peerTable=document.getElementById('peerTable');
@@ -331,7 +335,7 @@
     const metricColor=semanticColor(role({metric_label:selectedLabel}));
     const barColors=points.map((_,i)=>i===points.length-1?metricColor:withAlpha(metricColor,.58));
     const pointPeriods=points.map(r=>r.period);
-    Plotly.react(chart,[{type:'bar',x:pointPeriods,y:points.map(r=>Number(r.value)),marker:{color:barColors},customdata:points.map(display),hoverinfo:'none'}],{...baseLayout(360),showlegend:false,margin:{l:55,r:15,t:15,b:45},xaxis:periodAxis(pointPeriods)},config);
+    Plotly.react(chart,[{type:'bar',x:pointPeriods,y:points.map(r=>Number(r.value)),marker:{color:barColors},customdata:points.map(display),hoverinfo:'none'}],{...baseLayout(chartHeight('focusChart',360)),showlegend:false,margin:{l:55,r:15,t:15,b:45},xaxis:periodAxis(pointPeriods)},config);
     bindChartTooltip('focusChart',point=>({period:periodLabel(point.x),label:document.getElementById('metricSelect').selectedOptions[0]?.textContent||'Показатель',value:point.customdata,color:barColors[point.pointNumber]||accent}));
     document.getElementById('companyTableWrap').innerHTML=`<table class="company-table"><thead><tr><th>Период</th><th>Значение</th><th>Изменение</th></tr></thead><tbody>${points.slice().reverse().map((r,i,a)=>{const previous=a[i+1];const d=previous&&Number(previous.value)?(Number(r.value)/Number(previous.value)-1)*100:null;return `<tr><td>${esc(periodLabel(r.period))}</td><td class="value">${esc(display(r))}</td><td class="${d!==null&&d<0?'negative':'positive'}">${d===null?'—':`${d>=0?'+':''}${nf.format(d)}%`}</td></tr>`}).join('')}</tbody></table>`;
   }
