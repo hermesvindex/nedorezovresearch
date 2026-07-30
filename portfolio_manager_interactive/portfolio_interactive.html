@@ -1,0 +1,1830 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Конструктор портфеля</title>
+  <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
+  <script src="assets/data/bootstrap.js"></script>
+  <style>
+    :root {
+      --font:"Graphik","Graphik LCG","Graphik LC","Graphik Web",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      --bg:#F2F2F2;
+      --card:rgba(255,255,255,.78);
+      --ink:#111111;
+      --muted:#6A6A6A;
+      --line:#D9D9D9;
+      --chip:#F2F2F2;
+      --brand:#720E22;
+      --graphite:#2B2B2B;
+      --positive:#0D8A4A;
+      --negative:#B43C2B;
+      --shadow:0 24px 58px rgba(17,17,17,.10);
+      --radius:24px;
+      --hero-ink:#F2F7FB;
+      --hero-muted:rgba(242,247,251,.76);
+      --hero-line:rgba(255,255,255,.12);
+    }
+    * { box-sizing:border-box; }
+    button,input,select,textarea { font-family:var(--font); }
+    svg text,.js-plotly-plot .plotly text { font-family:var(--font) !important; }
+    html,body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); overflow-x:hidden; width:100%; max-width:100%; }
+    body {
+      padding:8px;
+      background:
+        linear-gradient(180deg, #FFFFFF 0%, #F2F2F2 54%, #E9E9E9 100%);
+    }
+    .page { width:calc(100vw - 16px); max-width:none; margin:0 auto; display:grid; gap:12px; min-width:0; }
+    .hero, .card, .table-wrap, .editor-card {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.78), rgba(250,252,249,.74));
+      border:1px solid rgba(255,255,255,.58);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(22px) saturate(1.12);
+      -webkit-backdrop-filter:blur(22px) saturate(1.12);
+    }
+    .hero {
+      padding:22px 24px;
+      min-height:0;
+      display:grid;
+      gap:14px;
+      min-width:0;
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(19,19,19,.99), rgba(37,37,37,.97) 62%, rgba(114,14,34,.94) 100%);
+      border-color:rgba(255,255,255,.14);
+      box-shadow:0 22px 50px rgba(17,17,17,.22);
+    }
+    .hero::before { content:none; }
+    .hero-head { display:grid; grid-template-columns:minmax(0,1.18fr) minmax(380px,.82fr); align-items:start; gap:24px; min-width:0; }
+    .hero-head > * { min-width:0; }
+    .title h1 { margin:0; font-size:48px; line-height:.98; letter-spacing:0; color:var(--hero-ink); font-weight:900; }
+    .title p { margin:10px 0 0; color:var(--hero-muted); font-size:15px; line-height:1.45; max-width:860px; }
+    .hero-actions { display:flex; align-items:flex-start; justify-content:flex-end; min-width:0; }
+    .search-launch { border:none; background:var(--brand); color:#fff; border-radius:18px; padding:12px 16px; font-size:16px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; white-space:nowrap; }
+    .editor-actions { display:grid; grid-auto-flow:column; grid-auto-columns:max-content; align-items:start; justify-content:end; gap:12px; min-width:0; width:100%; max-width:100%; }
+    .editor-head { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); align-items:start; gap:12px; min-width:0; width:100%; max-width:100%; }
+    .editor-head h2 { margin:0; font-size:28px; letter-spacing:0; }
+    .editor-footer { display:flex; justify-content:flex-end; margin-top:10px; }
+    .clear-btn { border:1px solid #E6C9C1; background:#FFF4F1; color:#8D352A; border-radius:16px; padding:10px 14px; font-size:14px; font-weight:700; cursor:pointer; }
+    .hero-badges { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; align-content:flex-start; min-width:0; }
+    .badge { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--hero-line); background:rgba(255,255,255,.08); backdrop-filter:blur(8px); padding:9px 12px; border-radius:999px; font-size:13px; color:rgba(242,247,251,.86); min-width:0; }
+    .badge b { color:var(--hero-ink); }
+    .badge input { border:none; background:transparent; color:var(--hero-ink); font:inherit; font-weight:700; outline:none; cursor:text; max-width:150px; min-width:130px; }
+    .badge-input { background:#FFFFFF; color:#111827; border-color:rgba(255,255,255,.85); box-shadow:0 8px 24px rgba(8,16,28,.18), inset 0 0 0 1px rgba(17,24,39,.04); }
+    .badge-input b, .badge-input span { color:#111827; }
+    .badge-input input { color:#111827; background:#FFFFFF; cursor:pointer; }
+    .analytics { display:grid; gap:12px; min-width:0; width:100%; overflow:hidden; }
+    .toolbar { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; }
+    .segmented { display:inline-flex; gap:4px; padding:4px; border:1px solid var(--line); background:#fff; border-radius:999px; }
+    .segment-btn { border:0; border-radius:999px; padding:8px 12px; background:transparent; color:#444; font-size:13px; font-weight:800; cursor:pointer; }
+    .segment-btn.active { background:var(--brand); color:#fff; }
+    .toolbar-note { color:var(--muted); font-size:13px; }
+    .composer { padding:16px; min-width:0; overflow:hidden; }
+    .composer h2, .analytics-head h2, .table-wrap h3 { margin:0; font-size:24px; letter-spacing:0; }
+    .search-block { position:relative; display:grid; gap:12px; min-width:0; }
+    .search-input {
+      width:100%;
+      border:1px solid rgba(255,255,255,.86);
+      border-radius:20px;
+      padding:14px 16px;
+      font-size:16px;
+      color:var(--ink);
+      outline:none;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.92),transparent 42%),
+        linear-gradient(145deg,rgba(255,255,255,.68),rgba(216,226,231,.28));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(39,76,99,.08),0 10px 28px rgba(15,34,51,.09);
+      backdrop-filter:blur(18px) saturate(155%);
+      -webkit-backdrop-filter:blur(18px) saturate(155%);
+      transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+    }
+    .search-input::placeholder { color:rgba(15,34,51,.42); }
+    .search-input:hover { border-color:rgba(255,255,255,.98); box-shadow:inset 0 1px 0 #fff,0 12px 30px rgba(15,34,51,.11); }
+    .search-input:focus { border-color:rgba(39,76,99,.34); box-shadow:0 0 0 4px rgba(39,76,99,.10),inset 0 1px 0 #fff,0 14px 34px rgba(15,34,51,.13); transform:translateY(-1px); }
+    .search-results { position:absolute; top:100%; left:0; right:0; z-index:12; margin-top:8px; border:1px solid var(--line); border-radius:22px; background:#fff; box-shadow:0 18px 48px rgba(31,42,46,.14); max-height:min(460px, 52vh); overflow:auto; display:none; }
+    .search-results.open { display:block; }
+    .result-item { padding:14px 16px; border-bottom:1px solid #EEF2EE; cursor:pointer; display:grid; gap:6px; }
+    .result-item:last-child { border-bottom:none; }
+    .result-item:hover, .result-item.active { background:#F5F8F4; }
+    .result-main { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .result-title { font-weight:700; font-size:16px; }
+    .result-meta { color:var(--muted); font-size:13px; line-height:1.35; }
+    .result-price { white-space:nowrap; font-size:14px; font-weight:700; }
+    .pill-row { display:grid; gap:10px; justify-items:stretch; }
+    .pill { border:none; cursor:pointer; background:#F2F5F1; color:#34453D; border-radius:18px; padding:10px 14px; font-size:13px; border:1px solid #D9E2DB; width:100%; display:flex; align-items:center; justify-content:flex-start; text-align:left; line-height:1.25; }
+    .pill:hover { background:#EAF0EA; }
+    .selected-card { border:1px solid var(--line); border-radius:22px; background:rgba(255,255,255,.82); padding:14px; display:grid; gap:10px; min-width:0; overflow:hidden; }
+    .composer-guidance { width:100%; color:var(--muted); font-size:13px; line-height:1.45; text-align:right; }
+    .selected-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+    .selected-title { margin:0; font-size:18px; line-height:1.05; }
+    .selected-sub { margin:5px 0 0; color:var(--muted); font-size:12px; }
+    .selected-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .mini { border:1px solid var(--line); border-radius:18px; padding:10px 12px; background:rgba(252,253,250,.78); }
+    .mini .k { color:var(--muted); font-size:12px; margin-bottom:6px; }
+    .mini .v { font-size:16px; font-weight:800; line-height:1.1; }
+    .mode-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .mode-btn { border:1px solid var(--line); background:#fff; border-radius:999px; padding:8px 12px; cursor:pointer; font-size:14px; }
+    .mode-btn.active { background:var(--brand); color:#fff; border-color:var(--brand); }
+    .add-grid { display:grid; grid-template-columns: minmax(0,1fr) 96px minmax(116px,.88fr); gap:8px; align-items:end; }
+    .field { display:grid; gap:7px; min-width:0; }
+    .field label { color:var(--muted); font-size:12px; line-height:1.15; min-height:28px; display:flex; align-items:flex-end; }
+    .field input, .field select { width:100%; border:1px solid var(--line); border-radius:16px; padding:11px 12px; background:#fff; font-size:15px; }
+    .add-btn { border:none; background:var(--brand); color:#fff; border-radius:16px; padding:12px 14px; font-size:15px; cursor:pointer; }
+    .add-btn:disabled { opacity:.45; cursor:not-allowed; }
+    .preview-note { color:#5F6D66; font-size:13px; line-height:1.4; min-height:18px; }
+    .recommendations { display:grid; gap:14px; min-width:0; }
+    .reco-block { border:1px solid var(--line); border-radius:22px; padding:12px; background:rgba(252,253,250,.78); min-width:0; overflow:hidden; }
+    .reco-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .reco-head.compact { justify-content:flex-start; text-align:left; }
+    .reco-head h3 { margin:0; font-size:18px; }
+    .reco-head span { color:var(--muted); font-size:12px; }
+    .kpis { display:flex; flex-wrap:wrap; gap:10px; align-items:stretch; align-content:flex-start; justify-content:flex-start; min-width:0; width:100%; }
+    .kpi { flex:1 1 210px; min-width:190px; max-width:none; background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(249,251,248,.96)); border:1px solid rgba(197,210,202,.88); border-radius:22px; padding:10px 12px; box-shadow:0 10px 24px rgba(34,53,44,.05); overflow:hidden; }
+    .kpi .l { color:var(--muted); font-size:12px; line-height:1.2; }
+    .kpi .v { margin-top:4px; font-size:17px; font-weight:900; letter-spacing:0; }
+    .grid-main { display:grid; grid-template-columns:1fr; gap:16px; align-items:start; min-width:0; width:100%; max-width:100%; overflow:hidden; }
+    .chart-card { padding:14px; min-width:0; width:100%; overflow:hidden; max-width:100%; }
+    .chart-grid-bottom { display:grid; grid-template-columns:1fr; gap:16px; min-width:0; width:100%; max-width:100%; overflow:hidden; }
+    .donut-layout { display:grid; grid-template-columns:minmax(420px,.72fr) minmax(620px,1.28fr); gap:14px; align-items:start; min-width:0; width:100%; }
+    .class-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; min-width:0; align-content:start; }
+    .class-card { border:1px solid var(--line); border-radius:22px; background:rgba(252,253,250,.78); padding:12px 14px; min-width:0; width:100%; overflow:hidden; }
+    .class-head { display:flex; justify-content:space-between; align-items:center; gap:10px; padding-bottom:8px; border-bottom:3px solid var(--line); margin-bottom:10px; font-size:14px; }
+    .class-row { width:100%; display:grid; grid-template-columns:12px minmax(0,1fr) auto; gap:10px; align-items:center; padding:6px 4px; border:0; border-radius:10px; color:inherit; background:transparent; font:inherit; text-align:left; cursor:pointer; transition:background-color .14s ease, transform .14s ease; }
+    .class-row:hover { background:rgba(216,226,231,.34); transform:translateX(2px); }
+    .class-row:focus-visible { outline:2px solid #274C63; outline-offset:2px; background:rgba(216,226,231,.34); }
+    .dot { width:12px; height:12px; border-radius:999px; }
+    .class-name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .class-pct { font-variant-numeric:tabular-nums; }
+    .editor-card { padding:12px 14px; display:grid; gap:8px; min-width:0; width:100%; overflow:hidden; }
+    #editorTableWrap { width:100%; max-width:100%; min-width:0; overflow:hidden; }
+    .editor-scroll { display:block; width:100%; max-width:100%; overflow-x:auto !important; overflow-y:hidden; overscroll-behavior-x:contain; scrollbar-gutter:stable both-edges; padding-bottom:10px; -webkit-overflow-scrolling:touch; }
+    .editor-table { width:100%; min-width:860px; border-collapse:collapse; table-layout:fixed; }
+    .editor-table col.col-name { width:300px; }
+    .editor-table col.col-category { width:190px; }
+    .editor-table col.col-lots { width:120px; }
+    .editor-table col.col-now { width:170px; }
+    .editor-table col.col-share { width:110px; }
+    .editor-table col.col-yield { width:120px; }
+    .editor-table col.col-risk { width:120px; }
+    .editor-table col.col-actions { width:100px; }
+    .editor-table th, .editor-table td { padding:8px 6px; border-bottom:1px solid #E8EEE8; text-align:center; vertical-align:middle; }
+    .editor-table th { color:var(--muted); font-size:12px; font-weight:700; }
+    .editor-table td { font-size:14px; }
+    .editor-table td .muted { font-size:12px; line-height:1.2; }
+    .editor-table td:first-child, .editor-table th:first-child { text-align:left; }
+    .editor-table td.num { text-align:center; font-variant-numeric:tabular-nums; }
+    .editor-table td:first-child .muted { white-space:normal; word-break:break-word; }
+    .editor-table tr.asset-class-divider td { padding:14px 6px 7px; border-bottom:0; background:transparent; text-align:left; }
+    .asset-class-divider__inner { display:flex; align-items:flex-end; justify-content:flex-start; gap:14px; min-height:30px; padding:0 4px 6px; border-bottom:2px solid var(--class-color); color:var(--class-color); }
+    .asset-class-divider__name { color:var(--class-color); font-size:13px; font-weight:900; line-height:18px; letter-spacing:.01em; white-space:nowrap; }
+    .asset-class-divider__meta { color:var(--class-color); font-size:12px; font-weight:800; line-height:18px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .lots-input { width:88px; border:1px solid var(--line); border-radius:14px; padding:7px 10px; font-size:14px; text-align:right; }
+    .remove-btn { border:none; background:#FBE7E2; color:#8D352A; border-radius:14px; padding:8px 12px; cursor:pointer; }
+    tr.asset-row { cursor:pointer; transition:background-color .14s ease; }
+    tr.asset-row:hover { background:#F6F8F4; }
+    .table-wrap { padding:12px; overflow:hidden; min-width:0; width:100%; }
+    .table-scroll { display:block; width:100%; max-width:100%; overflow-x:auto !important; overflow-y:hidden; overscroll-behavior-x:contain; scrollbar-gutter:stable both-edges; padding-bottom:10px; -webkit-overflow-scrolling:touch; }
+    .table-wrap .asset-table { width:100%; table-layout:fixed; }
+    .table-title { display:flex; justify-content:space-between; align-items:flex-end; gap:10px; margin-bottom:10px; font-size:22px; letter-spacing:0; font-weight:900; min-width:0; }
+    .table-title span { color:#2F3B37; font-size:18px; white-space:normal; overflow-wrap:anywhere; text-align:right; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { padding:10px 10px; border-bottom:1px solid #E6ECE7; vertical-align:top; }
+    th { text-align:center; color:#607166; font-size:13px; white-space:nowrap; position:sticky; top:0; z-index:1; background:rgba(251,253,250,.96); backdrop-filter:blur(8px); }
+    th:first-child, td:first-child { text-align:left; }
+    td.num { text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    td.comment { color:#5F6D66; }
+    .name-cell { display:flex; align-items:flex-start; gap:10px; min-width:0; }
+    .name-dot { width:11px; height:11px; border-radius:999px; margin-top:5px; flex:0 0 auto; }
+    .name-cell > span:last-child { min-width:0; overflow-wrap:anywhere; }
+    .chip { display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:999px; font-weight:800; min-width:70px; }
+    .chip.pos { color:#0E8A4A; background:rgba(13,138,74,.12); border:1px solid rgba(13,138,74,.22); }
+    .chip.neg { color:#B43C2B; background:rgba(180,60,43,.10); border:1px solid rgba(180,60,43,.18); }
+    .chip.risk { color:var(--risk-tone); background:color-mix(in srgb, var(--risk-tone) 11%, transparent); border:1px solid color-mix(in srgb, var(--risk-tone) 30%, transparent); }
+    .editor-table tfoot td { border-top:2px solid rgba(39,76,99,.28); border-bottom:0; background:rgba(216,226,231,.34); font-weight:900; }
+    .chip.low { color:#205A9C; background:rgba(61,90,128,.10); border:1px solid rgba(61,90,128,.16); }
+    .chip.mid { color:#8B6A00; background:rgba(208,169,40,.12); border:1px solid rgba(208,169,40,.2); }
+    .chip.high { color:#8D3B2B; background:rgba(216,111,85,.12); border:1px solid rgba(216,111,85,.2); }
+    .chip.aci { color:#40627B; background:rgba(152,193,217,.16); border:1px solid rgba(152,193,217,.24); }
+    .empty { display:grid; place-items:center; min-height:260px; color:#718078; text-align:center; padding:18px; }
+    .muted { color:var(--muted); }
+    .drawer { position:fixed; inset:0; z-index:40; display:none; background:rgba(17,24,39,.24); backdrop-filter:blur(4px); }
+    .drawer.open { display:block; }
+    .drawer-panel { position:absolute; right:0; top:0; height:100%; width:min(1100px,97vw); background:rgba(255,255,255,.88); border-left:1px solid var(--line); box-shadow:-24px 0 50px rgba(0,0,0,.25); padding:16px; overflow:auto; backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); }
+    .search-drawer-panel { position:absolute; right:0; top:0; height:100%; width:min(460px,94vw); background:var(--card); border-left:1px solid var(--line); box-shadow:-24px 0 50px rgba(0,0,0,.22); padding:14px; overflow:auto; }
+    .search-drawer-panel .drawer-title { font-size:clamp(22px,2.4vw,30px); line-height:1; }
+    .drawer-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .drawer-title { margin:0; font-size:24px; }
+    .drawer-sub { margin:4px 0 0; color:var(--muted); font-size:13px; }
+    .btn { border:1px solid var(--line); border-radius:999px; background:#fff; padding:10px 14px; cursor:pointer; font-size:15px; }
+    .detail-cards { margin-top:12px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+    .detail-card { border:1px solid var(--line); border-radius:16px; padding:12px; background:#FCFDFA; }
+    .detail-card .k { color:var(--muted); font-size:12px; }
+    .detail-card .v { margin-top:4px; font-size:18px; font-weight:800; line-height:1.15; }
+    .detail-section { margin-top:12px; border:1px solid var(--line); border-radius:16px; padding:12px; background:#FCFDFA; }
+    #detailFlowPlot { height:420px; width:100%; }
+    .kv-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .kv { border:1px solid rgba(17,38,24,.08); border-radius:12px; padding:8px; background:#fff; }
+    .kv .k { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.3px; }
+    .kv .v { margin-top:4px; font-size:12px; word-break:break-word; }
+    .drawer-panel {
+      width:min(1160px,97vw);
+      padding:clamp(16px,2.4vw,28px);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(14,165,107,.14), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.88), rgba(246,252,249,.68));
+      border-left:1px solid rgba(255,255,255,.72);
+      box-shadow:-28px 0 70px rgba(16,18,21,.18);
+      backdrop-filter:blur(30px) saturate(1.28);
+      -webkit-backdrop-filter:blur(30px) saturate(1.28);
+    }
+    .drawer-header {
+      padding:0 0 16px;
+      border-bottom:0;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:start;
+    }
+    .drawer-title { font-size:clamp(28px,4.6vw,54px); line-height:.94; font-weight:900; letter-spacing:0; }
+    .drawer-sub { margin-top:10px; font-size:14px; line-height:1.35; color:rgba(16,18,21,.58); }
+    .detail-cards { grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:16px; }
+    .detail-card {
+      min-height:78px;
+      border-radius:8px;
+      padding:14px;
+      background:rgba(255,255,255,.50);
+      border:1px solid rgba(255,255,255,.70);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.74);
+      overflow:hidden;
+    }
+    .detail-card .k { font-size:12px; line-height:1.15; color:rgba(16,18,21,.58); text-transform:none; letter-spacing:0; }
+    .detail-card .v { margin-top:6px; font-size:20px; line-height:1.08; font-weight:900; word-break:normal; overflow-wrap:normal; }
+    .detail-section {
+      margin-top:14px;
+      border-radius:8px;
+      padding:16px;
+      background:rgba(255,255,255,.44);
+      border:1px solid rgba(255,255,255,.66);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.72);
+    }
+    .detail-section h3 { margin:0 0 12px; font-size:18px; line-height:1; }
+    #detailFlowPlot { height:390px; }
+    .btn { border-radius:8px; background:rgba(255,255,255,.62); border:1px solid rgba(255,255,255,.78); }
+    details.macro-details { padding:0; overflow:visible; border:1px solid rgba(255,255,255,.78); border-radius:28px; background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(238,244,246,.62)); box-shadow:0 18px 46px rgba(15,34,51,.10),inset 0 1px 0 rgba(255,255,255,.94); }
+    details.macro-details > summary { list-style:none; cursor:pointer; padding:20px 22px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+    details.macro-details > summary::-webkit-details-marker { display:none; }
+    details.macro-details > summary:hover .macro-summary-action { border-color:rgba(255,255,255,.98); background-color:rgba(255,255,255,.24); transform:translateY(-1px); }
+    details.macro-details > summary:focus-visible { outline:3px solid rgba(39,76,99,.26); outline-offset:3px; border-radius:26px; }
+    .macro-summary-copy { display:grid; gap:5px; min-width:0; }
+    .macro-summary-kicker { color:rgba(15,34,51,.52); font-size:10px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; }
+    .macro-summary-title { color:#0F2233; font-size:clamp(20px,2vw,28px); font-weight:850; line-height:1.05; letter-spacing:-.025em; }
+    .macro-summary-action { flex:0 0 auto; min-height:42px; display:inline-flex; align-items:center; gap:10px; padding:0 14px; border:1px solid rgba(255,255,255,.78); border-radius:999px; color:#274C63; background:linear-gradient(145deg,rgba(255,255,255,.64),rgba(216,226,231,.26)); box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 8px 20px rgba(15,34,51,.08); backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%); font-size:12px; font-weight:750; white-space:nowrap; transition:transform .18s ease,border-color .18s ease,background-color .18s ease; }
+    .macro-summary-action__close { display:none; }
+    .macro-summary-chevron { width:9px; height:9px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:translateY(-2px) rotate(45deg); transition:transform .22s cubic-bezier(.22,.9,.26,1); }
+    details.macro-details[open] .macro-summary-action__open { display:none; }
+    details.macro-details[open] .macro-summary-action__close { display:inline; }
+    details.macro-details[open] .macro-summary-chevron { transform:translateY(2px) rotate(225deg); }
+    details.macro-details[open] > summary { padding-bottom:16px; }
+    .macro-body { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:0 14px 14px; }
+    .macro-body .chart-card { position:relative; overflow:visible; border:1px solid rgba(255,255,255,.84); border-radius:22px; background:rgba(255,255,255,.62); box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 10px 28px rgba(15,34,51,.06); }
+    .macro-chart-header { padding:18px 20px 4px; display:grid; gap:10px; }
+    .macro-chart-header h3 { margin:0; color:#0F2233; font-size:18px; font-weight:750; line-height:1.15; letter-spacing:-.02em; }
+    .macro-chart-legend { display:flex; align-items:center; flex-wrap:wrap; gap:8px 16px; color:#52616D; font-size:11px; line-height:1.2; }
+    .macro-chart-legend span { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; }
+    .macro-chart-legend i { display:block; width:24px; height:3px; border-radius:999px; background:var(--legend-color); }
+    .detail-table { width:100%; border-collapse:collapse; min-width:600px; }
+    .detail-table th,.detail-table td { border-bottom:1px solid var(--line); padding:6px 8px; font-size:12px; text-align:left; }
+    .detail-table th { color:var(--muted); }
+    .drawer.asset-card-mode .drawer-panel { width:min(1180px,97vw); padding:0; display:flex; flex-direction:column; overflow:hidden; border-radius:28px 0 0 28px; }
+    .drawer.asset-card-mode .drawer-header { position:absolute; top:16px; right:16px; z-index:5; padding:0; margin:0; border:0; }
+    .drawer.asset-card-mode .drawer-header > div { display:none; }
+    .drawer.asset-card-mode .drawer-header .btn { width:44px; height:44px; padding:0; border-radius:999px; overflow:hidden; color:transparent; font-size:0; background:rgba(255,255,255,.82); box-shadow:0 8px 24px rgba(16,18,21,.12); }
+    .drawer.asset-card-mode .drawer-header .btn::before { content:'×'; color:#101215; font-size:30px; line-height:1; font-weight:400; }
+    .drawer.asset-card-mode .detail-cards { display:block; flex:1 1 auto; min-height:0; margin-top:0; }
+    .drawer.asset-card-mode .detail-section { display:none; }
+    .asset-card-frame { width:100%; height:100%; min-height:100vh; border:0; border-radius:28px 0 0 28px; background:#fff; }
+    .donut-card {
+      order:1;
+      isolation:isolate;
+      background-clip:padding-box;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.94);
+    }
+    @media (max-width:1560px) {
+      .editor-table th, .editor-table td { padding:7px 4px; font-size:13px; }
+      .lots-input { width:84px; }
+    }
+    @media (max-width:1440px) {
+      .page { width:calc(100vw - 14px); max-width:none; }
+      .title h1 { font-size:46px; }
+      .title p { font-size:15px; }
+    }
+    @media (max-width:1380px) {
+      .title h1 { font-size:44px; }
+      .title p { font-size:15px; }
+      .kpi .v { font-size:16px; }
+    }
+    @media (max-width:1220px) {
+      .hero { min-height:0; padding:24px 22px; }
+      .hero-head { grid-template-columns:1fr; }
+      .hero-badges { justify-content:flex-start; }
+      .kpi { flex:1 1 calc(33.333% - 8px); min-width:180px; max-width:none; width:auto; }
+      .donut-layout { grid-template-columns:1fr; }
+      .class-grid { grid-template-columns:1fr; }
+      #plotDonut { height:420px !important; }
+    }
+    @media (max-width:860px) {
+      body { padding:10px; }
+      .page { width:calc(100vw - 20px); }
+      .title h1 { font-size:40px; }
+      .title p { font-size:15px; }
+      .hero { padding:18px 16px; }
+      .hero-head { grid-template-columns:1fr; }
+      .hero-badges { gap:8px; justify-content:flex-start; }
+      .badge { font-size:12px; padding:8px 11px; }
+      .badge-input { width:100%; justify-content:space-between; }
+      .composer, .chart-card, .table-wrap, .editor-card { padding:14px; }
+      .kpi { flex:1 1 calc(50% - 8px); min-width:160px; max-width:none; width:auto; }
+      .selected-grid, .add-grid { grid-template-columns:1fr; }
+      .selected-head { flex-direction:column; }
+      .selected-title { font-size:22px; }
+      .search-input { font-size:16px; padding:14px 16px; }
+      .result-main { align-items:flex-start; flex-direction:column; }
+      .result-price { font-size:13px; }
+      .editor-head { grid-template-columns:1fr; }
+      .editor-actions { grid-auto-flow:row; justify-content:stretch; justify-items:stretch; }
+      .editor-actions .search-launch { width:100%; max-width:calc(100vw - 50px); }
+      .editor-scroll { overflow-x:auto !important; overflow-y:hidden !important; }
+      .editor-table { min-width:860px; }
+      .editor-table col.col-name { width:220px; }
+      .editor-table col.col-category { width:160px; }
+      .editor-table col.col-lots { width:110px; }
+      .editor-table col.col-now { width:132px; }
+      .editor-table col.col-share { width:92px; }
+      .editor-table col.col-yield { width:112px; }
+      .editor-table col.col-risk { width:112px; }
+      .editor-table col.col-actions { width:84px; }
+      .hero, .card, .table-wrap, .editor-card { border-radius:22px; }
+      .table-title { font-size:22px; }
+      #plotDonut { height:360px !important; }
+      #plotRate, #plotFx { height:320px !important; }
+      .macro-body { grid-template-columns:1fr; }
+      .detail-cards, .kv-grid { grid-template-columns:1fr; }
+      .detail-card .v { font-size:18px; }
+      .drawer-panel { width:100vw; }
+      .drawer.asset-card-mode .drawer-panel { width:100vw; padding:0; border-radius:0; }
+      .asset-card-frame { border-radius:0; }
+      .asset-card-frame { min-height:calc(100vh - 96px); border-radius:18px; }
+    }
+    @media (max-width:640px) {
+      .kpi { flex:1 1 100%; min-width:0; width:100%; max-width:none; }
+      .editor-table { min-width:840px; }
+      .editor-table th, .editor-table td { padding:6px 4px; font-size:12px; }
+      .class-name { white-space:normal; }
+      details.macro-details > summary { padding:17px 18px; }
+      .macro-summary-action { width:42px; min-width:42px; padding:0; justify-content:center; }
+      .macro-summary-action__open,.macro-summary-action__close { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+    }
+  </style>
+  <link rel="stylesheet" href="../elements/assets/header-system.css">
+  <link rel="stylesheet" href="../assets/asset-drawer.css">
+  <link rel="stylesheet" href="./portfolio-header-design.css?v=20260722-mobile2">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260730-project-gradients-1">
+  <script>try{const q=JSON.parse(sessionStorage.getItem('quantis-transition-v2')||'null');if(q&&Date.now()-q.time<5000)document.documentElement.classList.add('qn-transition-pending')}catch(e){}</script>
+  <script src="../elements/assets/header-system.js" defer></script>
+  <script src="../assets/asset-drawer.js" defer></script>
+  <script src="../assets/integration-shell.js?v=20260730-project-gradients-1" defer></script>
+</head>
+<body>
+  <div class="page">
+    <header class="product-header product-header--portfolio">
+      <div class="product-header__copy">
+        <p class="product-header__eyebrow">Конструктор</p>
+        <h1 class="product-header__title">Конструктор портфеля</h1>
+        <p class="product-header__description">Интерактивный инструмент для сборки и оценки портфеля с расчетом текущей структуры, прогнозной стоимости, ожидаемой доходности и риска.</p>
+      </div>
+      <div class="product-header__utility">
+        <div class="product-header__controls field-group">
+          <div class="header-liquid-glass header-liquid-glass--currency" id="currencyToggle" role="tablist" aria-label="Валюта оценки портфеля">
+            <span class="header-liquid-glass__glider" aria-hidden="true"></span>
+            <button class="segment-btn active" type="button" role="tab" data-value="RUB" data-currency-view="RUB" aria-selected="true" tabindex="0">RUB</button>
+            <button class="segment-btn" type="button" role="tab" data-value="USD" data-currency-view="USD" aria-selected="false" tabindex="-1">USD</button>
+            <button class="segment-btn" type="button" role="tab" data-value="EUR" data-currency-view="EUR" aria-selected="false" tabindex="-1">EUR</button>
+            <button class="segment-btn" type="button" role="tab" data-value="CNY" data-currency-view="CNY" aria-selected="false" tabindex="-1">CNY</button>
+          </div>
+          <label class="date-field-wrap">
+            <span class="field-label">Горизонт</span>
+            <input class="date-field" id="horizonInput" type="date" />
+          </label>
+        </div>
+      </div>
+      <div class="header-blocks" aria-label="Сводные показатели портфеля">
+        <article class="header-block"><p class="header-block__label" id="kpiNowLabel">Текущая стоимость</p><b class="header-block__value" id="kpiNowValue">0 ₽</b><span class="header-block__note">фактическая оценка</span></article>
+        <article class="header-block"><p class="header-block__label" id="kpiFutureLabel">Ожидаемая стоимость</p><b class="header-block__value" id="kpiFutureValue">0 ₽</b><span class="header-block__note">на выбранный горизонт</span></article>
+        <article class="header-block"><p class="header-block__label" id="kpiRetLabel">Ожидаемая доходность</p><b class="header-block__value" id="kpiRetValue">0%</b><span class="header-block__note">расчетный сценарий</span></article>
+      </div>
+      <div class="header-compat" aria-hidden="true">
+        <span id="badgeCatalog">—</span><span id="badgeLastDate">—</span><span id="badgeResolvedHorizon">—</span>
+        <span id="kpiPnlLabel"></span><span id="kpiPnlValue"></span><span id="kpiRiskValue"></span>
+      </div>
+    </header>
+
+    <main class="analytics">
+      <section class="editor-card">
+        <div class="editor-head">
+          <h2>Состав портфеля</h2>
+          <div class="editor-actions">
+            <button class="search-launch" id="openComposerBtn">Добавить активы</button>
+          </div>
+        </div>
+        <div id="editorTableWrap"></div>
+      </section>
+
+      <section class="grid-main">
+        <div class="chart-card card donut-card"><div class="donut-layout"><div class="donut-chart-wrap"><div id="plotDonut" style="height:460px;"></div><div class="donut-center" id="donutCenter"><div class="donut-center__label">Ожидаемая доходность</div><div class="donut-center__return" id="donutReturn">0%</div><div class="donut-center__date" id="donutDate"></div><div class="donut-center__risk-label">Оценка риска</div><div class="donut-center__risk" id="donutRisk">0%</div></div></div><div id="classCards" class="class-grid"></div></div></div>
+      </section>
+
+      <details class="macro-details card">
+        <summary>
+          <span class="macro-summary-copy"><span class="macro-summary-kicker">Рыночный контекст</span><span class="macro-summary-title">Макросценарии и валютные курсы</span></span>
+          <span class="macro-summary-action" aria-hidden="true"><span class="macro-summary-action__open">Открыть графики</span><span class="macro-summary-action__close">Свернуть</span><span class="macro-summary-chevron"></span></span>
+        </summary>
+        <div class="macro-body">
+          <div class="chart-card card">
+            <div class="macro-chart-header"><h3>Ключевая ставка и рыночные индексы</h3><div class="macro-chart-legend"><span><i style="--legend-color:#2A7F7A"></i>Ключевая ставка</span><span><i style="--legend-color:#3D6077"></i>Индекс денежного рынка</span><span><i style="--legend-color:#7FA8B5"></i>Индекс гос. облигаций</span></div></div>
+            <div id="plotRate" style="height:360px;"></div>
+          </div>
+          <div class="chart-card card">
+            <div class="macro-chart-header"><h3>Курсы валют</h3><div class="macro-chart-legend"><span><i style="--legend-color:#2A7F7A"></i>Доллар США</span><span><i style="--legend-color:#FF6A00"></i>Юань</span><span><i style="--legend-color:#274C63"></i>Евро</span><span><i style="--legend-color:#7FA8B5"></i>Швейцарский франк</span></div></div>
+            <div id="plotFx" style="height:360px;"></div>
+          </div>
+        </div>
+      </details>
+
+    </main>
+  </div>
+
+  <div class="drawer" id="composerDrawer">
+    <div class="search-drawer-panel">
+      <div class="drawer-header" style="margin-bottom:12px;">
+        <div>
+          <h2 class="drawer-title" style="margin-bottom:4px;">Собрать портфель</h2>
+        <div class="drawer-sub">Поиск инструмента, выбор способа добавления и расчет позиции.</div>
+        </div>
+        <button class="asset-unified-close" id="closeComposerBtn" type="button" aria-label="Закрыть панель «Собрать портфель»">
+          <span class="asset-unified-close__icon" aria-hidden="true"></span>
+        </button>
+      </div>
+      <aside class="composer card" style="box-shadow:none;">
+        <div class="search-block">
+          <input id="searchInput" class="search-input" placeholder="Введите тикер, ISIN, эмитента, название или класс актива..." autocomplete="off" />
+          <div id="searchResults" class="search-results"></div>
+          <div class="composer-guidance">Выбор инструмента открывает расчет добавления. Позиция появляется в портфеле после указания лотов или бюджета.</div>
+        </div>
+
+        <div id="selectedCard" class="selected-card">
+          <div class="composer-guidance">Найдите и выберите инструмент, затем задайте количество лотов или бюджет.</div>
+        </div>
+
+        <div class="recommendations">
+          <div class="reco-block">
+            <div class="reco-head"><h3>Подсказки</h3><span>быстрый старт</span></div>
+            <div class="pill-row" id="quickFilters"></div>
+          </div>
+          <div class="reco-block">
+          <div class="reco-head compact"><h3>ОФЗ</h3></div>
+            <div class="pill-row" id="recoOfz"></div>
+          </div>
+          <div class="reco-block">
+          <div class="reco-head compact"><h3>Корпоративные рублёвые облигации</h3></div>
+            <div class="pill-row" id="recoCorpRub"></div>
+          </div>
+          <div class="reco-block">
+          <div class="reco-head compact"><h3>Корпоративные валютные облигации</h3></div>
+            <div class="pill-row" id="recoCorpFx"></div>
+          </div>
+          <div class="reco-block">
+          <div class="reco-head compact"><h3>Топ-акции</h3></div>
+            <div class="pill-row" id="recoStocks"></div>
+          </div>
+          <div class="reco-block">
+          <div class="reco-head compact"><h3>БПИФ Альфа-Капитал</h3></div>
+            <div class="pill-row" id="recoEtf"></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="drawer" id="assetDrawer">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <div>
+          <h2 class="drawer-title" id="detailTitle">Инструмент</h2>
+          <div class="drawer-sub" id="detailSub">Выберите строку таблицы, позицию редактора или столбец графика</div>
+        </div>
+        <button class="asset-unified-close" id="closeDrawerBtn" type="button" aria-label="Закрыть карточку актива">
+          <span class="asset-unified-close__icon" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="detail-cards" id="detailCards"></div>
+      <div class="detail-section">
+        <div id="detailFlowPlot"></div>
+      </div>
+      <div class="detail-section">
+        <h3 style="margin:0 0 8px;">Даты выплат/погашений</h3>
+        <div id="detailSchedule"></div>
+      </div>
+      <div class="detail-section">
+        <div class="kv-grid" id="detailRaw"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const bootstrap = window.__PMI_BOOTSTRAP__ || {};
+    const catalog = bootstrap.catalog || [];
+    const recommendations = bootstrap.recommendations || {};
+    const meta = bootstrap.meta || {};
+    const classColors = bootstrap.colors || {};
+    Object.assign(classColors, {
+      'Облигации в рублях':'#7FA8B5',
+      'Облигации валютные':'#2A7F7A',
+      'Акции':'#274C63',
+      'Драгоценные металлы':'#FF6A00',
+      'Денежный рынок':'#3D6077',
+      'Прочее':'#8FA5B2'
+    });
+    let detailBySecid = {};
+    let detailScriptPromises = {};
+    const donutTooltipBindings = new WeakMap();
+    const macroTooltipBindings = new WeakMap();
+    const catalogMap = Object.fromEntries(catalog.map(item => [item.secid, item]));
+    const isinMap = Object.fromEntries(catalog.filter(item => item.isin).map(item => [String(item.isin).toUpperCase(), item]));
+    const storageKey = 'portfolio_manager_interactive_state_v10';
+    const defaultPortfolioRaw = [
+      ['RU000A10AUE8', 65],
+      ['RU000A10BSL5', 70],
+      ['RU000A10ES57', 70],
+      ['SU26254RMFS1', 70],
+      ['SU26248RMFS3', 60],
+      ['RU000A10AXW4', 10],
+      ['RU000A10AUX8', 10],
+      ['RU000A10BTU4', 10],
+      ['RU000A10EW44', 1],
+      ['SBER', 100],
+      ['MOEX', 18],
+      ['BSPB', 9],
+      ['LENT', 12],
+      ['OZON', 6],
+      ['DOMRF', 9],
+      ['AKGD', 400],
+      ['AKMM', 1500],
+    ];
+
+    function resolveIdentifierToSecid(identifier) {
+      const key = String(identifier || '').trim().toUpperCase();
+      if (!key) return null;
+      if (catalogMap[key]) return key;
+      if (isinMap[key]) return isinMap[key].secid;
+      return null;
+    }
+
+    const defaultPortfolio = defaultPortfolioRaw
+      .map(([identifier, lots]) => {
+        const secid = resolveIdentifierToSecid(identifier);
+        return secid ? { secid, lots } : null;
+      })
+      .filter(Boolean);
+
+    const state = {
+      query: '',
+      searchActive: false,
+      highlightedIndex: 0,
+      selectedSecid: null,
+      selectedHorizonInput: meta.horizon_date,
+      addMode: 'lots',
+      addLots: 1,
+      addBudget: '',
+      addBudgetCurrency: 'RUB',
+      currencyView: 'RUB',
+      portfolio: loadPortfolio(),
+    };
+
+    const els = {
+      openComposerBtn: document.getElementById('openComposerBtn'),
+      composerDrawer: document.getElementById('composerDrawer'),
+      closeComposerBtn: document.getElementById('closeComposerBtn'),
+      searchInput: document.getElementById('searchInput'),
+      searchResults: document.getElementById('searchResults'),
+      selectedCard: document.getElementById('selectedCard'),
+      editorTableWrap: document.getElementById('editorTableWrap'),
+      classCards: document.getElementById('classCards'),
+      horizonInput: document.getElementById('horizonInput'),
+      drawer: document.getElementById('assetDrawer'),
+      detailTitle: document.getElementById('detailTitle'),
+      detailSub: document.getElementById('detailSub'),
+      detailCards: document.getElementById('detailCards'),
+      detailSchedule: document.getElementById('detailSchedule'),
+      detailRaw: document.getElementById('detailRaw'),
+      closeDrawerBtn: document.getElementById('closeDrawerBtn'),
+      currencyToggle: document.getElementById('currencyToggle'),
+      currencyNote: document.getElementById('currencyNote'),
+    };
+    let latestSecidColors = {};
+
+    function loadPortfolio() {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (!raw) return defaultPortfolio.map(row => ({ ...row }));
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return defaultPortfolio.map(row => ({ ...row }));
+        return parsed.filter(row => row && catalogMap[row.secid] && Number(row.lots) > 0).map(row => {
+          return {
+            secid: row.secid,
+            lots: Math.max(0, Number(row.lots) || 0)
+          };
+        });
+      } catch (err) {
+        return defaultPortfolio.map(row => ({ ...row }));
+      }
+    }
+
+    function savePortfolio() {
+      localStorage.setItem(storageKey, JSON.stringify(state.portfolio));
+    }
+
+    function ensureDetailsLoaded(secid) {
+      if (!secid) return Promise.reject(new Error('Missing secid'));
+      if (detailBySecid[secid]) return Promise.resolve(detailBySecid[secid]);
+      if (detailScriptPromises[secid]) return detailScriptPromises[secid];
+      detailScriptPromises[secid] = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = `./assets/details/${encodeURIComponent(secid)}.js`;
+        script.onload = () => {
+          const payload = window.__PMI_DETAIL__ || null;
+          if (!payload) {
+            reject(new Error(`Не удалось загрузить details/${secid}.js`));
+            return;
+          }
+          detailBySecid[secid] = payload;
+          window.__PMI_DETAIL__ = null;
+          resolve(payload);
+        };
+        script.onerror = () => reject(new Error(`Не удалось загрузить details/${secid}.js`));
+        document.head.appendChild(script);
+      });
+      return detailScriptPromises[secid];
+    }
+
+    function openComposer() {
+      els.composerDrawer.classList.add('open');
+      requestAnimationFrame(() => els.searchInput.focus());
+    }
+
+    function closeComposer() {
+      els.composerDrawer.classList.remove('open');
+      state.searchActive = false;
+      renderSearch();
+    }
+
+    function fmtNum(value, digits=2) {
+      if (value == null || !Number.isFinite(value)) return '—';
+      return new Intl.NumberFormat('ru-RU', { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
+    }
+
+    function fmtPct(value, digits=2) {
+      if (value == null || !Number.isFinite(value)) return '—';
+      return `${Number(value).toFixed(digits)}%`;
+    }
+
+    function fmtSignedPct(value, digits=2) {
+      if (value == null || !Number.isFinite(value)) return '—';
+      const normalized = Math.abs(Number(value)) < 0.5 * 10 ** (-digits) ? 0 : Number(value);
+      return `${normalized > 0 ? '+' : ''}${normalized.toFixed(digits)}%`;
+    }
+
+    function projectedReturn(row) {
+      const currentView = moneyInView(row.currentValue, 'current');
+      const futureView = moneyInView(row.horizonValue, 'future');
+      return currentView > 0 ? (futureView / currentView - 1) * 100 : 0;
+    }
+
+    function rowRisk(row) {
+      return row.category === 'Денежный рынок' || row.broker_class === 'Money' ? 0 : Number(row.annual_vol || 0);
+    }
+
+    function riskTone(risk) {
+      const safeRisk = Math.max(0, Number(risk || 0));
+      const normalized = Math.min(1, safeRisk / 20);
+      if (normalized <= 0.5) return blendHex('#0D8A4A', '#66707F', normalized / 0.5);
+      return blendHex('#66707F', '#C53D50', (normalized - 0.5) / 0.5);
+    }
+
+    function currencySymbol(currency) {
+      return { RUB:'₽', USD:'$', EUR:'€', CNY:'¥', CHF:'₣' }[currency] || currency;
+    }
+
+    function macroRowForDate(date) {
+      const macro = meta.macro_window || [];
+      if (!macro.length) return null;
+      let best = macro[0];
+      let bestDiff = Math.abs(new Date(best.date).getTime() - new Date(date).getTime());
+      for (const row of macro.slice(1)) {
+        const diff = Math.abs(new Date(row.date).getTime() - new Date(date).getTime());
+        if (diff < bestDiff) {
+          best = row;
+          bestDiff = diff;
+        }
+      }
+      return best;
+    }
+
+    function rubRate(currency, date) {
+      if (currency === 'RUB') return 1;
+      const key = `${currency.toLowerCase()}_rub`;
+      const macroRow = macroRowForDate(date);
+      const macroValue = macroRow ? Number(macroRow[key]) : NaN;
+      if (Number.isFinite(macroValue) && macroValue > 0) return macroValue;
+      const spotValue = Number((meta.spot_rates || {})[currency]);
+      return Number.isFinite(spotValue) && spotValue > 0 ? spotValue : 1;
+    }
+
+    function moneyInView(valueRub, kind='current') {
+      const currency = state.currencyView || 'RUB';
+      const date = kind === 'future' ? resolvedHorizonDate() : meta.last_date;
+      const rate = rubRate(currency, date);
+      return Number(valueRub || 0) / rate;
+    }
+
+    function fmtMoneyView(valueRub, kind='current', digits=2) {
+      const currency = state.currencyView || 'RUB';
+      return `${fmtNum(moneyInView(valueRub, kind), digits)} ${currencySymbol(currency)}`;
+    }
+
+    function fmtQty(value) {
+      if (value == null || !Number.isFinite(value)) return '—';
+      if (Math.abs(value - Math.round(value)) < 1e-9) {
+        return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(Math.round(value));
+      }
+      return new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 4 }).format(value);
+    }
+
+    function fmtTrim(value, maxDigits=4) {
+      if (value == null || !Number.isFinite(value)) return '—';
+      let s = Number(value).toFixed(maxDigits);
+      s = s.replace(/0+$/,'').replace(/\.$/,'');
+      const parts = s.split('.');
+      parts[0] = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(Number(parts[0]));
+      return parts.join(',');
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;');
+    }
+
+    function cardHtml(k, v) {
+      return `<div class="detail-card"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+    }
+
+    function kvHtml(k, v) {
+      return `<div class="kv"><div class="k">${escapeHtml(k)}</div><div class="v">${v ?? ''}</div></div>`;
+    }
+
+    function scheduleRow(kind, date, value, currency) {
+      const rendered = (value === null || value === undefined || Number.isNaN(Number(value))) ? '' : fmtTrim(Number(value));
+      return `<tr><td>${kind}</td><td>${date || ''}</td><td>${rendered}</td><td>${currency || ''}</td></tr>`;
+    }
+
+    function blendHex(c1, c2, t) {
+      const p = (hex) => {
+        const x = hex.replace('#','');
+        return [parseInt(x.slice(0,2),16), parseInt(x.slice(2,4),16), parseInt(x.slice(4,6),16)];
+      };
+      const a = p(c1), b = p(c2);
+      const mix = a.map((v, i) => Math.round(v + (b[i] - v) * Math.max(0, Math.min(1, t))));
+      return '#' + mix.map(v => v.toString(16).padStart(2,'0')).join('');
+    }
+
+    function groupShadeMap(items) {
+      const out = {};
+      items.forEach(item => {
+        out[item.secid] = classColors[item.category] || '#9CA3AF';
+      });
+      return out;
+    }
+
+    function computeSearchResults(query) {
+      const q = query.trim().toLowerCase();
+      if (!q) return [];
+      const tokens = q.split(/\s+/).filter(Boolean);
+      const ranked = [];
+      for (const item of catalog) {
+        const hay = item.search_blob || '';
+        if (!tokens.every(token => hay.includes(token))) continue;
+        let score = 0;
+        if (item.secid.toLowerCase().startsWith(q)) score += 120;
+        if ((item.isin || '').toLowerCase().startsWith(q)) score += 110;
+        if ((item.shortname || '').toLowerCase().startsWith(q)) score += 80;
+        if ((item.secname || '').toLowerCase().startsWith(q)) score += 75;
+        if ((item.title || '').toLowerCase().includes(q)) score += 45;
+        if (item.available) score += 20;
+        score += Math.log10((item.turnover_score || 0) + 1) * 6;
+        ranked.push({ item, score });
+      }
+      ranked.sort((a, b) => b.score - a.score);
+      return ranked.slice(0, 14).map(x => x.item);
+    }
+
+    function currentSelected() {
+      return state.selectedSecid ? catalogMap[state.selectedSecid] : null;
+    }
+
+    function priceLabel(item) {
+      return item && item.is_real_bond ? 'Цена, %' : 'Цена, ₽';
+    }
+
+    function moneyToNative(amount, inputCurrency, nativeCurrency) {
+      const spot = meta.spot_rates || {};
+      const from = spot[inputCurrency] || 1;
+      const to = spot[nativeCurrency] || 1;
+      return amount * from / to;
+    }
+
+    function formatDateRu(value) {
+      const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      return match ? `${match[3]}.${match[2]}.${match[1]}` : String(value || '');
+    }
+
+    function resolvedHorizonDate() {
+      const raw = state.selectedHorizonInput || meta.horizon_date;
+      const requested = new Date(raw);
+      const dates = (meta.horizon_dates || [meta.horizon_date]).slice();
+      if (!dates.length || Number.isNaN(requested.getTime())) return meta.horizon_date;
+      let best = dates[0];
+      let bestDiff = Math.abs(new Date(best).getTime() - requested.getTime());
+      for (const date of dates.slice(1)) {
+        const diff = Math.abs(new Date(date).getTime() - requested.getTime());
+        if (diff < bestDiff) {
+          best = date;
+          bestDiff = diff;
+        }
+      }
+      return best;
+    }
+
+    function addPreview(item) {
+      if (!item) return { lots: 0, units: 0, usedNative: 0, usedRub: 0, restNative: 0, restRub: 0, disabled: true, text: 'Сначала выберите инструмент.' };
+      if (!item.available) {
+        return { lots: 0, units: 0, usedNative: 0, usedRub: 0, restNative: 0, restRub: 0, disabled: true, text: 'Для этого инструмента сейчас доступна только справочная карточка.' };
+      }
+      const lotCostNative = Number(item.entry_lot_cost_native || 0);
+      const spotNative = Number((meta.spot_rates || {})[item.currency] || 1);
+      if (!(lotCostNative > 0)) {
+        return { lots: 0, units: 0, usedNative: 0, usedRub: 0, restNative: 0, restRub: 0, disabled: true, text: 'Не удалось определить стоимость лота.' };
+      }
+      if (state.addMode === 'lots') {
+        const lots = Math.max(0, Math.floor(Number(state.addLots) || 0));
+        const units = lots * Number(item.lotsize || 1);
+        const usedNative = lots * lotCostNative;
+        return {
+          lots, units, usedNative,
+          usedRub: usedNative * spotNative,
+          restNative: 0,
+          restRub: 0,
+          disabled: lots <= 0,
+          text: lots > 0
+            ? `Будет добавлено ${fmtQty(lots)} лот(ов) / ${fmtQty(units)} шт. Расчет покупки проводится по цене без НКД, дробление лота не применяется.`
+            : 'Введите количество лотов.'
+        };
+      }
+      const budget = Number(String(state.addBudget).replace(',', '.'));
+      if (!(budget > 0)) {
+        return { lots: 0, units: 0, usedNative: 0, usedRub: 0, restNative: 0, restRub: 0, disabled: true, text: 'Введите бюджет больше нуля.' };
+      }
+      const nativeBudget = moneyToNative(budget, state.addBudgetCurrency, item.currency);
+      const lots = Math.floor(nativeBudget / lotCostNative);
+      const units = lots * Number(item.lotsize || 1);
+      const usedNative = lots * lotCostNative;
+      const restNative = nativeBudget - usedNative;
+      return {
+        lots, units, usedNative,
+        usedRub: usedNative * spotNative,
+        restNative,
+        restRub: restNative * spotNative,
+        disabled: lots <= 0,
+        text: lots > 0
+          ? `Из бюджета ${fmtNum(budget, 2)} ${state.addBudgetCurrency} получится ${fmtQty(lots)} лот(ов) / ${fmtQty(units)} шт. Будет использовано ${fmtNum(usedNative, 2)} ${item.currency}, остаток ${fmtNum(restNative, 2)} ${item.currency}.`
+          : `Бюджета недостаточно даже на 1 лот. Стоимость лота: ${fmtNum(lotCostNative, 2)} ${item.currency}.`
+      };
+    }
+
+    function mergePortfolioRow(secid, lotsToAdd) {
+      const existing = state.portfolio.find(row => row.secid === secid);
+      if (existing) {
+        existing.lots = Math.max(0, Number(existing.lots || 0) + Number(lotsToAdd || 0));
+      } else {
+        state.portfolio.push({ secid, lots: Math.max(0, Number(lotsToAdd || 0)) });
+      }
+      state.portfolio = state.portfolio.filter(row => row.lots > 0);
+      savePortfolio();
+      renderAll();
+    }
+
+    function selectedSnapshot(item) {
+      if (!item) return null;
+      const horizons = item.horizons || {};
+      const resolved = resolvedHorizonDate();
+      return horizons[resolved] || horizons[meta.horizon_date] || null;
+    }
+
+    function computeHoldings() {
+      const rows = [];
+      for (const line of state.portfolio) {
+        const item = catalogMap[line.secid];
+        if (!item || !item.available) continue;
+        const lots = Math.max(0, Number(line.lots) || 0);
+        const qtyUnits = lots * Number(item.lotsize || 1);
+        if (!(qtyUnits > 0)) continue;
+        const snap = selectedSnapshot(item);
+        rows.push({
+          ...item,
+          lots,
+          qtyUnits,
+          currentValue: qtyUnits * Number(item.unit_current || 0),
+          horizonValue: qtyUnits * Number((snap && snap.horizon_value) ?? item.unit_future ?? 0),
+          pnl: qtyUnits * Number((snap && snap.pnl) ?? item.unit_pnl ?? 0),
+          couponsRub: qtyUnits * Number((snap && snap.coupons_rub) ?? item.unit_coupons ?? 0),
+          amortRub: qtyUnits * Number((snap && snap.amort_rub) ?? item.unit_amort ?? 0),
+          dividendsRub: qtyUnits * Number((snap && snap.dividends_rub) ?? item.unit_dividends ?? 0),
+          reinvestRub: qtyUnits * Number((snap && snap.reinvest_rub) ?? item.unit_reinvest ?? 0),
+          currentAciRub: qtyUnits * Number(item.unit_current_aci || 0),
+          note: (snap && snap.note) || item.note || '',
+        });
+      }
+      const categoryOrder = {
+        'Облигации в рублях': 0,
+        'Облигации валютные': 1,
+        'Акции': 2,
+        'Драгоценные металлы': 3,
+        'Денежный рынок': 4,
+      };
+      rows.sort((a, b) => (categoryOrder[a.category] ?? 99) - (categoryOrder[b.category] ?? 99));
+      return rows;
+    }
+
+    function renderSearch() {
+      const results = computeSearchResults(state.query);
+      const open = state.searchActive && results.length > 0;
+      els.searchResults.classList.toggle('open', open);
+      if (!open) {
+        els.searchResults.innerHTML = '';
+        return;
+      }
+      state.highlightedIndex = Math.min(state.highlightedIndex, results.length - 1);
+      els.searchResults.innerHTML = results.map((item, idx) => {
+        const className = idx === state.highlightedIndex ? 'result-item active' : 'result-item';
+        const metaLine = [
+          item.secid,
+          item.isin || '',
+          item.category,
+          item.currency ? `валюта ${item.currency}` : '',
+          item.sector_ru || item.etf_company || '',
+          item.available ? 'доступен расчет' : 'только справочная карточка'
+        ].filter(Boolean).join(' · ');
+        const priceText = item.is_real_bond ? `${fmtTrim(item.price)}%` : `${fmtTrim(item.price)} ₽`;
+        return `<div class="${className}" data-secid="${escapeHtml(item.secid)}"><div class="result-main"><div class="result-title">${escapeHtml(item.title)}</div><div class="result-price">${priceText}</div></div><div class="result-meta">${escapeHtml(metaLine)}</div></div>`;
+      }).join('');
+      els.searchResults.querySelectorAll('.result-item').forEach(node => {
+        node.addEventListener('mousedown', (event) => {
+          event.preventDefault();
+          selectInstrument(node.dataset.secid);
+        });
+      });
+    }
+
+    function selectInstrument(secid) {
+      state.selectedSecid = secid;
+      state.searchActive = false;
+      state.highlightedIndex = 0;
+      const item = catalogMap[secid];
+      if (item) {
+        els.searchInput.value = `${item.secid} · ${item.title}`;
+      }
+      renderAll();
+    }
+
+    function renderSelectedCard() {
+      const item = currentSelected();
+      if (!item) {
+        els.selectedCard.innerHTML = '<div class="composer-guidance">Найдите и выберите инструмент, затем задайте количество лотов или бюджет.</div>';
+        return;
+      }
+      const preview = addPreview(item);
+      const canAdd = !preview.disabled;
+      const metrics = [
+        ['Категория', item.category],
+        [priceLabel(item), item.is_real_bond ? `${fmtTrim(item.price)}%` : `${fmtTrim(item.price)} ₽`],
+        ['Лот', `${fmtQty(item.lotsize)} шт.`],
+        ['Стоимость лота', `${fmtNum(item.entry_lot_cost_native, 2)} ${item.currency}`],
+        ['Сектор / структура', item.sector_ru || item.etf_structure || '—'],
+        ['УК / валюта', item.etf_company || item.currency || '—'],
+      ];
+      els.selectedCard.innerHTML = `
+        <div class="selected-head">
+          <div>
+            <h3 class="selected-title">${escapeHtml(item.secid)} · ${escapeHtml(item.title)}</h3>
+            <div class="selected-sub">${escapeHtml([item.isin, item.boardid, item.shortname || '', item.secname || ''].filter(Boolean).join(' · '))}</div>
+          </div>
+          <div class="pill" style="cursor:default;">${item.available ? 'Можно добавить' : 'Нет расчёта'}</div>
+        </div>
+        <div class="selected-grid">
+          ${metrics.map(([k, v]) => `<div class="mini"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`).join('')}
+        </div>
+        <div class="mode-row">
+          <button class="mode-btn ${state.addMode === 'lots' ? 'active' : ''}" data-mode="lots">По лотам</button>
+          <button class="mode-btn ${state.addMode === 'budget' ? 'active' : ''}" data-mode="budget">По сумме</button>
+        </div>
+        <div class="add-grid">
+          <div class="field">
+            <label>${state.addMode === 'lots' ? 'Количество лотов' : 'Бюджет'}</label>
+            <input id="addValueInput" type="number" min="0" step="${state.addMode === 'lots' ? '1' : '0.01'}" value="${state.addMode === 'lots' ? String(state.addLots) : String(state.addBudget)}" />
+          </div>
+          <div class="field">
+            <label>${state.addMode === 'lots' ? 'Валюта' : 'Валюта бюджета'}</label>
+            <select id="addCurrencySelect" ${state.addMode === 'lots' ? 'disabled' : ''}>
+              ${['RUB','USD','CNY','EUR','CHF'].map(ccy => `<option value="${ccy}" ${state.addBudgetCurrency === ccy ? 'selected' : ''}>${ccy}</option>`).join('')}
+            </select>
+          </div>
+          <button id="addPositionBtn" class="add-btn" ${canAdd ? '' : 'disabled'}>Добавить</button>
+        </div>
+        <div class="preview-note">${escapeHtml(preview.text)}${item.is_real_bond ? ' Покупка по сумме для облигаций рассчитывается по цене без НКД, дробление лота не применяется.' : ''}</div>
+      `;
+      els.selectedCard.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.addMode = btn.dataset.mode;
+          renderSelectedCard();
+        });
+      });
+      const input = document.getElementById('addValueInput');
+      const select = document.getElementById('addCurrencySelect');
+      input.addEventListener('input', () => {
+        if (state.addMode === 'lots') state.addLots = input.value;
+        else state.addBudget = input.value;
+        updateSelectedPreview();
+      });
+      select.addEventListener('change', () => {
+        state.addBudgetCurrency = select.value;
+        updateSelectedPreview();
+      });
+      document.getElementById('addPositionBtn').addEventListener('click', () => {
+        const p = addPreview(item);
+        if (p.disabled || !(p.lots > 0)) return;
+        mergePortfolioRow(item.secid, p.lots);
+        closeComposer();
+      });
+    }
+
+    function updateSelectedPreview() {
+      const item = currentSelected();
+      if (!item) return;
+      const preview = addPreview(item);
+      const addBtn = document.getElementById('addPositionBtn');
+      const noteEl = els.selectedCard.querySelector('.preview-note');
+      if (addBtn) addBtn.disabled = !!preview.disabled;
+      if (noteEl) {
+        noteEl.textContent = preview.text + (item.is_real_bond ? ' Покупка по сумме для облигаций рассчитывается по цене без НКД, дробление лота не применяется.' : '');
+      }
+    }
+
+    function renderRecommendations() {
+      const quick = [
+        ['Деньги', 'AKMM'],
+        ['Золото', 'AKGD'],
+        ['Акции РФ', 'AKME'],
+        ['Рублёвые облигации', 'AKMB'],
+      ];
+      document.getElementById('quickFilters').innerHTML = quick.map(([label, secid]) => {
+        const item = catalogMap[secid];
+        if (!item) return '';
+        return `<button class="pill" data-secid="${secid}">${escapeHtml(label)} · ${escapeHtml(item.title)}</button>`;
+      }).join('');
+      const mount = (id, secids) => {
+        const root = document.getElementById(id);
+        root.innerHTML = secids.map(secid => {
+          const item = catalogMap[secid];
+          if (!item) return '';
+          return `<button class="pill" data-secid="${secid}">${escapeHtml(item.title)}</button>`;
+        }).join('');
+      };
+      mount('recoOfz', recommendations.ofz || []);
+      mount('recoCorpRub', recommendations.corp_rub || []);
+      mount('recoCorpFx', recommendations.corp_fx || []);
+      mount('recoStocks', recommendations.stocks || []);
+      mount('recoEtf', recommendations.ak_etf || []);
+      document.querySelectorAll('.pill[data-secid]').forEach(btn => {
+        btn.addEventListener('click', () => selectInstrument(btn.dataset.secid));
+      });
+    }
+
+    function renderEditor(holdings) {
+      const totalNow = holdings.reduce((sum, row) => sum + row.currentValue, 0);
+      const totalFuture = holdings.reduce((sum, row) => sum + row.horizonValue, 0);
+      const totalNowView = moneyInView(totalNow, 'current');
+      const totalFutureView = moneyInView(totalFuture, 'future');
+      const totalReturn = totalNowView > 0 ? (totalFutureView / totalNowView - 1) * 100 : 0;
+      const totalRisk = totalNow > 0 ? holdings.reduce((sum, row) => sum + row.currentValue / totalNow * rowRisk(row), 0) : 0;
+      const categoryStats = holdings.reduce((acc, row) => {
+        if (!acc[row.category]) acc[row.category] = { value: 0 };
+        acc[row.category].value += row.currentValue;
+        return acc;
+      }, {});
+      els.editorTableWrap.innerHTML = `
+        <div class="editor-scroll">
+        <table class="editor-table">
+          <colgroup>
+            <col class="col-name">
+            <col class="col-category">
+            <col class="col-lots">
+            <col class="col-now">
+            <col class="col-share">
+            <col class="col-yield">
+            <col class="col-risk">
+            <col class="col-actions">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Инструмент</th>
+              <th>Категория</th>
+              <th>Лоты</th>
+              <th>Текущая стоимость</th>
+              <th>Доля</th>
+              <th>Доходность</th>
+              <th>Риск</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${holdings.length ? holdings.map((row, index) => {
+              const share = totalNow > 0 ? row.currentValue / totalNow * 100 : 0;
+              const expectedReturn = projectedReturn(row);
+              const risk = rowRisk(row);
+              const categoryStart = index === 0 || holdings[index - 1].category !== row.category;
+              const categoryValue = (categoryStats[row.category] || { value: 0 }).value;
+              const categoryShare = totalNow > 0 ? categoryValue / totalNow * 100 : 0;
+              const categoryDivider = categoryStart ? `
+              <tr class="asset-class-divider" style="--class-color:${escapeHtml(classColors[row.category] || '#8FA5B2')}">
+                <td colspan="8">
+                  <div class="asset-class-divider__inner">
+                    <span class="asset-class-divider__name">${escapeHtml(row.category)}</span>
+                    <span class="asset-class-divider__meta">${fmtPct(categoryShare, 2)} от портфеля · ${fmtMoneyView(categoryValue, 'current')}</span>
+                  </div>
+                </td>
+              </tr>` : '';
+              return `
+              ${categoryDivider}
+              <tr class="asset-row" data-secid="${escapeHtml(row.secid)}">
+                <td><b>${escapeHtml(row.secid)}</b><br><span class="muted">${escapeHtml(row.title)}</span></td>
+                <td>${escapeHtml(row.category)}</td>
+                <td><input class="lots-input" data-lots-secid="${escapeHtml(row.secid)}" type="number" min="0" step="1" value="${Math.max(0, Math.floor(Number(row.lots) || 0))}"></td>
+                <td class="num">${fmtMoneyView(row.currentValue, 'current')}</td>
+                <td class="num">${fmtPct(share, 2)}</td>
+                <td class="num"><span class="chip ${expectedReturn >= 0 ? 'pos' : 'neg'}">${fmtSignedPct(expectedReturn, 2)}</span></td>
+                <td class="num"><span class="chip risk" style="--risk-tone:${riskTone(risk, expectedReturn)}">${fmtPct(risk, 2)}</span></td>
+                <td class="num"><button class="remove-btn" data-remove-secid="${escapeHtml(row.secid)}">Удалить</button></td>
+              </tr>
+            `}).join('') : '<tr><td colspan="8" class="muted" style="padding:24px;">Добавьте инструмент через кнопку «Добавить активы».</td></tr>'}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Итого</td>
+              <td></td>
+              <td></td>
+              <td class="num">${fmtMoneyView(totalNow, 'current')}</td>
+              <td class="num">${fmtPct(totalNow > 0 ? 100 : 0, 2)}</td>
+              <td class="num"><span class="chip ${totalReturn >= 0 ? 'pos' : 'neg'}">${fmtSignedPct(totalReturn, 2)}</span></td>
+              <td class="num"><span class="chip risk" style="--risk-tone:${riskTone(totalRisk, totalReturn)}">${fmtPct(totalRisk, 2)}</span></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+        </div>
+        <div class="editor-footer">
+          <button class="clear-btn" id="clearPortfolioBtn">Очистить портфель</button>
+        </div>
+      `;
+      els.editorTableWrap.querySelectorAll('[data-lots-secid]').forEach(input => {
+        input.addEventListener('change', () => {
+          const lots = Math.max(0, Math.floor(Number(input.value) || 0));
+          const row = state.portfolio.find(x => x.secid === input.dataset.lotsSecid);
+          if (row) row.lots = lots;
+          state.portfolio = state.portfolio.filter(x => x.lots > 0);
+          savePortfolio();
+          renderAll();
+        });
+      });
+      els.editorTableWrap.querySelectorAll('[data-remove-secid]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.portfolio = state.portfolio.filter(x => x.secid !== btn.dataset.removeSecid);
+          savePortfolio();
+          renderAll();
+        });
+      });
+      els.editorTableWrap.querySelectorAll('tr.asset-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+          if (event.target.closest('input') || event.target.closest('button')) return;
+          openDetail(row.dataset.secid);
+        });
+      });
+      const clearBtn = document.getElementById('clearPortfolioBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          state.portfolio = [];
+          savePortfolio();
+          renderAll();
+        });
+      }
+    }
+
+    function renderKpis(holdings) {
+      const lastDate = meta.last_date;
+      const horizonDate = resolvedHorizonDate();
+      const lastDateLabel = formatDateRu(lastDate);
+      const horizonDateLabel = formatDateRu(horizonDate);
+      document.getElementById('kpiNowLabel').innerHTML = `Фактическая стоимость портфеля<br>на ${lastDateLabel}`;
+      document.getElementById('kpiFutureLabel').innerHTML = `Ожидаемая стоимость портфеля<br>на ${horizonDateLabel}`;
+      document.getElementById('kpiPnlLabel').innerHTML = `Потенциальный результат<br>к ${horizonDateLabel}`;
+      document.getElementById('kpiRetLabel').innerHTML = `Ожид. дох. к ${horizonDateLabel},<br>%`;
+      const totalNow = holdings.reduce((sum, row) => sum + row.currentValue, 0);
+      const totalFuture = holdings.reduce((sum, row) => sum + row.horizonValue, 0);
+      const pnl = totalFuture - totalNow;
+      const currentView = moneyInView(totalNow, 'current');
+      const futureView = moneyInView(totalFuture, 'future');
+      const pnlView = futureView - currentView;
+      const ret = currentView > 0 ? pnlView / currentView * 100 : 0;
+      const risk = totalNow > 0 ? holdings.reduce((sum, row) => sum + (row.currentValue / totalNow) * rowRisk(row), 0) : 0;
+      document.getElementById('kpiNowValue').textContent = fmtMoneyView(totalNow, 'current');
+      document.getElementById('kpiFutureValue').textContent = fmtMoneyView(totalFuture, 'future');
+      const pnlEl = document.getElementById('kpiPnlValue');
+      pnlEl.textContent = `${fmtNum(pnlView, 2)} ${currencySymbol(state.currencyView)}`;
+      pnlEl.style.color = pnlView >= 0 ? 'var(--positive)' : 'var(--negative)';
+      const retEl = document.getElementById('kpiRetValue');
+      retEl.textContent = fmtSignedPct(ret, 2);
+      retEl.style.color = ret >= 0 ? 'var(--positive)' : 'var(--negative)';
+      document.getElementById('kpiRiskValue').textContent = fmtPct(risk, 2);
+      return { totalNow, totalFuture, pnl, ret, risk };
+    }
+
+    function renderClassCards(holdings, secidColors, totalNow) {
+      if (!holdings.length) {
+        els.classCards.innerHTML = '';
+        return;
+      }
+      const groups = {};
+      holdings.forEach(row => (groups[row.category] ||= []).push(row));
+      const ordered = Object.entries(groups).sort((a, b) => b[1].reduce((s, x) => s + x.currentValue, 0) - a[1].reduce((s, x) => s + x.currentValue, 0));
+      els.classCards.innerHTML = ordered.map(([group, rows]) => {
+        const subtotal = rows.reduce((sum, row) => sum + row.currentValue, 0);
+        return `
+          <div class="class-card">
+            <div class="class-head" style="border-color:${classColors[group] || '#9CA3AF'};">
+              <b>${escapeHtml(group)}</b>
+              <span>${fmtPct(totalNow > 0 ? subtotal / totalNow * 100 : 0, 2)}</span>
+            </div>
+            ${rows.sort((a, b) => b.currentValue - a.currentValue).map(row => `
+              <button type="button" class="class-row" data-secid="${escapeHtml(row.secid)}" aria-label="Открыть карточку ${escapeHtml(row.title)}">
+                <span class="dot" style="background:${secidColors[row.secid] || (classColors[group] || '#9CA3AF')};"></span>
+                <span class="class-name">${escapeHtml(row.title)}</span>
+                <span class="class-pct">${fmtPct(totalNow > 0 ? row.currentValue / totalNow * 100 : 0, 2)}</span>
+              </button>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+      els.classCards.querySelectorAll('.class-row[data-secid]').forEach(button => {
+        button.addEventListener('click', () => openDetail(button.dataset.secid));
+      });
+    }
+
+    function bindDonutTooltip(chart, holdings, secidColors, totalNow) {
+      const wrapper = chart.closest('.donut-chart-wrap');
+      if (!wrapper || !chart?.on) return;
+      let tooltip = wrapper.querySelector('.portfolio-chart-tooltip');
+      if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.className = 'portfolio-chart-tooltip';
+        tooltip.setAttribute('role', 'status');
+        wrapper.appendChild(tooltip);
+      }
+      const previous = donutTooltipBindings.get(chart);
+      if (previous?.show && chart.removeListener) chart.removeListener('plotly_hover', previous.show);
+      if (previous?.click && chart.removeListener) chart.removeListener('plotly_click', previous.click);
+      if (previous?.trackPointer) chart.removeEventListener('mousemove', previous.trackPointer, true);
+      if (previous?.leave) wrapper.removeEventListener('mouseleave', previous.leave);
+      if (previous?.scrollHide) window.removeEventListener('scroll', previous.scrollHide, true);
+      const coarse = window.matchMedia?.('(pointer: coarse)')?.matches === true;
+      const binding = { pointer: null, touchLocked:false };
+      const place = (x, y) => {
+        const rect = wrapper.getBoundingClientRect();
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        let left = x + 18;
+        if (left + width > rect.width - 8) left = x - width - 18;
+        tooltip.style.left = `${Math.max(8, Math.min(rect.width - width - 8, left))}px`;
+        tooltip.style.top = `${Math.max(8, Math.min(rect.height - height - 8, y - height / 2))}px`;
+      };
+      const trackPointer = event => {
+        const rect = wrapper.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        binding.pointer = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height ? { x, y } : null;
+      };
+      const hide = force => {
+        if (!force && coarse && binding.touchLocked) return;
+        binding.pointer = null;
+        tooltip.classList.remove('is-visible');
+      };
+      const render = (event, lock=false) => {
+        const point = event.points?.[0];
+        const row = point ? holdings[point.pointNumber] : null;
+        if (!row) return hide(true);
+        binding.touchLocked = lock;
+        const color = secidColors[row.secid] || classColors[row.category] || '#8FA5B2';
+        const share = totalNow > 0 ? row.currentValue / totalNow * 100 : 0;
+        tooltip.innerHTML = `
+          <span class="portfolio-chart-tooltip__category">${escapeHtml(row.category)} · ${escapeHtml(row.secid)}</span>
+          <span class="portfolio-chart-tooltip__asset"><i style="--tooltip-color:${color}"></i><span>${escapeHtml(row.title)}</span></span>
+          <span class="portfolio-chart-tooltip__meta">
+            <span>Стоимость</span><strong>${fmtMoneyView(row.currentValue, 'current')}</strong>
+            <span>Доля портфеля</span><strong>${fmtPct(share, 2)}</strong>
+          </span>`;
+        tooltip.classList.add('is-visible');
+        const rect = wrapper.getBoundingClientRect();
+        const source = event.event || {};
+        const eventX = Number(source.clientX) - rect.left;
+        const eventY = Number(source.clientY) - rect.top;
+        const validEventX = Number.isFinite(eventX) && eventX >= 0 && eventX <= rect.width;
+        const validEventY = Number.isFinite(eventY) && eventY >= 0 && eventY <= rect.height;
+        const x = binding.pointer?.x ?? (validEventX ? eventX : rect.width / 2);
+        const y = binding.pointer?.y ?? (validEventY ? eventY : rect.height / 2);
+        requestAnimationFrame(() => place(x, y));
+      };
+      const show = event => render(event,false);
+      const click = event => render(event,true);
+      const leave = () => hide(false);
+      const scrollHide = () => hide(true);
+      Object.assign(binding, { show, click, hide, leave, scrollHide, trackPointer });
+      donutTooltipBindings.set(chart, binding);
+      chart.addEventListener('mousemove', trackPointer, { capture:true, passive:true });
+      wrapper.addEventListener('mouseleave', leave, { passive:true });
+      window.addEventListener('scroll', scrollHide, {capture:true,passive:true});
+      chart.on('plotly_hover', show);
+      chart.on('plotly_click', click);
+    }
+
+    function bindMacroTooltip(chart) {
+      const wrapper = chart.closest('.chart-card');
+      if (!wrapper || !chart?.on) return;
+      let tooltip = wrapper.querySelector('.portfolio-chart-tooltip');
+      if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.className = 'portfolio-chart-tooltip';
+        tooltip.setAttribute('role', 'status');
+        wrapper.appendChild(tooltip);
+      }
+      const previous = macroTooltipBindings.get(chart);
+      if (previous?.show && chart.removeListener) chart.removeListener('plotly_hover', previous.show);
+      if (previous?.click && chart.removeListener) chart.removeListener('plotly_click', previous.click);
+      if (previous?.unhover && chart.removeListener) chart.removeListener('plotly_unhover', previous.unhover);
+      if (previous?.trackPointer) chart.removeEventListener('mousemove', previous.trackPointer, true);
+      if (previous?.leave) wrapper.removeEventListener('mouseleave', previous.leave);
+      if (previous?.scrollHide) window.removeEventListener('scroll', previous.scrollHide, true);
+      const coarse = window.matchMedia?.('(pointer: coarse)')?.matches === true;
+      const binding = { pointer:null, touchLocked:false };
+      const place = (x, y) => {
+        const rect = wrapper.getBoundingClientRect();
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        let left = x + 18;
+        if (left + width > rect.width - 8) left = x - width - 18;
+        tooltip.style.left = `${Math.max(8, Math.min(rect.width - width - 8, left))}px`;
+        tooltip.style.top = `${Math.max(8, Math.min(rect.height - height - 8, y - height / 2))}px`;
+      };
+      const trackPointer = event => {
+        const rect = wrapper.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        binding.pointer = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height ? {x,y} : null;
+      };
+      const hide = force => {
+        if (!force && coarse && binding.touchLocked) return;
+        binding.pointer = null;
+        tooltip.classList.remove('is-visible');
+      };
+      const render = (event, lock=false) => {
+        const points = event.points || [];
+        if (!points.length) return hide(true);
+        binding.touchLocked = lock;
+        const dateValue = points[0].x;
+        const dateText = String(dateValue || '');
+        const parsedDate = dateValue instanceof Date
+          ? dateValue
+          : new Date(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(dateText) ? `${dateText}T00:00:00` : dateText);
+        const displayDate = parsedDate.toLocaleDateString('ru-RU', {day:'2-digit', month:'long', year:'numeric'});
+        const orderedPoints = [...points].sort((a, b) => Number(b.curveNumber || 0) - Number(a.curveNumber || 0));
+        const rows = orderedPoints.map(point => {
+          const name = point.data?.name || point.fullData?.name || '';
+          const color = point.fullData?.line?.color || point.data?.line?.color || '#274C63';
+          const unit = point.data?.meta?.unit || '';
+          const value = `${fmtNum(Number(point.y), 2)}${unit}`;
+          return `<span class="macro-tooltip-label" style="display:flex;align-items:center;gap:8px"><i aria-hidden="true" style="display:block;width:10px;height:10px;min-width:10px;border-radius:999px;background:${color};box-shadow:0 0 0 3px color-mix(in srgb,${color} 16%,transparent)"></i>${escapeHtml(name)}</span><strong>${escapeHtml(value)}</strong>`;
+        }).join('');
+        tooltip.innerHTML = `
+          <span class="portfolio-chart-tooltip__category">${escapeHtml(displayDate)}</span>
+          <span class="portfolio-chart-tooltip__meta">${rows}</span>`;
+        tooltip.classList.add('is-visible');
+        const rect = wrapper.getBoundingClientRect();
+        const source = event.event || {};
+        const eventX = Number(source.clientX) - rect.left;
+        const eventY = Number(source.clientY) - rect.top;
+        const validEventX = Number.isFinite(eventX) && eventX >= 0 && eventX <= rect.width;
+        const validEventY = Number.isFinite(eventY) && eventY >= 0 && eventY <= rect.height;
+        const x = binding.pointer?.x ?? (validEventX ? eventX : rect.width / 2);
+        const y = binding.pointer?.y ?? (validEventY ? eventY : rect.height / 2);
+        requestAnimationFrame(() => place(x, y));
+      };
+      const show = event => render(event,false);
+      const click = event => render(event,true);
+      const unhover = () => hide(false);
+      const leave = () => hide(false);
+      const scrollHide = () => hide(true);
+      Object.assign(binding, {show, click, unhover, hide, leave, scrollHide, trackPointer});
+      macroTooltipBindings.set(chart, binding);
+      chart.addEventListener('mousemove', trackPointer, {capture:true, passive:true});
+      wrapper.addEventListener('mouseleave', leave, {passive:true});
+      window.addEventListener('scroll', scrollHide, {capture:true,passive:true});
+      chart.on('plotly_hover', show);
+      chart.on('plotly_click', click);
+      chart.on('plotly_unhover', unhover);
+    }
+
+    function renderDonut(holdings, secidColors, totals) {
+      const center = document.getElementById('donutCenter');
+      if (!holdings.length) {
+        center.hidden = true;
+        Plotly.newPlot('plotDonut', [], {
+          paper_bgcolor:'rgba(0,0,0,0)',
+          plot_bgcolor:'rgba(0,0,0,0)',
+          margin:{l:10,r:10,t:60,b:10},
+          annotations:[{text:'Добавьте активы для расчета портфеля', x:0.5, y:0.5, showarrow:false, font:{size:18,color:'#6B7A72'}}],
+          xaxis:{visible:false},
+          yaxis:{visible:false},
+          showlegend:false
+        }, {responsive:true});
+        els.classCards.innerHTML = '';
+        return;
+      }
+      const groups = {};
+      holdings.forEach(row => (groups[row.category] ||= []).push(row));
+      const donutSecidColors = {...secidColors};
+      holdings.forEach(row => {
+        if (row.category === 'Денежный рынок') donutSecidColors[row.secid] = '#9CA3AF';
+      });
+      const orderedHoldings = Object.entries(groups)
+        .sort((a, b) => b[1].reduce((s, x) => s + x.currentValue, 0) - a[1].reduce((s, x) => s + x.currentValue, 0))
+        .flatMap(([, rows]) => rows.sort((a, b) => b.currentValue - a.currentValue));
+      const perf = fmtSignedPct(totals.ret, 2);
+      const risk = fmtPct(totals.risk, 2);
+      const riskColor = riskTone(totals.risk, totals.ret);
+      const resolved = resolvedHorizonDate();
+      center.hidden = false;
+      const donutReturn = document.getElementById('donutReturn');
+      donutReturn.textContent = perf;
+      donutReturn.style.color = totals.ret < 0 ? '#B43C2B' : '#0E8A4A';
+      document.getElementById('donutDate').textContent = `к ${formatDateRu(resolved)}`;
+      const donutRisk = document.getElementById('donutRisk');
+      donutRisk.textContent = risk;
+      donutRisk.style.setProperty('--risk-tone', riskColor);
+      Plotly.newPlot('plotDonut', [{
+        type:'pie',
+        labels: orderedHoldings.map(x => x.title),
+        values: orderedHoldings.map(x => x.currentValue),
+        customdata: orderedHoldings.map(x => x.secid),
+        hole:0.72,
+        sort:false,
+        textinfo:'none',
+        marker:{colors: orderedHoldings.map(x => donutSecidColors[x.secid] || classColors[x.category] || '#999'), line:{color:'#FFFCF7', width:2}},
+        hovertemplate:'%{label}<extra></extra>'
+      }], {
+        paper_bgcolor:'rgba(0,0,0,0)',
+        plot_bgcolor:'rgba(0,0,0,0)',
+        margin:{l:10,r:10,t:10,b:10},
+        showlegend:false,
+        annotations:[]
+      }, {responsive:true});
+      bindDonutTooltip(document.getElementById('plotDonut'), orderedHoldings, donutSecidColors, totals.totalNow);
+      document.getElementById('plotDonut').on('plotly_click', (ev) => {
+        const secid = ev?.points?.[0]?.customdata;
+        if (secid) openDetail(secid);
+      });
+      renderClassCards(holdings, secidColors, totals.totalNow);
+    }
+
+    function renderMacro() {
+      const macro = meta.macro_window || [];
+      if (!macro.length) return;
+      const historyCut = macro.find(row => row.is_forecast);
+      const cutoff = historyCut ? historyCut.date : meta.last_date;
+      const shiftYears = (isoDate, years) => {
+        const date = new Date(`${isoDate}T00:00:00Z`);
+        date.setUTCFullYear(date.getUTCFullYear() + years);
+        return date.toISOString().slice(0, 10);
+      };
+      const defaultStart = shiftYears(cutoff, -3);
+      const fullEnd = macro[macro.length - 1].date;
+      const macroXAxis = () => ({
+        showgrid:false,
+        range:[defaultStart, fullEnd],
+        rangeslider:{visible:true, thickness:0.08, bgcolor:'rgba(216,226,231,.26)', bordercolor:'rgba(39,76,99,.12)', borderwidth:1}
+      });
+      const forecastBand = {
+        type:'rect', x0:cutoff, x1:fullEnd, xref:'x', yref:'paper', y0:0, y1:1,
+        fillcolor:'rgba(39,76,99,.055)', line:{width:0}, layer:'below'
+      };
+      const forecastBoundary = {
+        type:'line', x0:cutoff, x1:cutoff, xref:'x', yref:'paper', y0:0, y1:1,
+        line:{color:'rgba(127,168,181,.72)', width:1}
+      };
+      Plotly.newPlot('plotRate', [
+        {
+          type:'scatter', mode:'lines', name:'Ключевая ставка', meta:{unit:'%'}, hoverinfo:'none',
+          x: macro.map(x => x.date),
+          y: macro.map(x => x.key_rate),
+          line:{color:'#2A7F7A', width:3.8, shape:'hv'}
+        },
+        {
+          type:'scatter', mode:'lines', name:'Индекс денежного рынка', meta:{unit:'%'}, hoverinfo:'none',
+          x: macro.map(x => x.date),
+          y: macro.map(x => x.rusfar),
+          line:{color:'#3D6077', width:2.8, shape:'spline', smoothing:0.55}
+        },
+        {
+          type:'scatter', mode:'lines', name:'Индекс гос. облигаций', meta:{unit:''}, hoverinfo:'none',
+          x: macro.map(x => x.date),
+          y: macro.map(x => x.rgbi),
+          yaxis:'y2',
+          line:{color:'#7FA8B5', width:3.4, shape:'spline', smoothing:0.55}
+        }
+      ], {
+        paper_bgcolor:'rgba(0,0,0,0)',
+        plot_bgcolor:'rgba(0,0,0,0)',
+        margin:{l:56,r:56,t:12,b:46},
+        showlegend:false,
+        hovermode:'x unified',
+        xaxis:macroXAxis(),
+        yaxis:{title:'Ставки, %', showgrid:false, zeroline:false},
+        yaxis2:{title:'Индекс гос. облигаций', overlaying:'y', side:'right', showgrid:false, zeroline:false},
+        shapes:[forecastBand, forecastBoundary]
+      }, {responsive:true});
+
+      Plotly.newPlot('plotFx', [
+        {
+          type:'scatter', mode:'lines', name:'Доллар США', meta:{unit:' ₽'}, hoverinfo:'none',
+          x: macro.map(x => x.date), y: macro.map(x => x.usd_rub),
+          line:{color:'#2A7F7A', width:3.6, shape:'spline', smoothing:0.6}
+        },
+        {
+          type:'scatter', mode:'lines', name:'Юань', meta:{unit:' ₽'}, hoverinfo:'none',
+          x: macro.map(x => x.date), y: macro.map(x => x.cny_rub),
+          yaxis:'y2',
+          line:{color:'#FF6A00', width:3.2, shape:'spline', smoothing:0.6}
+        },
+        {
+          type:'scatter', mode:'lines', name:'Евро', meta:{unit:' ₽'}, hoverinfo:'none',
+          x: macro.map(x => x.date), y: macro.map(x => x.eur_rub),
+          line:{color:'#274C63', width:3.2, shape:'spline', smoothing:0.6}
+        },
+        {
+          type:'scatter', mode:'lines', name:'Швейцарский франк', meta:{unit:' ₽'}, hoverinfo:'none',
+          x: macro.map(x => x.date), y: macro.map(x => x.chf_rub),
+          line:{color:'#7FA8B5', width:2.8, shape:'spline', smoothing:0.6}
+        }
+      ], {
+        paper_bgcolor:'rgba(0,0,0,0)',
+        plot_bgcolor:'rgba(0,0,0,0)',
+        margin:{l:56,r:62,t:12,b:46},
+        showlegend:false,
+        hovermode:'x unified',
+        xaxis:macroXAxis(),
+        yaxis:{title:'Рублей за единицу валюты', showgrid:false, zeroline:false},
+        yaxis2:{title:'Юань, ₽', overlaying:'y', side:'right', showgrid:false, zeroline:false},
+        shapes:[forecastBand, forecastBoundary]
+      }, {responsive:true});
+      bindMacroTooltip(document.getElementById('plotRate'));
+      bindMacroTooltip(document.getElementById('plotFx'));
+    }
+
+    function plotDetail(rec) {
+      const pts = rec.history_points || [];
+      const pricePts = pts.filter(p => p.price !== null && p.price !== undefined);
+      const lineColor = latestSecidColors[rec.secid] || classColors[rec.bucket] || '#3D5A80';
+      Plotly.newPlot('detailFlowPlot', [
+        {
+          x: pricePts.map(p => p.date),
+          y: pricePts.map(p => p.price),
+          mode:'lines',
+          name:'Цена',
+          line:{width:2.8, color:lineColor},
+          hovertemplate:'%{x}<br>Цена: %{y:.4f}<extra></extra>'
+        },
+        {
+          x: pts.map(p => p.date),
+          y: pts.map(p => p.turnover || 0),
+          type:'bar',
+          name:'Оборот, ₽',
+          yaxis:'y2',
+          marker:{color:'#98C1D9', opacity:0.45},
+          hovertemplate:'%{x}<br>Оборот: %{y:,.0f} ₽<extra></extra>'
+        }
+      ], {
+        paper_bgcolor:'rgba(0,0,0,0)',
+        plot_bgcolor:'rgba(0,0,0,0)',
+        margin:{l:54,r:72,t:82,b:36},
+        title:{text:'График цены и оборота', x:0.04, xanchor:'left', y:0.985, yanchor:'top', font:{size:20,color:'#24332B'}},
+        legend:{orientation:'h', y:1.14, x:0.02, xanchor:'left'},
+        xaxis:{showgrid:false, zeroline:false},
+        yaxis:{title:'Цена', showgrid:false, zeroline:false},
+        yaxis2:{title:'Оборот, ₽', overlaying:'y', side:'right', showgrid:false, zeroline:false}
+      }, {responsive:true});
+    }
+
+    function assetCardUrl(secid) {
+      const version = encodeURIComponent(meta.generated_at || '');
+      return `../asset/index.html?id=${encodeURIComponent(secid)}&drawer=1&v=${version}`;
+    }
+
+    async function openDetail(secid) {
+      const item = catalogMap[secid];
+      if (!item) return;
+      els.detailTitle.textContent = item.title || secid;
+      els.detailSub.textContent = `${item.category || ''} · ${item.isin || item.secid || ''}`;
+      els.detailCards.innerHTML = `<iframe class="asset-card-frame" title="Карточка актива ${escapeHtml(item.title || secid)}"></iframe>`;
+      const frame = els.detailCards.querySelector('.asset-card-frame');
+      frame.src = assetCardUrl(secid);
+      frame.addEventListener('load', () => {
+        try {
+          frame.contentDocument?.documentElement?.classList.add('drawer-mode');
+          frame.contentDocument?.body?.classList.add('in-drawer');
+        } catch (error) {
+          /* drawer=1 передан в URL, этого достаточно для браузеров с ограниченным доступом к iframe. */
+        }
+      });
+      els.detailSchedule.innerHTML = '';
+      els.detailRaw.innerHTML = '';
+      els.drawer.classList.add('open', 'asset-card-mode');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      els.drawer.classList.remove('open', 'asset-card-mode');
+      els.detailCards.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    let deferredRenderToken = 0;
+
+    function renderAll() {
+      document.getElementById('badgeCatalog').textContent = fmtQty(meta.catalog_size || 0);
+      const badgeAvailable = document.getElementById('badgeAvailable');
+      if (badgeAvailable) badgeAvailable.textContent = fmtQty(meta.available_size || 0);
+      document.getElementById('badgeLastDate').textContent = formatDateRu(meta.last_date);
+      if (els.horizonInput.value !== state.selectedHorizonInput) {
+        els.horizonInput.value = state.selectedHorizonInput || meta.horizon_date;
+      }
+      document.getElementById('badgeResolvedHorizon').textContent = formatDateRu(resolvedHorizonDate());
+      if (els.currencyNote) {
+        const ccy = state.currencyView || 'RUB';
+        const spot = rubRate(ccy, meta.last_date);
+        const future = rubRate(ccy, resolvedHorizonDate());
+        els.currencyNote.textContent = ccy === 'RUB'
+          ? 'Оценка в рублях. Валютный прогноз применяется к ожидаемой стоимости.'
+          : `Оценка в ${ccy}: текущий курс ${fmtNum(spot, 4)} ₽, прогноз на горизонт ${fmtNum(future, 4)} ₽.`;
+      }
+      renderSearch();
+      renderSelectedCard();
+      renderRecommendations();
+      const holdings = computeHoldings();
+      renderEditor(holdings);
+      const totals = renderKpis(holdings);
+      const secidColors = groupShadeMap(holdings);
+      latestSecidColors = secidColors;
+      if (!window.Plotly) return;
+      renderDonut(holdings, secidColors, totals);
+      const token = ++deferredRenderToken;
+      requestAnimationFrame(() => {
+        if (token !== deferredRenderToken) return;
+        requestAnimationFrame(() => {
+          if (token !== deferredRenderToken) return;
+          const macroDetails = document.querySelector('details.macro-details');
+          if (macroDetails && macroDetails.open) renderMacro();
+        });
+      });
+    }
+
+    els.searchInput.addEventListener('input', () => {
+      state.query = els.searchInput.value;
+      state.searchActive = true;
+      state.highlightedIndex = 0;
+      renderSearch();
+    });
+
+    els.horizonInput.addEventListener('change', () => {
+      state.selectedHorizonInput = els.horizonInput.value || meta.horizon_date;
+      renderAll();
+    });
+
+    els.horizonInput.addEventListener('input', () => {
+      state.selectedHorizonInput = els.horizonInput.value || meta.horizon_date;
+      renderAll();
+    });
+
+    els.currencyToggle.querySelectorAll('[data-currency-view]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.currencyView = btn.dataset.currencyView || 'RUB';
+        els.currencyToggle.querySelectorAll('[data-currency-view]').forEach(node => {
+          node.classList.toggle('active', node.dataset.currencyView === state.currencyView);
+        });
+        renderAll();
+      });
+    });
+
+    document.querySelector('details.macro-details').addEventListener('toggle', (event) => {
+      if (event.currentTarget.open) requestAnimationFrame(renderMacro);
+    });
+
+    els.searchInput.addEventListener('focus', () => {
+      state.searchActive = true;
+      renderSearch();
+    });
+
+    els.searchInput.addEventListener('keydown', (event) => {
+      const results = computeSearchResults(state.query);
+      if (!results.length) return;
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        state.highlightedIndex = Math.min(results.length - 1, state.highlightedIndex + 1);
+        renderSearch();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        state.highlightedIndex = Math.max(0, state.highlightedIndex - 1);
+        renderSearch();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        selectInstrument(results[state.highlightedIndex].secid);
+      } else if (event.key === 'Escape') {
+        state.searchActive = false;
+        renderSearch();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!els.searchResults.contains(event.target) && event.target !== els.searchInput) {
+        state.searchActive = false;
+        renderSearch();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (!window.Plotly) return;
+      Plotly.Plots.resize('plotDonut');
+      Plotly.Plots.resize('plotRate');
+      Plotly.Plots.resize('plotFx');
+      if (els.drawer.classList.contains('open') && document.getElementById('detailFlowPlot')) {
+        Plotly.Plots.resize('detailFlowPlot');
+      }
+    });
+
+    els.closeDrawerBtn.addEventListener('click', closeDrawer);
+    els.drawer.addEventListener('click', (event) => {
+      if (event.target === els.drawer) closeDrawer();
+    });
+    els.openComposerBtn.addEventListener('click', openComposer);
+    els.closeComposerBtn.addEventListener('click', closeComposer);
+    els.composerDrawer.addEventListener('click', (event) => {
+      if (event.target === els.composerDrawer) closeComposer();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeDrawer();
+        closeComposer();
+      }
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

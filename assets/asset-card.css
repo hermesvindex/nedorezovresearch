@@ -1,0 +1,525 @@
+/* Shared presentation and interaction contract for quantis_designlab/asset_cards. */
+
+:root {
+  --lg-accent: var(--accent);
+  --asset-control-height: 44px;
+  --asset-control-track: color-mix(in srgb, var(--accent), transparent 90%);
+  --asset-control-edge: color-mix(in srgb, var(--accent), white 70%);
+}
+
+body.lg-root {
+  color: #111111;
+}
+
+.logo:not(.market-identity) img[src$=".svg"] {
+  box-sizing: border-box;
+  padding: 9px;
+  background: #ffffff;
+  object-fit: contain;
+}
+
+.logo.market-identity {
+  width: auto !important;
+  min-width: 96px;
+  max-width: min(240px, 34vw);
+  padding: 0 18px;
+  border-radius: 22px;
+}
+
+.logo.market-identity .logo-fallback {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(18px, 2.2vw, 28px);
+  letter-spacing: .035em;
+}
+
+.logo.market-identity.market-identity--image {
+  width: 84px !important;
+  min-width: 84px;
+  max-width: 84px;
+  height: 84px;
+  padding: 0;
+  border-radius: 22px;
+}
+
+.logo.market-identity.market-identity--image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+html.drawer-mode,
+html.drawer-mode body,
+body.in-drawer {
+  height: auto !important;
+  min-height: 100% !important;
+  padding: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain !important;
+  background: #ffffff !important;
+}
+
+html.drawer-mode body::before,
+body.in-drawer::before {
+  display: none !important;
+}
+
+html.drawer-mode body .shell,
+body.in-drawer .shell {
+  width: 100% !important;
+  min-height: 100% !important;
+  gap: 0 !important;
+}
+
+html.drawer-mode body .card,
+body.in-drawer .card {
+  min-width: 0;
+  min-height: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  border-radius: 28px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html.drawer-mode body .card::before,
+body.in-drawer .card::before {
+  display: none !important;
+}
+
+html.drawer-mode body .content,
+body.in-drawer .content {
+  position: relative !important;
+  z-index: 1 !important;
+  padding-bottom: 0 !important;
+}
+
+.asset-switcher,
+.footer-note,
+html.drawer-mode body .asset-switcher,
+html.drawer-mode body .footer-note,
+body.in-drawer .asset-switcher,
+body.in-drawer .footer-note {
+  display: none !important;
+}
+
+html.drawer-mode body .topline,
+body.in-drawer .topline {
+  padding-right: 62px;
+}
+
+html.drawer-mode body #title,
+body.in-drawer #title {
+  overflow-wrap: anywhere;
+}
+
+.chart-toolbar {
+  align-items: center;
+  gap: 12px;
+}
+
+.chart-panel,
+.chart-toolbar,
+#chart,
+#chart .plot-container,
+#chart .svg-container {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#chart,
+#chart .plot-container,
+#chart .svg-container {
+  width: 100% !important;
+}
+
+.chart-panel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+#chart { position: relative; isolation: isolate; }
+#chart .hoverlayer { opacity: 0 !important; pointer-events: none !important; }
+.asset-chart-tooltip {
+  position: absolute;
+  z-index: 12;
+  min-width: 190px;
+  max-width: min(300px, calc(100% - 16px));
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 14px;
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: 14px;
+  color: #0f2233;
+  background: rgba(255,255,255,.84);
+  box-shadow: 0 0 0 1px rgba(15,34,51,.08), 0 14px 34px rgba(15,34,51,.16), inset 0 1px 0 rgba(255,255,255,.96);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(4px) scale(.98);
+  transition: opacity 120ms ease, transform 120ms ease, visibility 0s linear 120ms;
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+  backdrop-filter: blur(20px) saturate(155%);
+}
+.asset-chart-tooltip.is-visible { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition-delay: 0s; }
+.asset-chart-tooltip__period { grid-column: 1 / -1; color: rgba(15,34,51,.58); font-size: 10px; font-weight: 600; letter-spacing: .055em; text-transform: uppercase; }
+.asset-chart-tooltip__metric { min-width: 0; display: flex; align-items: center; gap: 7px; overflow: hidden; color: rgba(15,34,51,.76); font-size: 11px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.asset-chart-tooltip__metric i { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 999px; background: var(--tooltip-color); box-shadow: 0 0 0 2px rgba(15,34,51,.08); }
+.asset-chart-tooltip strong { color: #0f2233; font-size: 12px; font-weight: 600; text-align: right; white-space: nowrap; }
+.asset-chart-hover-line { position: absolute; z-index: 11; width: 1px; opacity: 0; pointer-events: none; background: rgba(15,34,51,.22); transition: opacity 100ms ease; }
+.asset-chart-hover-line.is-visible { opacity: 1; }
+
+.chart-empty {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  padding: 24px;
+  border: 1px dashed color-mix(in srgb, var(--accent), transparent 72%);
+  border-radius: 22px;
+  color: color-mix(in srgb, var(--accent), #111111 52%);
+  background: color-mix(in srgb, var(--accent), transparent 94%);
+  font-size: 14px;
+  font-weight: 720;
+  text-align: center;
+}
+
+.chart-toolbar .asset-accent-segmented {
+  isolation: isolate;
+  position: relative;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+  min-height: calc(var(--asset-control-height) + 8px);
+  padding: 4px;
+  overflow: hidden;
+  border: 1px solid var(--asset-control-edge);
+  border-radius: 999px !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.62), rgba(255,255,255,.28)),
+    radial-gradient(120% 150% at 10% -30%, rgba(255,255,255,.76), transparent 52%),
+    var(--asset-control-track);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    inset 0 -1px 0 color-mix(in srgb, var(--accent), transparent 88%),
+    0 10px 28px color-mix(in srgb, var(--accent), transparent 84%);
+  -webkit-backdrop-filter: blur(24px) saturate(165%);
+  backdrop-filter: blur(24px) saturate(165%);
+}
+
+.chart-toolbar .asset-accent-segmented .lg-segmented__glider {
+  position: absolute;
+  z-index: -1;
+  top: 6px;
+  left: 0;
+  height: calc(var(--asset-control-height) - 4px);
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 76%);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.64), rgba(255,255,255,.34)),
+    color-mix(in srgb, var(--accent), transparent 82%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.72),
+    0 2px 8px rgba(17,17,17,.07),
+    0 3px 10px color-mix(in srgb, var(--accent), transparent 90%);
+  transition: transform 420ms cubic-bezier(.22,.9,.26,1), width 420ms cubic-bezier(.22,.9,.26,1);
+}
+
+.chart-toolbar .asset-accent-segmented .lg-segmented__glider::before {
+  display: none;
+}
+
+.chart-toolbar .asset-accent-segmented button,
+.chart-toolbar .range-group button {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: var(--asset-control-height);
+  padding: 0 13px;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: color-mix(in srgb, var(--accent), #111111 54%);
+  background: transparent !important;
+  box-shadow: none !important;
+  white-space: nowrap;
+  transform: none;
+}
+
+.chart-toolbar .asset-accent-segmented button:hover {
+  color: color-mix(in srgb, var(--accent), #111111 28%);
+}
+
+.chart-toolbar .asset-accent-segmented button[aria-selected="true"],
+.chart-toolbar .asset-accent-segmented button.active {
+  color: color-mix(in srgb, var(--accent), #111111 44%) !important;
+}
+
+.chart-toolbar .asset-accent-segmented button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent), white 38%);
+  outline-offset: 2px;
+}
+
+@media (max-width: 880px) {
+  .content {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .content > section,
+  .content > .side {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .chart-toolbar {
+    align-items: stretch;
+  }
+
+  .chart-toolbar .asset-accent-segmented {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .chart-toolbar .asset-accent-segmented::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  html.drawer-mode,
+  html.drawer-mode body,
+  body.in-drawer {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+  }
+
+  html.drawer-mode body .card,
+  body.in-drawer .card {
+    width: 100% !important;
+    min-height: 100% !important;
+    border-radius: 0 !important;
+  }
+
+  html.drawer-mode body .content,
+  body.in-drawer .content {
+    gap: 16px !important;
+    padding: 14px 14px 18px !important;
+  }
+
+  html.drawer-mode body .topline,
+  body.in-drawer .topline {
+    grid-template-columns: 56px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding-right: 50px;
+  }
+
+  html.drawer-mode body .logo,
+  body.in-drawer .logo {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    padding: 0 !important;
+    border-radius: 17px !important;
+  }
+
+  html.drawer-mode body .logo.market-identity,
+  body.in-drawer .logo.market-identity {
+    width: fit-content !important;
+    min-width: 74px !important;
+    max-width: 108px !important;
+    padding-inline: 12px !important;
+  }
+
+  html.drawer-mode body h1,
+  body.in-drawer h1 {
+    font-size: clamp(27px, 8.6vw, 36px) !important;
+    line-height: .98 !important;
+    text-wrap: balance;
+  }
+
+  html.drawer-mode body .subtitle,
+  body.in-drawer .subtitle {
+    margin-top: 7px !important;
+    font-size: 12px !important;
+  }
+
+  html.drawer-mode body .chips,
+  body.in-drawer .chips {
+    gap: 5px !important;
+    margin-top: 9px !important;
+  }
+
+  html.drawer-mode body .chip,
+  body.in-drawer .chip {
+    min-height: 25px !important;
+    padding-inline: 9px !important;
+    font-size: 10px !important;
+  }
+
+  html.drawer-mode body .detail-cta,
+  body.in-drawer .detail-cta {
+    margin-top: 10px !important;
+  }
+
+  html.drawer-mode body .price-panel,
+  body.in-drawer .price-panel {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    margin-top: 16px !important;
+  }
+
+  html.drawer-mode body .quote,
+  body.in-drawer .quote {
+    min-height: 0 !important;
+    padding: 14px !important;
+    border-radius: 20px !important;
+  }
+
+  html.drawer-mode body .quote-value,
+  body.in-drawer .quote-value {
+    font-size: clamp(34px, 11vw, 48px) !important;
+  }
+
+  html.drawer-mode body .quote-rub,
+  body.in-drawer .quote-rub {
+    margin-top: 6px !important;
+    font-size: 16px !important;
+  }
+
+  html.drawer-mode body .delta,
+  body.in-drawer .delta {
+    margin-top: 8px !important;
+    font-size: 15px !important;
+  }
+
+  html.drawer-mode body .metric-grid,
+  body.in-drawer .metric-grid {
+    gap: 8px !important;
+  }
+
+  html.drawer-mode body .metric,
+  body.in-drawer .metric {
+    min-height: 82px !important;
+    padding: 12px !important;
+    border-radius: 18px !important;
+  }
+
+  html.drawer-mode body .metric-value,
+  body.in-drawer .metric-value {
+    font-size: 20px !important;
+  }
+
+  html.drawer-mode body .returns-grid,
+  body.in-drawer .returns-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    margin-top: 0 !important;
+  }
+
+  html.drawer-mode body .return-pill,
+  body.in-drawer .return-pill {
+    min-height: 58px !important;
+    padding: 9px 10px !important;
+  }
+
+  html.drawer-mode body .chart-panel,
+  body.in-drawer .chart-panel {
+    margin-top: 12px !important;
+    padding: 10px 8px 7px !important;
+    border-radius: 20px !important;
+  }
+
+  html.drawer-mode body #chart,
+  body.in-drawer #chart {
+    height: 260px !important;
+  }
+
+  html.drawer-mode body .side,
+  body.in-drawer .side {
+    gap: 10px !important;
+  }
+
+  html.drawer-mode body .tiles,
+  body.in-drawer .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  html.drawer-mode body .tile,
+  body.in-drawer .tile {
+    min-height: 72px !important;
+    padding: 12px !important;
+  }
+
+  html.drawer-mode body .section,
+  body.in-drawer .section {
+    padding: 14px !important;
+    border-radius: 19px !important;
+  }
+
+  html.drawer-mode body .section h2,
+  body.in-drawer .section h2 {
+    margin-bottom: 9px !important;
+  }
+
+  html.drawer-mode body .cashflow,
+  body.in-drawer .cashflow {
+    max-height: none !important;
+    gap: 6px !important;
+    overflow: visible !important;
+  }
+
+  html.drawer-mode body .flow-row,
+  body.in-drawer .flow-row {
+    grid-template-columns: 74px minmax(0, 1fr) auto !important;
+    gap: 8px !important;
+    min-height: 44px !important;
+    padding: 7px 8px !important;
+  }
+
+  .chart-toolbar .mode-group {
+    width: fit-content;
+  }
+
+  .chart-toolbar .range-group {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    justify-content: flex-start;
+  }
+
+  .asset-chart-tooltip { min-width: 174px; max-width: calc(100% - 12px); padding: 10px 11px; gap: 5px 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-toolbar .asset-accent-segmented .lg-segmented__glider {
+    transition-duration: .01ms !important;
+  }
+  .asset-chart-tooltip, .asset-chart-hover-line { transition: none; }
+}
+
+@media (prefers-contrast: more) {
+  .chart-toolbar .asset-accent-segmented {
+    border-color: currentColor;
+  }
+}
+.detail-link {
+  min-height: 38px !important;
+  padding: 0 15px !important;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 72%) !important;
+  background: var(--accent) !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 760 !important;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--accent), transparent 76%) !important;
+}
+.detail-link:hover { background: color-mix(in srgb, var(--accent), #101827 15%) !important; }

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Финансовая отчетность · Nedorezov Research</title>
+  <link rel="stylesheet" href="assets/product-system.css?v=ad9fde8cfa29">
+  <link rel="stylesheet" href="assets/liquid-glass.css?v=ad9fde8cfa29">
+  <link rel="stylesheet" href="assets/company.css?v=ad9fde8cfa29">
+  <link rel="stylesheet" href="../assets/issuer-instruments.css?v=ad9fde8cfa29">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260730-project-gradients-1">
+  <script src="assets/vendor/plotly-2.35.2.min.js"></script>
+</head>
+<body class="qn-product-page">
+  <main class="company-page" id="top">
+    <header class="company-header">
+      <div class="company-header__top">
+        <div class="company-brand">
+          <div class="company-brand__logo" id="companyLogo"></div>
+          <div>
+            <p class="company-kicker">Nedorezov Research · отчетность эмитента</p>
+            <h1 class="company-title" id="companyTitle"></h1>
+            <div class="company-chips" id="companyChips"></div>
+          </div>
+        </div>
+        <a class="back-link" id="companyBackLink" href="../statements.html">К списку эмитентов</a>
+      </div>
+    </header>
+    <section class="company-toolbar company-panel" id="overview">
+      <div class="company-segment" id="standardButtons" aria-label="Стандарт отчетности"></div>
+      <div class="company-segment" id="periodButtons" aria-label="Периодичность"></div>
+      <p class="unit-note">Данные приведены в единицах исходной отчетности. Для сопоставления компаний денежные показатели нормализованы в рубли.</p>
+    </section>
+    <section class="metric-grid" id="latestMetrics"></section>
+    <section class="analytics-grid" id="results">
+      <article class="company-panel company-panel--wide">
+        <div class="section-head"><div><p class="section-kicker">Финансовая траектория</p><h2 id="resultsTitle">Выручка, EBITDA и чистая прибыль</h2></div><span id="resultsPeriod" class="section-meta"></span></div>
+        <div id="resultsChart" class="large-chart"></div>
+      </article>
+      <article class="company-panel" id="profitability">
+        <div class="section-head"><div><p class="section-kicker">Эффективность</p><h2>Рентабельность</h2></div></div>
+        <div id="marginChart" class="side-chart"></div>
+        <div id="marginFacts" class="fact-list"></div>
+      </article>
+    </section>
+    <section class="company-panel peer-panel" id="peers">
+      <div class="section-head"><div><p class="section-kicker">Отраслевое сопоставление</p><h2 id="peerTitle">Эмитент и сопоставимые компании</h2></div><select id="peerMetric" class="metric-select" aria-label="Показатель сравнения"></select></div>
+      <div class="peer-grid"><div id="peerChart" class="peer-chart"></div><div id="peerTable" class="peer-table-wrap"></div></div>
+    </section>
+    <section class="company-panel" id="statements">
+      <div class="section-head"><div><p class="section-kicker">Финансовые формы</p><h2>История показателей</h2></div><select class="metric-select" id="metricSelect" aria-label="Финансовый показатель"></select></div>
+      <div class="statement-grid"><div id="focusChart" class="statement-chart"></div><div class="company-table-wrap" id="companyTableWrap"></div></div>
+    </section>
+    <section class="company-panel issuer-instruments" id="instruments" data-issuer-instruments></section>
+  </main>
+    <script src="company-manifest.js"></script>
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const ticker = params.get("ticker") || decodeURIComponent(location.hash.slice(1)) || "SBER";
+      const key = window.NED_COMPANY_MANIFEST[ticker];
+      if (!key) {
+        document.body.innerHTML = '<main class="company-page"><section class="company-panel"><h1>Эмитент не найден</h1><p></p></section></main>';
+        document.querySelector("p").textContent = ticker;
+        return;
+      }
+      const dataUrl = new URL("company-data/" + key + ".js", location.href);
+      const bootUrl = new URL("assets/company-bootstrap.js", location.href);
+      if (dataUrl.protocol !== "file:") dataUrl.searchParams.set("v", key);
+      document.write('<script src="' + dataUrl.href + '"><\/script>');
+      document.write('<script src="' + bootUrl.href + '"><\/script>');
+    }());
+  </script>
+  <script src="assets/company.js?v=ad9fde8cfa29"></script>
+  <script src="../assets/issuer-instruments.js?v=ad9fde8cfa29"></script>
+  <script src="../assets/integration-shell.js?v=20260730-project-gradients-1" defer></script>
+</body>
+</html>
