@@ -149,11 +149,8 @@
   function comparisonPair(list) { const sorted=list.filter(r=>r.period!=='LTM').sort((a,b)=>rank(a.period)-rank(b.period)); const current=sorted.at(-1); if(!current)return []; const match=String(current.period).match(/(\d{4})Q([1-4])/i); const target=match?`${Number(match[1])-1}Q${match[2]}`:String(Number(current.period)-1); const previous=sorted.find(r=>String(r.period)===target); return previous?[previous,current]:sorted.slice(-2); }
   function yoy(list) { const [previous,current]=comparisonPair(list); if(!previous||!current)return null; const a=Number(previous.value),b=Number(current.value); return a?(b/a-1)*100:null; }
   function ppChange(list) { const [previous,current]=comparisonPair(list); return !previous||!current?null:Number(current.value)-Number(previous.value); }
+  function chartHeight(id,fallback) { const height=Math.round(document.getElementById(id)?.getBoundingClientRect().height||0); return height>0?height:fallback; }
   function baseLayout(height) { return {height,margin:{l:58,r:20,t:20,b:45},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',font:{family:'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',size:12,color:'#17374b'},hovermode:'x',hoverdistance:-1,spikedistance:-1,legend:{orientation:'h',x:0,y:1.13},xaxis:{gridcolor:'rgba(0,0,0,0)',tickfont:{color:'#667986'}},yaxis:{gridcolor:palette.grid,zerolinecolor:palette.grid,tickfont:{color:'#667986'}},bargap:.22}; }
-  function chartHeight(id, fallback) {
-    const height=Math.round(document.getElementById(id)?.getBoundingClientRect().height||0);
-    return height>0?height:fallback;
-  }
   function periodLabel(value) {
     const raw=String(value||'');
     const quarter=raw.match(/^(\d{4})Q([1-4])$/i);
