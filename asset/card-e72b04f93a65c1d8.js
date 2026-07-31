@@ -32,7 +32,10 @@ const state = {
     const pct = (value, digits = 2) => value === null || value === undefined || Number.isNaN(value) ? "—" : `${trimFixed(value, digits)}%`;
     const num = (value, digits = 2) => trimFixed(value, digits);
     const nb = value => String(value).replaceAll(" ", "\u00a0");
-    const normalizeAccent = value => /^#[0-9a-fA-F]{6}$/.test(value || "") ? value : "#7A1027";
+    /* exact-brand-accent-v48 */
+    const normalizeAccent = value => /^#[0-9a-fA-F]{6}$/.test(value || "")
+      ? value.toUpperCase()
+      : "#274C63";
     const hexToSoft = value => `${normalizeAccent(value)}22`;
     const currencyLabel = value => (value || "RUB").replace("SUR", "RUB") === "RUB" ? "₽" : (value || "RUB");
     const money = (value, currency = "RUB", digits = 0) => {
