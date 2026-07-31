@@ -197,6 +197,17 @@ const state = {
         });
     }
 
+
+    function syncMacroSelects(asset) {
+      const controls = document.getElementById("macroSelectControls");
+      if (!controls) return;
+      const isMacro = asset.assetType === "macro";
+      controls.hidden = !isMacro;
+      if (!isMacro) return;
+      document.getElementById("macroModeSelect").value = state.mode;
+      document.getElementById("macroRangeSelect").value = state.range;
+    }
+
     function renderButtons() {
       const wrap = document.getElementById("assetButtons");
       const switcher = document.querySelector(".asset-switcher");
@@ -216,6 +227,17 @@ const state = {
         state.mode = button.dataset.mode;
         render();
       }));
+      const macroModeSelect = document.getElementById("macroModeSelect");
+      const macroRangeSelect = document.getElementById("macroRangeSelect");
+      if (macroModeSelect) macroModeSelect.addEventListener("change", () => {
+        state.mode = macroModeSelect.value;
+        render();
+      });
+      if (macroRangeSelect) macroRangeSelect.addEventListener("change", () => {
+        state.range = macroRangeSelect.value;
+        render();
+      });
+
     }
 
     function renderLogo(asset) {
@@ -839,6 +861,7 @@ const state = {
       setActiveButtons("assetButtons", "asset", String(state.assetIndex));
       setActiveButtons("rangeButtons", "range", state.range);
       setActiveButtons("modeButtons", "mode", state.mode);
+      syncMacroSelects(asset);
       requestAnimationFrame(() => {
         applyLogoAccentFromImage();
         renderChart(ASSETS[state.assetIndex]);
