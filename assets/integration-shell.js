@@ -951,3 +951,78 @@
   });
   observer.observe(document.documentElement, { childList: true, characterData: true, subtree: true });
 })();
+
+
+/* apple-active-center-lifecycle-v39 */
+(() => {
+  const selector = '.header-liquid-glass, .size-metric-control, .quantis-search__filters';
+  const center = group => {
+    if (!group || group.scrollWidth <= group.clientWidth) return;
+    const active = group.querySelector('[aria-selected="true"], [aria-pressed="true"]');
+    if (!active) return;
+    const target = active.offsetLeft - (group.clientWidth - active.offsetWidth) / 2;
+    group.scrollLeft = Math.max(0, target);
+  };
+  const centerAll = () => document.querySelectorAll(selector).forEach(center);
+  const schedule = () => requestAnimationFrame(centerAll);
+  [0, 120, 360, 900].forEach(delay => window.setTimeout(schedule, delay));
+  const observer = new MutationObserver(records => {
+    const groups = new Set();
+    records.forEach(record => {
+      const target = record.target instanceof Element ? record.target : null;
+      const group = target?.matches(selector) ? target : target?.closest(selector);
+      if (group) groups.add(group);
+      if (record.type === 'childList') {
+        record.addedNodes.forEach(node => {
+          if (!(node instanceof Element)) return;
+          if (node.matches(selector)) groups.add(node);
+          node.querySelectorAll?.(selector).forEach(item => groups.add(item));
+        });
+      }
+    });
+    if (groups.size) requestAnimationFrame(() => groups.forEach(center));
+  });
+  observer.observe(document.documentElement, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ['aria-selected', 'aria-pressed']
+  });
+})();
+
+
+/* apple-active-center-geometry-v40 */
+(() => {
+  const selector = '.header-liquid-glass, .size-metric-control, .quantis-search__filters';
+  const center = group => {
+    if (!group || group.scrollWidth <= group.clientWidth) return;
+    const active = group.querySelector('[aria-selected="true"], [aria-pressed="true"]');
+    if (!active) return;
+    const groupRect = group.getBoundingClientRect();
+    const activeRect = active.getBoundingClientRect();
+    const delta = (activeRect.left + activeRect.width / 2)
+      - (groupRect.left + groupRect.width / 2);
+    group.scrollLeft = Math.max(0, group.scrollLeft + delta);
+  };
+  const centerAll = () => document.querySelectorAll(selector).forEach(center);
+  const schedule = () => requestAnimationFrame(centerAll);
+  [0, 160, 420, 960].forEach(delay => window.setTimeout(schedule, delay));
+  document.addEventListener('click', event => {
+    const group = event.target.closest?.(selector);
+    if (group) requestAnimationFrame(() => center(group));
+  });
+  const observer = new MutationObserver(records => {
+    const groups = new Set();
+    records.forEach(record => {
+      const target = record.target instanceof Element ? record.target : null;
+      const group = target?.matches(selector) ? target : target?.closest(selector);
+      if (group) groups.add(group);
+    });
+    if (groups.size) requestAnimationFrame(() => groups.forEach(center));
+  });
+  observer.observe(document.documentElement, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['aria-selected', 'aria-pressed']
+  });
+})();
