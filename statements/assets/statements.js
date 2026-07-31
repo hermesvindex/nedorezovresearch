@@ -211,10 +211,11 @@
   function rowHtml(item, group) {
     const snapshot = selectedSnapshot(item);
     const values = snapshot.values;
+    const action = `<td class="statement-action"><a class="statement-link" href="${esc(item.page)}">Открыть</a></td>`;
     const leading = group === 'bank'
       ? `<td>${companyCell(item)}</td><td>${snapshot.standard ? `<span class="coverage-tag">${esc(standardLabel(snapshot.standard))}</span>` : '—'}</td><td>${values ? esc(periodLabel(state.period)) : '—'}</td>`
-      : `<td>${companyCell(item)}</td><td>${esc(item.sector || 'Сектор не указан')}</td><td>${snapshot.standard ? `<span class="coverage-tag">${esc(standardLabel(snapshot.standard))}</span>` : '—'}</td><td>${values ? esc(periodLabel(state.period)) : '—'}</td>`;
-    return `<tr>${leading}${tableConfig[group].columns.map(role => metricCell(role, values)).join('')}<td><a class="statement-link" href="${esc(item.page)}">Открыть</a></td></tr>`;
+      : `<td>${companyCell(item)}</td><td>${esc(item.sector || 'Сектор не указан')}</td>${action}<td>${snapshot.standard ? `<span class="coverage-tag">${esc(standardLabel(snapshot.standard))}</span>` : '—'}</td><td>${values ? esc(periodLabel(state.period)) : '—'}</td>`;
+    return `<tr>${leading}${tableConfig[group].columns.map(role => metricCell(role, values)).join('')}${group === 'bank' ? action : ''}</tr>`;
   }
 
   function renderGroup(group) {

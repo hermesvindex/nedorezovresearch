@@ -133,7 +133,7 @@
           <p class="site-footer__label">Обратная связь</p>
           <p>Если вы нашли ошибку в данных, расчетах или интерфейсе, сообщите владельцу проекта.</p>
           <div class="site-footer__contact-actions">
-            <a class="site-footer__contact" href="https://t.me/znedorezov" target="_blank" rel="noopener noreferrer" aria-label="Написать Захару Недорезову в Telegram">
+            <a class="site-footer__contact" href="https://t.me/znedorezov" target="_top" rel="noopener noreferrer" aria-label="Написать Захару Недорезову в Telegram">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
               <span>Telegram</span>
             </a>
