@@ -248,7 +248,33 @@
     state.metric=defaultMetricCode();
   }
   function positionGlider(node) { const active=node.querySelector('button[aria-selected="true"]'), glider=node.querySelector('.lg-segmented__glider'); if(!active||!glider)return; glider.style.width=`${active.offsetWidth}px`; glider.style.transform=`translateX(${active.offsetLeft}px)`; }
-  function segment(id, values, labels, active, onClick) { const node=document.getElementById(id); node.className='company-segment lg-root lg-segmented'; node.innerHTML=`<span class="lg-segmented__glider" aria-hidden="true"></span>${values.map(v=>`<button type="button" aria-selected="${v===active}" tabindex="${v===active?'0':'-1'}" data-value="${esc(v)}">${esc(labels[v]||v)}</button>`).join('')}`; node.querySelectorAll('button').forEach(b=>b.onclick=()=>onClick(b.dataset.value)); requestAnimationFrame(()=>positionGlider(node)); }
+  function segment(id, values, labels, active, onClick) {
+    const node=document.getElementById(id);
+    node.className='company-segment lg-root lg-segmented';
+    node.setAttribute('role','tablist');
+    node.setAttribute('aria-orientation','horizontal');
+    node.innerHTML=`<span class="lg-segmented__glider" aria-hidden="true"></span>${values.map(v=>`<button type="button" role="tab" aria-selected="${v===active}" tabindex="${v===active?'0':'-1'}" data-value="${esc(v)}">${esc(labels[v]||v)}</button>`).join('')}`;
+    const buttons=[...node.querySelectorAll('button')];
+    const activate=(button,restoreFocus=false)=>{
+      const value=button.dataset.value;
+      onClick(value);
+      if(restoreFocus) requestAnimationFrame(()=>{
+        [...document.getElementById(id).querySelectorAll('button')]
+          .find(item=>item.dataset.value===value)?.focus();
+      });
+    };
+    buttons.forEach((button,index)=>{
+      button.onclick=()=>activate(button);
+      button.onkeydown=event=>{
+        if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+        event.preventDefault();
+        const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:
+          (index+(event.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length;
+        activate(buttons[next],true);
+      };
+    });
+    requestAnimationFrame(()=>positionGlider(node));
+  }
   function metricOptions() { const map=new Map(); filtered().forEach(r=>{if(!map.has(r.metric_code)) map.set(r.metric_code,r.metric_label)}); return [...map].map(([code,label])=>({code,label})).sort((a,b)=>metricScore(a.label)-metricScore(b.label)||a.label.localeCompare(b.label,'ru')); }
   function hasRole(name) { return seriesByRole(name).length>0; }
   function isBankingSlice() { return !hasRole('revenue')&&!hasRole('ebitda')&&hasRole('operating_income')&&hasRole('net_interest_income'); }

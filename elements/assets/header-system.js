@@ -12,10 +12,8 @@
       if (!active || !glider) return;
 
       if (immediate) glider.style.transition = 'none';
-      const diameter = active.offsetHeight;
-      const centeredLeft = active.offsetLeft + (active.offsetWidth - diameter) / 2;
-      glider.style.width = `${diameter}px`;
-      glider.style.transform = `translateX(${centeredLeft}px)`;
+      glider.style.width = `${active.offsetWidth}px`;
+      glider.style.transform = `translateX(${active.offsetLeft}px)`;
 
       if (immediate) {
         requestAnimationFrame(() => glider.style.removeProperty('transition'));
