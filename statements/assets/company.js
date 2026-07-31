@@ -156,7 +156,9 @@
     const quarter=raw.match(/^(\d{4})Q([1-4])$/i);
     return quarter?`Q${quarter[2]} ${quarter[1]}`:raw;
   }
+  function compactPeriodAxis(values) { if (!window.matchMedia('(max-width: 680px)').matches || values.length<=6) return values; const last=values.length-1; const indexes=[0,Math.round(last*.25),Math.round(last*.5),Math.round(last*.75),last]; return [...new Set(indexes.map(index=>values[index]))]; }
   function periodAxis(values) {
+    const visibleValues=compactPeriodAxis(values);
     return {
       gridcolor:'rgba(0,0,0,0)',
       tickfont:{color:'#667986'},
@@ -164,8 +166,8 @@
       categoryorder:'array',
       categoryarray:values,
       tickmode:'array',
-      tickvals:values,
-      ticktext:values.map(periodLabel),
+      tickvals:visibleValues,
+      ticktext:visibleValues.map(periodLabel),
       tickangle:values.length>10?-45:0,
       automargin:true
     };
