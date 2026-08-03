@@ -451,7 +451,8 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
 
     function renderDetailCta(asset) {
       const wrap = document.getElementById("detailCta");
-      const url = asset.detailPageUrl || "";
+      const detailPath = asset.detailPageUrl || "";
+      const url = detailPath ? new URL(detailPath.replace(/^(\.\.\/)+/, ""), "https://nedorezov-research.ru/").href : "";
       if (!url) {
         wrap.style.display = "none";
         wrap.innerHTML = "";

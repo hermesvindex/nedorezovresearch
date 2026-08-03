@@ -173,6 +173,7 @@ const state = {
       if (state.range === "1Y") start.setFullYear(start.getFullYear() - 1);
       if (state.range === "3Y") start.setFullYear(start.getFullYear() - 3);
       if (state.range === "5Y") start.setFullYear(start.getFullYear() - 5);
+      if (state.range === "10Y") start.setFullYear(start.getFullYear() - 10);
       if (state.range === "YTD") {
         start.setMonth(0);
         start.setDate(1);
@@ -549,7 +550,8 @@ const state = {
 
     function renderDetailCta(asset) {
       const wrap = document.getElementById("detailCta");
-      const url = asset.detailPageUrl || "";
+      const detailPath = asset.detailPageUrl || "";
+      const url = detailPath ? new URL(detailPath.replace(/^(\.\.\/)+/, ""), "https://nedorezov-research.ru/").href : "";
       if (!url) {
         wrap.style.display = "none";
         wrap.innerHTML = "";
@@ -868,6 +870,14 @@ const state = {
       renderChart(asset);
       setActiveButtons("assetButtons", "asset", String(state.assetIndex));
       setActiveButtons("rangeButtons", "range", state.range);
+      const macroRangeButtons = document.getElementById("rangeButtons");
+      const activeMacroRange = macroRangeButtons?.querySelector('button[aria-selected="true"]');
+      if (asset.assetType === "macro" && activeMacroRange && macroRangeButtons.scrollWidth > macroRangeButtons.clientWidth) {
+        macroRangeButtons.scrollTo({
+          left: activeMacroRange.offsetLeft - (macroRangeButtons.clientWidth - activeMacroRange.offsetWidth) / 2,
+          behavior: "auto",
+        });
+      }
       setActiveButtons("modeButtons", "mode", state.mode);
       syncMacroSelects(asset);
       requestAnimationFrame(() => {

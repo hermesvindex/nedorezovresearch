@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Карточка актива · Nedorezov Research</title>
-  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260803-runtime-55-tilda">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260803-runtime-58-tilda">
   <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
   <style>
     :root {
@@ -492,7 +492,7 @@
   </style>
   <script>try{if(new URLSearchParams(location.search).get("drawer")==="1"){document.documentElement.classList.add("drawer-mode");}}catch(error){}</script>
   <link rel="stylesheet" href="../assets/liquid-glass.css">
-  <link rel="stylesheet" href="../assets/asset-card.css?v=20260803-runtime-55-tilda">
+  <link rel="stylesheet" href="../assets/asset-card.css?v=20260803-runtime-58-tilda">
   <style>
     body.macro-card .flow-row {
       align-items: start;
@@ -572,6 +572,109 @@
     }
   </style>
   <script src="../assets/liquid-glass.js" defer></script>
+
+  <style id="inflation-controls-v57">
+    body.macro-card .chart-toolbar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+    }
+    body.macro-card .macro-select-controls {
+      display: block !important;
+      flex: 0 0 150px !important;
+      width: 150px !important;
+      min-width: 150px !important;
+    }
+    body.macro-card .macro-select-controls .macro-select-field:last-child {
+      display: none !important;
+    }
+    body.macro-card .macro-select-field select {
+      height: 44px !important;
+      min-height: 44px !important;
+      padding: 0 38px 0 16px !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      background: #e8e8ed !important;
+      color: #1d1d1f !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      box-shadow: none !important;
+    }
+    body.macro-card .macro-select-field::after {
+      right: 15px !important;
+      color: var(--accent, #274c63) !important;
+    }
+    body.macro-card .chart-toolbar > #modeButtons { display: none !important; }
+    body.macro-card .chart-toolbar > #rangeButtons { display: flex !important; }
+    body.macro-card #rangeButtons {
+      flex: 0 1 468px !important;
+      width: 468px !important;
+      max-width: 468px !important;
+      min-width: 0 !important;
+      height: 44px !important;
+      min-height: 44px !important;
+      padding: 3px !important;
+      gap: 0 !important;
+      border-radius: 999px !important;
+      overflow: hidden !important;
+      background: #e8e8ed !important;
+    }
+    body.macro-card #rangeButtons > button {
+      position: relative !important;
+      z-index: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 38px !important;
+      min-height: 38px !important;
+      margin: 0 !important;
+      padding: 0 12px !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      white-space: nowrap !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      line-height: 1 !important;
+    }
+    body.macro-card #rangeButtons > button { flex: 1 1 0 !important; width: 0 !important; min-width: 44px !important; }
+    body.macro-card #rangeButtons > button[aria-selected="true"] {
+      color: #fff !important;
+      -webkit-text-fill-color: #fff !important;
+    }
+    body.macro-card #rangeButtons > .lg-segmented__glider {
+      display: block !important;
+      top: 3px !important;
+      height: 38px !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      background: var(--accent, #274c63) !important;
+      box-shadow: none !important;
+    }
+    @media (max-width: 560px) {
+      body.macro-card .macro-select-controls {
+        flex-basis: 132px !important;
+        width: 132px !important;
+        min-width: 132px !important;
+      }
+      body.macro-card #rangeButtons {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+      }
+      body.macro-card #rangeButtons::-webkit-scrollbar { display: none !important; }
+      body.macro-card #rangeButtons > button { flex: 0 0 48px !important; width: 48px !important; }
+      body.macro-card .chart-toolbar { gap: 8px !important; }
+      body.macro-card .macro-select-field select {
+        padding-left: 13px !important;
+        font-size: 12px !important;
+      }
+    }
+  </style>
 </head>
 <body class="lg-root">
   <main class="shell">
@@ -607,29 +710,28 @@
             <div class="chart-toolbar">
               <div class="macro-select-controls" id="macroSelectControls" hidden>
                 <label class="macro-select-field"><select id="macroModeSelect" aria-label="Показатель графика">
-                  <option value="annual">Годовая</option><option value="monthly">Помесячная</option><option value="monthlyAnnual">Помесячная в годовом выражении</option>
+                  <option value="annual">С начала года</option><option value="monthly">За месяц</option><option value="monthlyAnnual">Год к году</option>
                 </select></label>
                 <label class="macro-select-field"><select id="macroRangeSelect" aria-label="Горизонт графика">
-                  <option value="D">День</option><option value="W">Неделя</option><option value="1M">Месяц</option><option value="3M">3 месяца</option><option value="6M">6 месяцев</option><option value="YTD">С начала года</option><option value="1Y">1 год</option><option value="3Y">3 года</option><option value="5Y">5 лет</option><option value="ALL">Весь период</option>
+                  <option value="1M">Месяц</option><option value="3M">3 месяца</option><option value="6M">6 месяцев</option><option value="YTD">С начала года</option><option value="1Y">1 год</option><option value="3Y">3 года</option><option value="5Y">5 лет</option><option value="10Y">10 лет</option><option value="ALL">Весь период</option>
                 </select></label>
               </div>
               <div class="mode-group lg-segmented asset-accent-segmented" id="modeButtons" role="tablist" aria-label="Показатель графика"><span class="lg-segmented__glider" aria-hidden="true"></span>
                 <button type="button" data-mode="price" class="standard-mode active" aria-selected="true">Цена</button>
                 <button type="button" data-mode="yield" class="standard-mode" aria-selected="false">Доходность</button>
-                <button type="button" data-mode="annual" class="macro-mode" aria-selected="false">Годовая</button>
-                <button type="button" data-mode="monthly" class="macro-mode" aria-selected="false">Помесячная</button>
-                <button type="button" data-mode="monthlyAnnual" class="macro-mode active" aria-selected="true">Помесячная в годовом выражении</button>
+                <button type="button" data-mode="annual" class="macro-mode" aria-selected="false" aria-label="Инфляция с начала года">С начала года</button>
+                <button type="button" data-mode="monthly" class="macro-mode" aria-selected="false" aria-label="Изменение цен за месяц">За месяц</button>
+                <button type="button" data-mode="monthlyAnnual" class="macro-mode active" aria-selected="true" aria-label="Инфляция год к году">Год к году</button>
               </div>
               <div class="range-group lg-segmented asset-accent-segmented" id="rangeButtons" role="tablist" aria-label="Горизонт графика"><span class="lg-segmented__glider" aria-hidden="true"></span>
-                <button type="button" data-range="D" aria-label="День">D</button>
-                <button type="button" data-range="W" aria-label="Неделя">W</button>
-                <button type="button" data-range="1M" aria-label="Один месяц">M</button>
+                <button type="button" data-range="1M" aria-label="Один месяц" title="1 месяц">M</button>
                 <button type="button" data-range="3M" aria-label="Три месяца">3М</button>
                 <button type="button" data-range="6M" aria-label="Шесть месяцев">6М</button>
                 <button type="button" data-range="YTD" aria-label="С начала года">YTD</button>
                 <button type="button" data-range="1Y" aria-label="Один год">1Y</button>
                 <button type="button" data-range="3Y" aria-label="Три года">3Y</button>
                 <button type="button" data-range="5Y" aria-label="Пять лет">5Y</button>
+                <button type="button" data-range="10Y" aria-label="Десять лет">10Y</button>
                 <button type="button" data-range="ALL" class="active" aria-label="Весь период">ALL</button>
               </div>
             </div>
@@ -684,12 +786,12 @@
       const dataUrl = new URL("../data/assets/" + key + ".js", location.href);
       const appUrl = new URL("card-" + actualVariant + ".js", location.href);
       if (dataUrl.protocol !== "file:") dataUrl.searchParams.set("v", key);
-      if (appUrl.protocol !== "file:") appUrl.searchParams.set("v", "20260803-runtime-55");
+      if (appUrl.protocol !== "file:") appUrl.searchParams.set("v", "20260803-runtime-58");
       document.write('<script src="' + dataUrl.href + '"><\/script>');
       document.write('<script src="' + appUrl.href + '"><\/script>');
     }());
   </script>
 
-  <script src="../assets/integration-shell.js?v=20260803-runtime-55-tilda" defer></script>
+  <script src="../assets/integration-shell.js?v=20260803-runtime-58-tilda" defer></script>
 </body>
 </html>
