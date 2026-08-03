@@ -322,7 +322,12 @@ const state = {
       document.documentElement.style.setProperty("--accent-soft", hexToSoft(asset.accent));
       document.body.classList.toggle("key-rate-card", asset.assetType === "rate");
       document.body.classList.toggle("macro-card", asset.assetType === "macro");
-      document.getElementById("title").textContent = asset.title;
+      const assetTitle = document.getElementById("title");
+      assetTitle.textContent = asset.title;
+      const assetTitleLength = Array.from((asset.title || "").replace(/\s+/g, " ").trim()).length;
+      assetTitle.classList.toggle("asset-title--medium", assetTitleLength >= 19 && assetTitleLength < 31);
+      assetTitle.classList.toggle("asset-title--long", assetTitleLength >= 31 && assetTitleLength < 47);
+      assetTitle.classList.toggle("asset-title--xlong", assetTitleLength >= 47);
       if (asset.assetType && asset.assetType !== "bond") {
         if (asset.assetType === "rate") {
           document.getElementById("periodReturns").innerHTML = "";
