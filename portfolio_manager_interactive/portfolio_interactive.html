@@ -704,9 +704,13 @@
       return `${normalized > 0 ? '+' : ''}${normalized.toFixed(digits)}%`;
     }
 
+    function projectedFutureRub(row) {
+      return Number(row.horizonValue || 0) + Number(row.couponsRub || 0) + Number(row.amortRub || 0) + Number(row.dividendsRub || 0) + Number(row.reinvestRub || 0);
+    }
+
     function projectedReturn(row) {
       const currentView = moneyInView(row.currentValue, 'current');
-      const futureView = moneyInView(row.horizonValue, 'future');
+      const futureView = moneyInView(projectedFutureRub(row), 'future');
       return currentView > 0 ? (futureView / currentView - 1) * 100 : 0;
     }
 
@@ -951,17 +955,23 @@
         const qtyUnits = lots * Number(item.lotsize || 1);
         if (!(qtyUnits > 0)) continue;
         const snap = selectedSnapshot(item);
+        const horizonValue = qtyUnits * Number((snap && snap.horizon_value) ?? item.unit_future ?? 0);
+        const couponsRub = qtyUnits * Number((snap && snap.coupons_rub) ?? item.unit_coupons ?? 0);
+        const amortRub = qtyUnits * Number((snap && snap.amort_rub) ?? item.unit_amort ?? 0);
+        const dividendsRub = qtyUnits * Number((snap && snap.dividends_rub) ?? item.unit_dividends ?? 0);
+        const reinvestRub = qtyUnits * Number((snap && snap.reinvest_rub) ?? item.unit_reinvest ?? 0);
         rows.push({
           ...item,
           lots,
           qtyUnits,
           currentValue: qtyUnits * Number(item.unit_current || 0),
-          horizonValue: qtyUnits * Number((snap && snap.horizon_value) ?? item.unit_future ?? 0),
+          horizonValue,
           pnl: qtyUnits * Number((snap && snap.pnl) ?? item.unit_pnl ?? 0),
-          couponsRub: qtyUnits * Number((snap && snap.coupons_rub) ?? item.unit_coupons ?? 0),
-          amortRub: qtyUnits * Number((snap && snap.amort_rub) ?? item.unit_amort ?? 0),
-          dividendsRub: qtyUnits * Number((snap && snap.dividends_rub) ?? item.unit_dividends ?? 0),
-          reinvestRub: qtyUnits * Number((snap && snap.reinvest_rub) ?? item.unit_reinvest ?? 0),
+          couponsRub,
+          amortRub,
+          dividendsRub,
+          reinvestRub,
+          projectedFutureRub: horizonValue + couponsRub + amortRub + dividendsRub + reinvestRub,
           currentAciRub: qtyUnits * Number(item.unit_current_aci || 0),
           note: (snap && snap.note) || item.note || '',
         });
@@ -1133,7 +1143,7 @@
 
     function renderEditor(holdings) {
       const totalNow = holdings.reduce((sum, row) => sum + row.currentValue, 0);
-      const totalFuture = holdings.reduce((sum, row) => sum + row.horizonValue, 0);
+      const totalFuture = holdings.reduce((sum, row) => sum + projectedFutureRub(row), 0);
       const totalNowView = moneyInView(totalNow, 'current');
       const totalFutureView = moneyInView(totalFuture, 'future');
       const totalReturn = totalNowView > 0 ? (totalFutureView / totalNowView - 1) * 100 : 0;
@@ -1260,7 +1270,7 @@
       document.getElementById('kpiPnlLabel').innerHTML = `Потенциальный результат<br>к ${horizonDateLabel}`;
       document.getElementById('kpiRetLabel').innerHTML = `Ожид. дох. к ${horizonDateLabel},<br>%`;
       const totalNow = holdings.reduce((sum, row) => sum + row.currentValue, 0);
-      const totalFuture = holdings.reduce((sum, row) => sum + row.horizonValue, 0);
+      const totalFuture = holdings.reduce((sum, row) => sum + projectedFutureRub(row), 0);
       const pnl = totalFuture - totalNow;
       const currentView = moneyInView(totalNow, 'current');
       const futureView = moneyInView(totalFuture, 'future');
