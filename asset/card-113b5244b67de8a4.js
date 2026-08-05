@@ -277,8 +277,12 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
 
     function renderSummary(asset) {
       const hasYieldSeries = (asset.history || []).some(row => Number(row.yield || 0) > 0);
-      if (!hasYieldSeries && state.mode === "yield") state.mode = "price";
-      document.querySelector('[data-mode="yield"]').style.display = hasYieldSeries ? "" : "none";
+      const hideSingleIndexMode = asset.assetType === "index" && !hasYieldSeries;
+      if ((!hasYieldSeries && state.mode === "yield") || hideSingleIndexMode) state.mode = "price";
+      const yieldButton = document.querySelector('[data-mode="yield"]');
+      const modeButtons = document.getElementById("modeButtons");
+      if (yieldButton) yieldButton.style.display = hasYieldSeries ? "" : "none";
+      if (modeButtons) modeButtons.style.display = hideSingleIndexMode ? "none" : "";
       document.documentElement.style.setProperty("--accent", normalizeAccent(asset.accent));
       document.documentElement.style.setProperty("--accent-soft", hexToSoft(asset.accent));
       document.body.classList.toggle("key-rate-card", asset.assetType === "rate");
@@ -452,7 +456,23 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
     function renderDetailCta(asset) {
       const wrap = document.getElementById("detailCta");
       const detailPath = asset.detailPageUrl || "";
-      const url = detailPath ? new URL(detailPath.replace(/^(\.\.\/)+/, ""), "https://nedorezov-research.ru/").href : "";
+      const detailRaw = String(detailPath).trim();
+      const detailPathNormalized = detailRaw
+        .replace(/^(\.\.\/)+/, "")
+        .replace(/^(\.\/)+/, "")
+        .replace(/^\/+/, "");
+      let url = "";
+      if (detailPathNormalized) {
+        const isAbsolute = /^https?:\/\//i.test(detailPathNormalized);
+        const absolutePath = isAbsolute
+          ? detailPathNormalized
+          : `https://nedorezov-research.ru/${detailPathNormalized}`;
+        try {
+          url = new URL(absolutePath).href;
+        } catch {
+          url = "";
+        }
+      }
       if (!url) {
         wrap.style.display = "none";
         wrap.innerHTML = "";
@@ -737,6 +757,10 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
 
     function render() {
       const asset = ASSETS[state.assetIndex];
+      document.body.classList.toggle("index-card", asset.assetType === "index");
+      document.body.classList.toggle("index-card", asset.assetType === "index");
+      document.body.classList.toggle("index-card", asset.assetType === "index");
+      document.body.classList.toggle("index-card", asset.assetType === "index");
       document.body.classList.toggle("index-card", asset.assetType === "index");
       document.body.classList.toggle("index-card", asset.assetType === "index");
       renderLogo(asset);
