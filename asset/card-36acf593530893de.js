@@ -678,6 +678,7 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
       document.body.classList.toggle("index-card", asset.assetType === "index");
       document.body.classList.toggle("index-card", asset.assetType === "index");
       document.body.classList.toggle("index-card", asset.assetType === "index");
+      document.body.classList.toggle("index-card", asset.assetType === "index");
       renderLogo(asset);
       renderSummary(asset);
       renderDetailCta(asset);
