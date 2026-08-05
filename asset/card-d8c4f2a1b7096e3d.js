@@ -863,6 +863,7 @@ const state = {
 
     function render() {
       const asset = ASSETS[state.assetIndex];
+      document.body.classList.toggle("index-card", asset.assetType === "index");
       renderLogo(asset);
       renderSummary(asset);
       renderDetailCta(asset);
