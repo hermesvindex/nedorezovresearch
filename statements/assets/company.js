@@ -46,7 +46,7 @@
     backLink.addEventListener('click', event => {
       event.preventDefault();
       if (window.history.length > 1) window.history.back();
-      else window.location.href = '../statements.html';
+      else window.location.href = './statements.html';
     });
   }
 
