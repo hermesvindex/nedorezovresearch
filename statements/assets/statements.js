@@ -299,6 +299,44 @@
   render();
 })();
 
+/* statements-mobile-scroll-controls-v69 */
+(() => {
+  const installControls = () => {
+    if (!window.matchMedia('(max-width: 680px)').matches) return;
+    document.querySelectorAll('.qn-table-wrap').forEach(scroller => {
+      if (!scroller.querySelector('.financial-table') || scroller.previousElementSibling?.classList.contains('statements-mobile-scroll-controls')) return;
+      const controls = document.createElement('div');
+      controls.className = 'statements-mobile-scroll-controls';
+      controls.innerHTML = '<span class="statements-mobile-scroll-label">Столбцы таблицы</span><span class="statements-mobile-scroll-buttons"><button class="statements-mobile-scroll-button" type="button" data-direction="-1" aria-label="Прокрутить таблицу влево">← Влево</button><button class="statements-mobile-scroll-button" type="button" data-direction="1" aria-label="Прокрутить таблицу вправо">Вправо →</button></span>';
+      scroller.before(controls);
+      const previous = controls.querySelector('[data-direction="-1"]');
+      const next = controls.querySelector('[data-direction="1"]');
+      const update = () => {
+        const maximum = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+        previous.disabled = scroller.scrollLeft <= 2;
+        next.disabled = scroller.scrollLeft >= maximum - 2;
+      };
+      controls.addEventListener('click', event => {
+        const button = event.target.closest('[data-direction]');
+        if (!button) return;
+        const direction = Number(button.dataset.direction);
+        const step = Math.max(280, Math.round(scroller.clientWidth * 0.82));
+        const maximum = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+        scroller.scrollLeft = Math.max(0, Math.min(maximum, scroller.scrollLeft + direction * step));
+        update();
+      });
+      scroller.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+      update();
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', installControls, { once: true });
+  } else {
+    installControls();
+  }
+})();
+
 /* statements-touch-drag-v68 */
 (() => {
   const install = () => {
