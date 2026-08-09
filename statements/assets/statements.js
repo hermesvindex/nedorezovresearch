@@ -298,3 +298,57 @@
   setupSorting('bank');
   render();
 })();
+
+/* statements-touch-drag-v68 */
+(() => {
+  const install = () => {
+    document.querySelectorAll('.qn-table-wrap,.table-scroll,.statement-table-scroll,.company-table-wrap').forEach(scroller => {
+      if (scroller.dataset.qnTouchDrag === 'ready' || !scroller.querySelector('.financial-table,#operatingTable,#bankTable')) return;
+      scroller.dataset.qnTouchDrag = 'ready';
+      let startX = 0;
+      let startY = 0;
+      let startScrollLeft = 0;
+      let dragging = false;
+      let suppressClickUntil = 0;
+
+      scroller.addEventListener('touchstart', event => {
+        if (event.touches.length !== 1) return;
+        const touch = event.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        startScrollLeft = scroller.scrollLeft;
+        dragging = false;
+      }, { passive: true });
+
+      scroller.addEventListener('touchmove', event => {
+        if (event.touches.length !== 1) return;
+        const touch = event.touches[0];
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
+        if (!dragging) {
+          dragging = Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15;
+        }
+        if (!dragging) return;
+        event.preventDefault();
+        scroller.scrollLeft = startScrollLeft - deltaX;
+      }, { passive: false });
+
+      scroller.addEventListener('touchend', () => {
+        if (dragging) suppressClickUntil = performance.now() + 300;
+        dragging = false;
+      }, { passive: true });
+
+      scroller.addEventListener('click', event => {
+        if (performance.now() >= suppressClickUntil) return;
+        event.preventDefault();
+        event.stopPropagation();
+      }, true);
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', install, { once: true });
+  } else {
+    install();
+  }
+})();
