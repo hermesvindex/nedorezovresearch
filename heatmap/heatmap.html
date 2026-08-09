@@ -2225,8 +2225,9 @@ const STOCK_COLUMNS = [
   { key: 'dividend_yield', label: 'Дивдоход, %', type: 'number' },
   { key: 'standard', label: 'Стандарт', type: 'text' },
   { key: 'report_date', label: 'Дата отчета', type: 'date' },
+  { key: 'open', label: 'Открыть', type: 'open', sortable: false },
 ];
-const STOCK_METRICS = STOCK_COLUMNS.filter(column => !['logo', 'issuer', 'sector', 'standard', 'report_date'].includes(column.key));
+const STOCK_METRICS = STOCK_COLUMNS.filter(column => !['logo', 'issuer', 'sector', 'standard', 'report_date', 'open'].includes(column.key));
 const stockState = { year: '2025', query: '', sector: '', standard: '', sortKey: 'marketcap', sortDir: 'desc', page: 1, pageSize: 80, filters: [] };
 const stockBaseFilters = { search: true, year: true, sector: true, standard: true };
 const STOCK_BASE_LABELS = { search: 'Поиск', year: 'Период', sector: 'Сектор', standard: 'Отчетность' };
@@ -2335,6 +2336,10 @@ function stockCell(ticker, column) {
   if (column.key === 'standard') {
     const href = stockYearData(ticker)?.statements_url;
     return href ? `<a class="stock-class-chip" href="${esc(href)}">${value === 'IFRS' ? 'МСФО' : value}</a>` : '<span class="stock-missing">Нет данных</span>';
+  }
+  if (column.key === 'open') {
+    const href = stockYearData(ticker)?.statements_url;
+    return href ? `<a class="stock-class-chip" href="${esc(href)}">Открыть</a>` : '<span class="stock-missing">Нет данных</span>';
   }
   if (resolution.status === 'not_applicable') return `<span class="stock-na" title="${esc(resolution.label)}">н/п</span>`;
   const display = column.type === 'money' ? stockMoney(value) : stockNumber(value, column.tone);
