@@ -317,7 +317,8 @@ const state = {
 
     function renderSummary(asset) {
       const hasYieldSeries = (asset.history || []).some(row => Number(row.yield || 0) > 0);
-      const hideSingleIndexMode = asset.assetType === "index" && !hasYieldSeries;
+      const marketOnlyMode = ["currency", "index", "commodity", "rate"].includes(asset.assetType);
+      const hideSingleIndexMode = marketOnlyMode || (asset.assetType === "index" && !hasYieldSeries);
       if ((!hasYieldSeries && state.mode === "yield") || hideSingleIndexMode) state.mode = "price";
       const yieldButton = document.querySelector('[data-mode="yield"]');
       const modeButtons = document.getElementById("modeButtons");
@@ -556,18 +557,30 @@ const state = {
       const wrap = document.getElementById("detailCta");
       const detailPath = asset.detailPageUrl || "";
       const detailRaw = String(detailPath).trim();
-      const detailPathNormalized = detailRaw
-        .replace(/^(\.\.\/)+/, "")
-        .replace(/^(\.\/)+/, "")
-        .replace(/^\/+/, "");
       let url = "";
-      if (detailPathNormalized) {
-        const isAbsolute = /^https?:\/\//i.test(detailPathNormalized);
-        const absolutePath = isAbsolute
-          ? detailPathNormalized
-          : `https://nedorezov-research.ru/${detailPathNormalized}`;
+      if (detailRaw) {
         try {
-          url = new URL(absolutePath).href;
+          const normalizedPath = detailRaw
+            .replace(/^(\.\.\/)+/, "")
+            .replace(/^(\.\/)+/, "");
+          const detailUrl = new URL(normalizedPath, "https://nedorezov-research.ru/");
+          const isStatementRoute = detailUrl.pathname.endsWith("/statements/company.html")
+            || detailUrl.pathname.endsWith("/company.html")
+            || detailUrl.pathname === "/reports"
+            || detailUrl.pathname === "/reports/";
+          if (isStatementRoute) {
+            const reportUrl = new URL("https://nedorezov-research.ru/reports");
+            detailUrl.searchParams.forEach((value, key) => {
+              reportUrl.searchParams.set(key, value);
+            });
+            if (!reportUrl.searchParams.has("from")) {
+              reportUrl.searchParams.set("from", "asset");
+            }
+            reportUrl.hash = detailUrl.hash || "#instruments";
+            url = reportUrl.href;
+          } else {
+            url = detailUrl.href;
+          }
         } catch {
           url = "";
         }
@@ -883,19 +896,8 @@ const state = {
 
     function render() {
       const asset = ASSETS[state.assetIndex];
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
-      document.body.classList.toggle("index-card", asset.assetType === "index");
+      const marketOnlyCard = ["currency", "index", "commodity", "rate"].includes(asset.assetType);
+      document.body.classList.toggle("index-card", marketOnlyCard);
       renderLogo(asset);
       renderSummary(asset);
       renderDetailCta(asset);
