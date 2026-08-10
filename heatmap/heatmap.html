@@ -846,7 +846,7 @@
   <link rel="stylesheet" href="../elements/assets/header-system.css">
   <link rel="stylesheet" href="../assets/asset-drawer.css">
   <link rel="stylesheet" href="heatmap-design.css?v=20260722-filter-pill-controls">
-  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260809-runtime-68-tilda">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260809-runtime-67-tilda">
   <script>try{const q=JSON.parse(sessionStorage.getItem('quantis-transition-v2')||'null');if(q&&Date.now()-q.time<5000)document.documentElement.classList.add('qn-transition-pending')}catch(e){}</script>
   <script src="../elements/assets/header-system.js" defer></script>
   <script src="../assets/asset-drawer.js" defer></script>
@@ -2197,7 +2197,6 @@ const STOCK_COLUMNS = [
   { key: 'logo', label: 'Лого', type: 'logo', sortable: false },
   { key: 'issuer', label: 'Название', type: 'text' },
   { key: 'sector', label: 'Сектор', type: 'text' },
-  { key: 'open', label: 'Открыть', type: 'open', sortable: false },
   { key: 'close', label: 'Цена, ₽', type: 'number' },
   { key: 'returnD', label: 'День, %', type: 'number', tone: true },
   { key: 'marketcap', label: 'Капитализация', type: 'money' },
@@ -2226,6 +2225,7 @@ const STOCK_COLUMNS = [
   { key: 'dividend_yield', label: 'Дивдоход, %', type: 'number' },
   { key: 'standard', label: 'Стандарт', type: 'text' },
   { key: 'report_date', label: 'Дата отчета', type: 'date' },
+  { key: 'open', label: 'Открыть', type: 'open', sortable: false },
 ];
 const STOCK_METRICS = STOCK_COLUMNS.filter(column => !['logo', 'issuer', 'sector', 'standard', 'report_date', 'open'].includes(column.key));
 const stockState = { year: '2025', query: '', sector: '', standard: '', sortKey: 'marketcap', sortDir: 'desc', page: 1, pageSize: 80, filters: [] };
@@ -2339,7 +2339,7 @@ function stockCell(ticker, column) {
   }
   if (column.key === 'open') {
     const href = stockYearData(ticker)?.statements_url;
-    return href ? `<a class="statement-link" href="${esc(href)}">Открыть</a>` : '<span class="stock-missing">Нет данных</span>';
+    return href ? `<a class="stock-class-chip" href="${esc(href)}">Открыть</a>` : '<span class="stock-missing">Нет данных</span>';
   }
   if (resolution.status === 'not_applicable') return `<span class="stock-na" title="${esc(resolution.label)}">н/п</span>`;
   const display = column.type === 'money' ? stockMoney(value) : stockNumber(value, column.tone);

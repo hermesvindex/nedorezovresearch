@@ -8,47 +8,26 @@
     sectors: new Set(),
     standards: new Set(),
     period: payload.default_period || '2025',
-    groups: {
-      operating: { page: 1, pageSize: 40, sortKey: 'issuer', sortDir: 'asc' },
-      bank: { page: 1, pageSize: 20, sortKey: 'issuer', sortDir: 'asc' },
-    },
+    page: 1,
+    pageSize: 80,
+    sortKey: 'issuer',
+    sortDir: 'asc',
   };
   const standardOrder = ['IFRS', 'RAS', 'UNKNOWN'];
+  const columns = ['revenue', 'ebitda', 'profit', 'assets', 'equity', 'debt', 'fcf', 'pe', 'pbv', 'ps', 'ev_ebitda', 'roe', 'roa'];
+  const sortKeys = new Set(['issuer', 'sector', 'standard', 'period', ...columns]);
+  const moneyRoles = new Set(['revenue', 'ebitda', 'profit', 'assets', 'equity', 'debt', 'fcf']);
+  const percentRoles = new Set(['roe', 'roa']);
+  const bankRoleMap = {
+    revenue: 'net_interest_income',
+    ebitda: 'operating_income',
+    assets: 'bank_assets',
+    equity: 'bank_equity',
+    debt: 'deposits',
+  };
   const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
   const ratio = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
-  const tableConfig = {
-    operating: {
-      table: 'operatingTable',
-      meta: 'operatingMeta',
-      count: 'operatingCount',
-      pageSize: 'operatingPageSize',
-      pageLabel: 'operatingPageLabel',
-      prev: 'operatingPrev',
-      next: 'operatingNext',
-      columns: ['revenue', 'ebitda', 'profit', 'assets', 'equity', 'debt', 'fcf', 'pe', 'pbv', 'ps', 'ev_ebitda', 'roe', 'roa'],
-      sortKeys: ['issuer', 'sector', 'standard', 'period', 'revenue', 'ebitda', 'profit', 'assets', 'equity', 'debt', 'fcf', 'pe', 'pbv', 'ps', 'ev_ebitda', 'roe', 'roa'],
-      baseColumns: 4,
-      colspan: 18,
-    },
-    bank: {
-      table: 'bankTable',
-      meta: 'bankMeta',
-      count: 'bankCount',
-      pageSize: 'bankPageSize',
-      pageLabel: 'bankPageLabel',
-      prev: 'bankPrev',
-      next: 'bankNext',
-      columns: ['net_interest_income', 'operating_income', 'nim', 'cir', 'cost_of_risk', 'npl', 'capital_adequacy', 'bank_assets', 'bank_equity', 'deposits', 'roe', 'roa', 'pe', 'pbv'],
-      sortKeys: ['issuer', 'standard', 'period', 'net_interest_income', 'operating_income', 'nim', 'cir', 'cost_of_risk', 'npl', 'capital_adequacy', 'bank_assets', 'bank_equity', 'deposits', 'roe', 'roa', 'pe', 'pbv'],
-      baseColumns: 3,
-      colspan: 18,
-    },
-  };
-  const moneyRoles = new Set([
-    'revenue', 'ebitda', 'profit', 'assets', 'equity', 'debt', 'fcf',
-    'net_interest_income', 'operating_income', 'bank_assets', 'bank_equity', 'deposits',
-  ]);
-  const percentRoles = new Set(['roe', 'roa', 'nim', 'cir', 'cost_of_risk', 'npl', 'capital_adequacy']);
+  const table = document.getElementById('statementsTable');
 
   function esc(value) {
     return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -93,11 +72,19 @@
     return { standard: '', values: null };
   }
 
-  function filtered(group) {
+  function metricRole(item, role) {
+    return item.reporting_model === 'bank' ? (bankRoleMap[role] || role) : role;
+  }
+
+  function metricValue(item, values, role) {
+    const value = Number(values?.[metricRole(item, role)]);
+    return Number.isFinite(value) ? value : null;
+  }
+
+  function filtered() {
     const query = normalizeSearch(state.query);
     const tokens = query.split(' ').filter(Boolean);
     return companies.filter(item => {
-      if (item.reporting_model !== group) return false;
       const haystack = normalizeSearch([
         item.ticker,
         item.isin,
@@ -125,16 +112,14 @@
     if (key === 'sector') return item.sector || 'Сектор не указан';
     if (key === 'standard') return snapshot.standard ? standardLabel(snapshot.standard) : null;
     if (key === 'period') return snapshot.values ? periodRank(state.period) : null;
-    const value = Number(snapshot.values?.[key]);
-    return Number.isFinite(value) ? value : null;
+    return metricValue(item, snapshot.values, key);
   }
 
-  function sorted(group, rows) {
-    const groupState = state.groups[group];
-    const direction = groupState.sortDir === 'desc' ? -1 : 1;
+  function sorted(rows) {
+    const direction = state.sortDir === 'desc' ? -1 : 1;
     return rows.slice().sort((a, b) => {
-      const aValue = sortValue(a, groupState.sortKey);
-      const bValue = sortValue(b, groupState.sortKey);
+      const aValue = sortValue(a, state.sortKey);
+      const bValue = sortValue(b, state.sortKey);
       const aMissing = aValue === null || aValue === undefined || aValue === '';
       const bMissing = bValue === null || bValue === undefined || bValue === '';
       if (aMissing && bMissing) return String(a.company_name || a.ticker).localeCompare(String(b.company_name || b.ticker), 'ru');
@@ -149,39 +134,34 @@
     });
   }
 
-  function updateSortHeaders(group) {
-    const table = document.getElementById(tableConfig[group].table);
-    const groupState = state.groups[group];
+  function updateSortHeaders() {
     table.querySelectorAll('th[data-sort]').forEach(th => {
-      const active = th.dataset.sort === groupState.sortKey;
-      th.setAttribute('aria-sort', active ? (groupState.sortDir === 'asc' ? 'ascending' : 'descending') : 'none');
+      const active = th.dataset.sort === state.sortKey;
+      th.setAttribute('aria-sort', active ? (state.sortDir === 'asc' ? 'ascending' : 'descending') : 'none');
       const button = th.querySelector('.statements-sort-button');
-      if (button) button.dataset.sortDir = active ? groupState.sortDir : 'none';
+      if (button) button.dataset.sortDir = active ? state.sortDir : 'none';
     });
   }
 
-  function setupSorting(group) {
-    const config = tableConfig[group];
-    const table = document.getElementById(config.table);
+  function setupSorting() {
     table.querySelectorAll('th[data-sort]').forEach(th => {
       const key = th.dataset.sort;
-      if (!config.sortKeys.includes(key)) return;
+      if (!sortKeys.has(key)) return;
       const label = th.innerHTML;
       const accessibleLabel = th.textContent.trim().replace(/\s+/g, ' ');
       th.innerHTML = `<button class="statements-sort-button" type="button" data-sort-key="${esc(key)}" aria-label="Сортировать: ${esc(accessibleLabel)}"><span class="statements-sort-label">${label}</span><img class="statements-sort-icon" src="../assets/icons/chevron-down.png" alt=""></button>`;
       th.querySelector('button').addEventListener('click', () => {
-        const groupState = state.groups[group];
-        if (groupState.sortKey === key) {
-          groupState.sortDir = groupState.sortDir === 'asc' ? 'desc' : 'asc';
+        if (state.sortKey === key) {
+          state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
         } else {
-          groupState.sortKey = key;
-          groupState.sortDir = ['issuer', 'sector', 'standard', 'period'].includes(key) ? 'asc' : 'desc';
+          state.sortKey = key;
+          state.sortDir = ['issuer', 'sector', 'standard', 'period'].includes(key) ? 'asc' : 'desc';
         }
-        groupState.page = 1;
-        renderGroup(group);
+        state.page = 1;
+        render();
       });
     });
-    updateSortHeaders(group);
+    updateSortHeaders();
   }
 
   function logo(item) {
@@ -196,152 +176,93 @@
     </div>`;
   }
 
-  function metricCell(role, values) {
-    const raw = values?.[role];
-    const value = Number(raw);
-    if (!Number.isFinite(value)) return '<td class="qn-number qn-missing">—</td>';
-    const formatted = moneyRoles.has(role)
-      ? number.format(value)
-      : ratio.format(value);
+  function metricCell(item, role, values) {
+    const value = metricValue(item, values, role);
+    if (value === null) return '<td class="qn-number qn-missing">—</td>';
+    const formatted = moneyRoles.has(role) ? number.format(value) : ratio.format(value);
     const suffix = percentRoles.has(role) ? '%' : '';
     const tone = value < 0 && ['profit', 'fcf', 'roe', 'roa'].includes(role) ? ' qn-negative' : '';
     return `<td class="qn-number${tone}">${esc(formatted)}${suffix}</td>`;
   }
 
-  function rowHtml(item, group) {
+  function rowHtml(item) {
     const snapshot = selectedSnapshot(item);
-    const values = snapshot.values;
     const action = `<td class="statement-action"><a class="statement-link" href="${esc(item.page)}">Открыть</a></td>`;
-    const leading = group === 'bank'
-      ? `<td>${companyCell(item)}</td><td>${snapshot.standard ? `<span class="coverage-tag">${esc(standardLabel(snapshot.standard))}</span>` : '—'}</td><td>${values ? esc(periodLabel(state.period)) : '—'}</td>`
-      : `<td>${companyCell(item)}</td><td>${esc(item.sector || 'Сектор не указан')}</td>${action}<td>${snapshot.standard ? `<span class="coverage-tag">${esc(standardLabel(snapshot.standard))}</span>` : '—'}</td><td>${values ? esc(periodLabel(state.period)) : '—'}</td>`;
-    return `<tr>${leading}${tableConfig[group].columns.map(role => metricCell(role, values)).join('')}${group === 'bank' ? action : ''}</tr>`;
-  }
-
-  function renderGroup(group) {
-    const config = tableConfig[group];
-    const groupState = state.groups[group];
-    const rows = sorted(group, filtered(group));
-    const pages = Math.max(1, Math.ceil(rows.length / groupState.pageSize));
-    groupState.page = Math.min(groupState.page, pages);
-    const start = (groupState.page - 1) * groupState.pageSize;
-    const visible = rows.slice(start, start + groupState.pageSize);
-    const body = document.querySelector(`#${config.table} tbody`);
-    body.innerHTML = visible.length
-      ? visible.map(item => rowHtml(item, group)).join('')
-      : `<tr><td colspan="${config.colspan}"><div class="empty-state">По заданным условиям эмитенты не найдены.</div></td></tr>`;
-    document.getElementById(config.meta).innerHTML = `Показано <strong>${visible.length}</strong> из <strong>${rows.length}</strong> · ${esc(periodLabel(state.period))}`;
-    document.getElementById(config.count).textContent = `${rows.length} ${issuerWord(rows.length)}`;
-    document.getElementById(config.pageLabel).textContent = `Страница ${groupState.page} из ${pages}`;
-    document.getElementById(config.prev).disabled = groupState.page <= 1;
-    document.getElementById(config.next).disabled = groupState.page >= pages;
-    updateSortHeaders(group);
+    const leading = `<td>${companyCell(item)}</td><td>${esc(item.sector || 'Сектор не указан')}</td>${action}<td>${snapshot.standard ? `<span class="coverage-tag">${esc(standardLabel(snapshot.standard))}</span>` : '—'}</td><td>${snapshot.values ? esc(periodLabel(state.period)) : '—'}</td>`;
+    return `<tr>${leading}${columns.map(role => metricCell(item, role, snapshot.values)).join('')}</tr>`;
   }
 
   function render() {
-    renderGroup('operating');
-    renderGroup('bank');
+    const rows = sorted(filtered());
+    const pages = Math.max(1, Math.ceil(rows.length / state.pageSize));
+    state.page = Math.min(state.page, pages);
+    const start = (state.page - 1) * state.pageSize;
+    const visible = rows.slice(start, start + state.pageSize);
+    table.querySelector('tbody').innerHTML = visible.length
+      ? visible.map(rowHtml).join('')
+      : '<tr><td colspan="18"><div class="empty-state">По заданным условиям эмитенты не найдены.</div></td></tr>';
+    document.getElementById('statementsMeta').innerHTML = `Показано <strong>${visible.length}</strong> из <strong>${rows.length}</strong> · ${esc(periodLabel(state.period))}`;
+    document.getElementById('statementsSummary').textContent = `${rows.length} ${issuerWord(rows.length)}`;
+    document.getElementById('statementsPageLabel').textContent = `Страница ${state.page} из ${pages}`;
+    document.getElementById('statementsPrev').disabled = state.page <= 1;
+    document.getElementById('statementsNext').disabled = state.page >= pages;
+    updateSortHeaders();
   }
 
-  function resetPages() {
-    state.groups.operating.page = 1;
-    state.groups.bank.page = 1;
+  function resetPageAndRender() {
+    state.page = 1;
+    render();
   }
 
   function bindChecks(selector, target) {
     document.querySelectorAll(selector).forEach(input => input.addEventListener('change', () => {
       input.checked ? target.add(input.value) : target.delete(input.value);
-      resetPages();
-      render();
+      resetPageAndRender();
     }));
   }
 
   document.getElementById('companySearch').addEventListener('input', event => {
     state.query = event.target.value;
-    resetPages();
-    render();
+    resetPageAndRender();
   });
   document.getElementById('reportingPeriod').addEventListener('change', event => {
     state.period = event.target.value;
-    resetPages();
-    render();
+    resetPageAndRender();
   });
   document.querySelector('[data-qn-reset]').addEventListener('click', () => {
     state.query = '';
     state.sectors.clear();
     state.standards.clear();
     state.period = payload.default_period || '2025';
-    resetPages();
+    state.page = 1;
     document.getElementById('companySearch').value = '';
     document.getElementById('reportingPeriod').value = state.period;
     document.querySelectorAll('[data-sector-filter],[data-standard-filter]').forEach(input => { input.checked = false; });
     window.setTimeout(render, 0);
   });
-  Object.entries(tableConfig).forEach(([group, config]) => {
-    document.getElementById(config.pageSize).addEventListener('change', event => {
-      state.groups[group].pageSize = Number(event.target.value) || 40;
-      state.groups[group].page = 1;
-      renderGroup(group);
-    });
-    document.getElementById(config.prev).addEventListener('click', () => {
-      state.groups[group].page = Math.max(1, state.groups[group].page - 1);
-      renderGroup(group);
-    });
-    document.getElementById(config.next).addEventListener('click', () => {
-      state.groups[group].page += 1;
-      renderGroup(group);
-    });
+  document.getElementById('statementsPageSize').addEventListener('change', event => {
+    state.pageSize = Number(event.target.value) || 80;
+    resetPageAndRender();
+  });
+  document.getElementById('statementsPrev').addEventListener('click', () => {
+    state.page = Math.max(1, state.page - 1);
+    render();
+  });
+  document.getElementById('statementsNext').addEventListener('click', () => {
+    state.page += 1;
+    render();
   });
   bindChecks('[data-sector-filter]', state.sectors);
   bindChecks('[data-standard-filter]', state.standards);
-  setupSorting('operating');
-  setupSorting('bank');
+  setupSorting();
   render();
 })();
 
-/* statements-mobile-scroll-controls-v69 */
-(() => {
-  const installControls = () => {
-    if (!window.matchMedia('(max-width: 680px)').matches) return;
-    document.querySelectorAll('.qn-table-wrap').forEach(scroller => {
-      if (!scroller.querySelector('.financial-table') || scroller.previousElementSibling?.classList.contains('statements-mobile-scroll-controls')) return;
-      const controls = document.createElement('div');
-      controls.className = 'statements-mobile-scroll-controls';
-      controls.innerHTML = '<span class="statements-mobile-scroll-label">Столбцы таблицы</span><span class="statements-mobile-scroll-buttons"><button class="statements-mobile-scroll-button" type="button" data-direction="-1" aria-label="Прокрутить таблицу влево">← Влево</button><button class="statements-mobile-scroll-button" type="button" data-direction="1" aria-label="Прокрутить таблицу вправо">Вправо →</button></span>';
-      scroller.before(controls);
-      const previous = controls.querySelector('[data-direction="-1"]');
-      const next = controls.querySelector('[data-direction="1"]');
-      const update = () => {
-        const maximum = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-        previous.disabled = scroller.scrollLeft <= 2;
-        next.disabled = scroller.scrollLeft >= maximum - 2;
-      };
-      controls.addEventListener('click', event => {
-        const button = event.target.closest('[data-direction]');
-        if (!button) return;
-        const direction = Number(button.dataset.direction);
-        const step = Math.max(280, Math.round(scroller.clientWidth * 0.82));
-        const maximum = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-        scroller.scrollLeft = Math.max(0, Math.min(maximum, scroller.scrollLeft + direction * step));
-        update();
-      });
-      scroller.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', update, { passive: true });
-      update();
-    });
-  };
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', installControls, { once: true });
-  } else {
-    installControls();
-  }
-})();
-
-/* statements-touch-drag-v68 */
+/* statements-touch-drag-v68 · unified-table-v70 */
 (() => {
   const install = () => {
     document.querySelectorAll('.qn-table-wrap,.table-scroll,.statement-table-scroll,.company-table-wrap').forEach(scroller => {
-      if (scroller.dataset.qnTouchDrag === 'ready' || !scroller.querySelector('.financial-table,#operatingTable,#bankTable')) return;
+      if (scroller.dataset.qnTouchDrag === 'ready' || !scroller.querySelector('.financial-table,#statementsTable')) return;
       scroller.dataset.qnTouchDrag = 'ready';
       let startX = 0;
       let startY = 0;
@@ -363,9 +284,7 @@
         const touch = event.touches[0];
         const deltaX = touch.clientX - startX;
         const deltaY = touch.clientY - startY;
-        if (!dragging) {
-          dragging = Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15;
-        }
+        if (!dragging) dragging = Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15;
         if (!dragging) return;
         event.preventDefault();
         scroller.scrollLeft = startScrollLeft - deltaX;
@@ -384,9 +303,6 @@
     });
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', install, { once: true });
-  } else {
-    install();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, { once: true });
+  else install();
 })();
