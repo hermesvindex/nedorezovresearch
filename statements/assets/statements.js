@@ -14,13 +14,13 @@
     sortDir: 'asc',
   };
   const standardOrder = ['IFRS', 'RAS', 'UNKNOWN'];
-  const columns = ['revenue', 'ebitda', 'profit', 'assets', 'equity', 'debt', 'fcf', 'pe', 'pbv', 'ps', 'ev_ebitda', 'roe', 'roa'];
+  const columns = ['revenue', 'ebitda', 'profit', 'profitability', 'assets', 'equity', 'debt', 'fcf', 'pe', 'pbv', 'ps', 'ev_ebitda', 'roe', 'roa'];
   const sortKeys = new Set(['issuer', 'sector', 'standard', 'period', ...columns]);
   const moneyRoles = new Set(['revenue', 'ebitda', 'profit', 'assets', 'equity', 'debt', 'fcf']);
-  const percentRoles = new Set(['roe', 'roa']);
+  const percentRoles = new Set(['profitability', 'roe', 'roa']);
   const bankRoleMap = {
-    revenue: 'net_interest_income',
-    ebitda: 'operating_income',
+    revenue: 'operating_income',
+    ebitda: 'bank_not_applicable',
     assets: 'bank_assets',
     equity: 'bank_equity',
     debt: 'deposits',
@@ -77,8 +77,22 @@
   }
 
   function metricValue(item, values, role) {
+    if (role === 'profitability') {
+      const profit = Number(values?.profit);
+      const denominator = Number(values?.[item.reporting_model === 'bank' ? 'operating_income' : 'revenue']);
+      if (!Number.isFinite(profit) || !Number.isFinite(denominator) || denominator === 0) return null;
+      const profitability = profit / denominator * 100;
+      return profitability <= 100 && profitability >= -500 ? profitability : null;
+    }
     const value = Number(values?.[metricRole(item, role)]);
-    return Number.isFinite(value) ? value : null;
+    if (!Number.isFinite(value)) return null;
+    if (role === 'profit') {
+      const denominator = Number(values?.[item.reporting_model === 'bank' ? 'operating_income' : 'revenue']);
+      if (value > 0 && Number.isFinite(denominator) && denominator > 0 && value > denominator) return null;
+    }
+    if (['pe', 'pbv', 'ps', 'ev_ebitda'].includes(role) && Math.abs(value) > 200) return null;
+    if (['roe', 'roa'].includes(role) && Math.abs(value) > 500) return null;
+    return value;
   }
 
   function filtered() {
@@ -200,7 +214,7 @@
     const visible = rows.slice(start, start + state.pageSize);
     table.querySelector('tbody').innerHTML = visible.length
       ? visible.map(rowHtml).join('')
-      : '<tr><td colspan="18"><div class="empty-state">По заданным условиям эмитенты не найдены.</div></td></tr>';
+      : '<tr><td colspan="19"><div class="empty-state">По заданным условиям эмитенты не найдены.</div></td></tr>';
     document.getElementById('statementsMeta').innerHTML = `Показано <strong>${visible.length}</strong> из <strong>${rows.length}</strong> · ${esc(periodLabel(state.period))}`;
     document.getElementById('statementsSummary').textContent = `${rows.length} ${issuerWord(rows.length)}`;
     document.getElementById('statementsPageLabel').textContent = `Страница ${state.page} из ${pages}`;

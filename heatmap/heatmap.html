@@ -988,7 +988,7 @@
     <aside class="stock-methodology" aria-labelledby="stockMethodologyTitle">
       <div class="stock-methodology__title" id="stockMethodologyTitle">Отраслевые эквиваленты показателей</div>
       <ol>
-        <li><sup>1</sup><span><b>Выручка.</b> Для банков показан чистый процентный доход; для страховщиков — страховая выручка, если она раскрыта источником. У девелоперов выручка признаётся по передаче объектов и не равна денежным продажам периода.</span></li>
+        <li><sup>1</sup><span><b>Выручка и банковский операционный доход.</b> Для банков показан совокупный операционный доход, включающий чистый процентный, комиссионный и прочие операционные доходы; для страховщиков — страховая выручка, если она раскрыта источником. У девелоперов выручка признаётся по передаче объектов и не равна денежным продажам периода.</span></li>
         <li><sup>2</sup><span><b>EBITDA и маржа.</b> Для банков показаны операционная прибыль до резервов и чистая процентная маржа NIM. Для страховщиков вместо EBITDA используется операционная прибыль. У авиакомпаний показатель зависит от учёта аренды по МСФО 16.</span></li>
         <li><sup>3</sup><span><b>Себестоимость.</b> Для банков показаны операционные расходы. Процентные расходы уже учтены при расчёте чистого процентного дохода.</span></li>
         <li><sup>4</sup><span><b>Долг.</b> Для банков показаны депозиты как основной источник фондирования. Это обязательства перед клиентами, а не корпоративный долг промышленной компании.</span></li>
@@ -996,8 +996,14 @@
         <li><sup>6</sup><span><b>Оборачиваемость активов.</b> Для банков показан Cost-to-Income, CIR. У промышленной компании большее значение оборачиваемости обычно означает более эффективное использование активов; у банка меньшее значение CIR означает более высокую эффективность.</span></li>
         <li><sup>7</sup><span><b>FCF.</b> Для банков и страховщиков стандартный свободный денежный поток неприменим. Их денежная генерация оценивается через прибыль, капитал, нормативы достаточности и дивидендный потенциал.</span></li>
         <li><sup>8</sup><span><b>EV/EBITDA.</b> Для банков и страховщиков показатель неприменим; основными сравнительными мультипликаторами являются P/E и P/BV.</span></li>
+        <li><sup>9</sup><span><b>Рентабельность.</b> Для нефинансовых компаний рассчитывается как чистая прибыль / выручка. Для банков — как чистая прибыль / совокупный операционный доход.</span></li>
+        <li><sup>10</sup><span><b>P/E.</b> Капитализация / чистая прибыль. Показывает число годовых прибылей, заложенных в рыночной цене.</span></li>
+        <li><sup>11</sup><span><b>P/BV.</b> Капитализация / балансовый капитал. Показатель особенно значим для банков и других финансовых организаций.</span></li>
+        <li><sup>12</sup><span><b>P/S.</b> Капитализация / выручка. Для банков показатель экономически неприменим.</span></li>
+        <li><sup>13</sup><span><b>ROE.</b> Чистая прибыль / средний собственный капитал.</span></li>
+        <li><sup>14</sup><span><b>ROA.</b> Чистая прибыль / средние активы.</span></li>
       </ol>
-      <p><b>Обозначения:</b> «—» — показатель отсутствует в выбранной отчётности; «н/п» — показатель экономически неприменим к профилю компании.</p>
+      <p><b>Обозначения:</b> «—» — показатель отсутствует либо не прошёл контроль масштаба и экономической правдоподобности; «н/п» — показатель экономически неприменим к профилю компании.</p>
     </aside>
   </section>
 </div>
@@ -2193,6 +2199,7 @@ document.addEventListener('pointerdown', event => {
   if (panelEl.classList.contains('open') && !panelEl.contains(event.target)) closePanel();
 }, true);
 
+// financial-semantics-v71: sector-aware income and profitability
 const STOCK_COLUMNS = [
   { key: 'logo', label: 'Лого', type: 'logo', sortable: false },
   { key: 'issuer', label: 'Название', type: 'text' },
@@ -2201,24 +2208,24 @@ const STOCK_COLUMNS = [
   { key: 'returnD', label: 'День, %', type: 'number', tone: true },
   { key: 'marketcap', label: 'Капитализация', type: 'money' },
   { key: 'turnover', label: 'Оборот', type: 'money' },
-  { key: 'revenue', label: 'Выручка', note: 1, type: 'money' },
+  { key: 'revenue', label: 'Выручка / опер. доход', note: 1, type: 'money' },
   { key: 'revenueGrowth', label: 'Рост выручки, %', note: 1, type: 'number', tone: true },
   { key: 'ebitda', label: 'EBITDA', note: 2, type: 'money', tone: true },
   { key: 'net_profit', label: 'Чистая прибыль', type: 'money', tone: true },
+  { key: 'profitability', label: 'Рентабельность, %', note: 9, type: 'number', tone: true },
   { key: 'profitGrowth', label: 'Рост прибыли, %', type: 'number', tone: true },
   { key: 'cost_of_sales', label: 'Себестоимость', note: 3, type: 'money' },
   { key: 'assets', label: 'Активы', type: 'money' },
   { key: 'equity', label: 'Капитал', type: 'money' },
   { key: 'debt', label: 'Долг', note: 4, type: 'money' },
   { key: 'leverage', label: 'Долг/EBITDA', note: 5, type: 'number' },
-  { key: 'pe', label: 'P/E', type: 'number' },
-  { key: 'pbv', label: 'P/BV', type: 'number' },
-  { key: 'ps', label: 'P/S', type: 'number' },
+  { key: 'pe', label: 'P/E', note: 10, type: 'number' },
+  { key: 'pbv', label: 'P/BV', note: 11, type: 'number' },
+  { key: 'ps', label: 'P/S', note: 12, type: 'number' },
   { key: 'ev_ebitda', label: 'EV/EBITDA', note: 8, type: 'number' },
-  { key: 'roe', label: 'ROE, %', type: 'number', tone: true },
-  { key: 'roa', label: 'ROA, %', type: 'number', tone: true },
+  { key: 'roe', label: 'ROE, %', note: 13, type: 'number', tone: true },
+  { key: 'roa', label: 'ROA, %', note: 14, type: 'number', tone: true },
   { key: 'ebitda_margin', label: 'Маржа EBITDA, %', note: 2, type: 'number', tone: true },
-  { key: 'net_margin', label: 'Чистая маржа, %', type: 'number', tone: true },
   { key: 'net_debt', label: 'Чистый долг', type: 'money', tone: true },
   { key: 'asset_turnover', label: 'Оборачиваемость активов', note: 6, type: 'number' },
   { key: 'fcf', label: 'FCF', note: 7, type: 'money', tone: true },
@@ -2261,7 +2268,7 @@ function stockMetricResolution(ticker, key) {
   const profile = stockProfile(ticker);
   if (profile === 'bank') {
     const bankMap = {
-      revenue: ['net_interest_income', 'Чистый процентный доход'],
+      revenue: ['operating_income', 'Совокупный операционный доход банка'],
       ebitda: ['pre_provision_profit', 'Операционная прибыль до резервов'],
       cost_of_sales: ['operating_expenses', 'Операционные расходы'],
       assets: ['bank_assets', 'Активы банка'],
@@ -2270,6 +2277,7 @@ function stockMetricResolution(ticker, key) {
       leverage: ['capital_adequacy', 'Достаточность общего капитала'],
       pbv: ['bank_pb', 'P/B'],
       ebitda_margin: ['nim', 'Чистая процентная маржа, NIM'],
+      profitability: ['operating_income', 'Чистая прибыль / совокупный операционный доход'],
       asset_turnover: ['cir', 'Cost-to-Income, CIR'],
     };
     const notApplicable = new Set(['ps', 'ev_ebitda', 'net_margin', 'net_debt', 'fcf']);
@@ -2308,11 +2316,28 @@ function stockValue(ticker, key) {
     marketcap: ticker.marketcap, turnover: ticker.value,
     revenueGrowth: revenueKey ? stockGrowth(ticker, revenueKey) : null,
     profitGrowth: stockGrowth(ticker, 'net_profit'),
+    profitability: (() => {
+      const profile = stockProfile(ticker);
+      const profit = Number(fundamentals?.net_profit);
+      const income = Number(fundamentals?.[profile === 'bank' ? 'operating_income' : 'revenue']);
+      return Number.isFinite(profit) && Number.isFinite(income) && income !== 0 ? profit / income * 100 : null;
+    })(),
     standard: fundamentals?.standard || '—', report_date: fundamentals?.report_date || '—',
   };
-  if (Object.prototype.hasOwnProperty.call(direct, key)) return direct[key];
   const resolution = stockMetricResolution(ticker, key);
-  return resolution.key ? fundamentals?.[resolution.key] : null;
+  const value = Object.prototype.hasOwnProperty.call(direct, key)
+    ? direct[key]
+    : resolution.key ? fundamentals?.[resolution.key] : null;
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) return value;
+  const numeric = Number(value);
+  if (key === 'net_profit') {
+    const income = Number(fundamentals?.[stockProfile(ticker) === 'bank' ? 'operating_income' : 'revenue']);
+    if (numeric > 0 && Number.isFinite(income) && income > 0 && numeric > income) return null;
+  }
+  if (key === 'profitability' && (numeric > 100 || numeric < -500)) return null;
+  if (['pe', 'pbv', 'ps', 'ev_ebitda'].includes(key) && Math.abs(numeric) > 200) return null;
+  if (['roe', 'roa'].includes(key) && Math.abs(numeric) > 500) return null;
+  return value;
 }
 function stockMoney(value) {
   if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
