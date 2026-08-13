@@ -1,10 +1,11 @@
 (() => {
   'use strict';
+  // company-profitability-v72: business-model-aware margins and returns
 
   const DATA = window.STATEMENTS_COMPANY || {};
   const rows = Array.isArray(DATA.records) ? DATA.records : [];
   const peers = Array.isArray(DATA.peers) ? DATA.peers : [];
-  const state = { standard: '', periodType: '', metric: '', peerMetric: '' };
+  const state = { standard: '', periodType: '', metric: '', peerMetric: '', profitabilityView: 'margins' };
   const chartBindings = new WeakMap();
   const nf = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
   const compact = new Intl.NumberFormat('ru-RU', { notation: 'compact', maximumFractionDigits: 1 });
@@ -27,10 +28,13 @@
       ebitda:issuerColors[1],
       operating_profit:issuerColors[1],
       profit:issuerColors[2],
+      operating_margin:issuerColors[1],
       ebitda_margin:issuerColors[0],
+      bank_profitability:issuerColors[1],
       nim:issuerColors[0],
       cir:issuerColors[2],
       net_margin:issuerColors[2],
+      roa:issuerColors[0],
       roe:issuerColors[1]
     })[name] || issuerColors[2] || '#547f98';
   }
@@ -128,21 +132,48 @@
     if(t.includes('операционный денежный поток')) return 'ocf';
     if(t.includes('свободный денежный поток')) return 'fcf';
     if(t.includes('capex') && !t.includes('/')) return 'capex';
+    if(t.includes('операционн') && (t.includes('марж') || t.includes('рентаб'))) return 'operating_margin';
     if(t.includes('рентаб') && t.includes('ebitda')) return 'ebitda_margin';
+    if(t.includes('рентабельность банка')) return 'bank_profitability';
     if(t.includes('рентаб') && (t.includes('чист') || t.includes('net margin'))) return 'net_margin';
     if(t.includes('чистая процентная маржа')) return 'nim';
     if(t.includes('расходы/доходы') || t.includes('(cir)')) return 'cir';
+    if(/(^|\W)roa($|\W)/.test(t)) return 'roa';
     if(/(^|\W)roe($|\W)/.test(t)) return 'roe';
     if(t.includes('чистый долг/ebitda')) return 'net_debt_ebitda';
     if(t.includes('ev/ebitda')) return 'ev_ebitda';
     if(/(^|\W)p\/e($|\W)/.test(t)) return 'pe';
     return '';
   }
-  const roleOrder = ['revenue','operating_income','net_interest_income','net_fee_income','ebitda','operating_profit','profit','ocf','fcf','capex','ebitda_margin','nim','cir','net_margin','roe','net_debt_ebitda','ev_ebitda','pe'];
+  const roleOrder = ['revenue','operating_income','net_interest_income','net_fee_income','ebitda','operating_profit','profit','ocf','fcf','capex','operating_margin','ebitda_margin','bank_profitability','nim','cir','net_margin','roa','roe','net_debt_ebitda','ev_ebitda','pe'];
   function metricScore(label) { const fake={metric_label:label}; const idx=roleOrder.indexOf(role(fake)); return idx<0 ? 99 : idx; }
   function dedupe(list) { const map=new Map(); list.forEach(row=>{const previous=map.get(row.period); if(!previous||reportRank(row.report_date)>=reportRank(previous.report_date)) map.set(row.period,row)}); return [...map.values()].sort((a,b)=>rank(a.period)-rank(b.period)); }
   function seriesByRole(name) { const candidates=valid(filtered()).filter(row => role(row)===name); if(!candidates.length) return []; const counts=new Map(); candidates.forEach(r=>counts.set(r.metric_code,(counts.get(r.metric_code)||0)+1)); const code=[...counts].sort((a,b)=>b[1]-a[1])[0][0]; return dedupe(candidates.filter(r=>r.metric_code===code)); }
   function series(code) { return dedupe(valid(filtered().filter(row=>row.metric_code===code))); }
+  function crediblePercent(key,row) {
+    const value=Number(row?.value); if(!Number.isFinite(value))return false;
+    if(['operating_margin','ebitda_margin','bank_profitability','net_margin'].includes(key))return value>=-500&&value<=200;
+    if(key==='nim')return value>=-20&&value<=50;
+    if(key==='cir')return value>=0&&value<=300;
+    if(['roa','roe'].includes(key))return Math.abs(value)<=500;
+    return true;
+  }
+  function derivedPercentSeries(key,numeratorRole,denominatorRole,label) {
+    const numerators=seriesByRole(numeratorRole), denominators=seriesByRole(denominatorRole);
+    return numerators.map(numerator=>{
+      const denominator=denominators.find(row=>String(row.period)===String(numerator.period));
+      const top=Number(numerator.normalized_value), bottom=Number(denominator?.normalized_value);
+      if(!Number.isFinite(top)||!Number.isFinite(bottom)||bottom<=0)return null;
+      const value=top/bottom*100; if(!Number.isFinite(value))return null;
+      return {...numerator,metric_code:`derived_${key}`,metric_label:label,value,raw_value:String(value),raw_unit:'PERCENT',unit_label:'%',derived:true};
+    }).filter(row=>row&&crediblePercent(key,row));
+  }
+  function profitabilitySeries(key) {
+    const reported=seriesByRole(key).filter(row=>crediblePercent(key,row));
+    if(reported.length)return reported;
+    const formula={operating_margin:['operating_profit','revenue','Операционная рентабельность'],ebitda_margin:['ebitda','revenue','Рентабельность EBITDA'],net_margin:['profit','revenue','Чистая рентабельность'],bank_profitability:['profit','operating_income','Рентабельность операционного дохода']}[key];
+    return formula?derivedPercentSeries(key,...formula):[];
+  }
   function cleanUnit(row) { return String(row?.unit_label||'').replace(/\bRUB\b|руб\.?/ig,'').trim(); }
   function display(row) { const v=Number(row?.value); if(!Number.isFinite(v)) return row?.raw_value||'—'; if(isPercent(row)) return `${nf.format(v)}%`; if(isRatio(row)) return `${nf.format(v)}x`; return `${nf.format(v)}${cleanUnit(row)?` ${cleanUnit(row)}`:''}`; }
   function latest(list) { return list.reduce((a,b)=>!a||rank(b.period)>rank(a.period)?b:a,null); }
@@ -283,10 +314,15 @@
     if(!hasRole('ebitda')&&hasRole('operating_profit')) return [['revenue','Выручка'],['operating_profit','Операционная прибыль'],['profit','Чистая прибыль']];
     return [['revenue','Выручка'],['ebitda','EBITDA'],['profit','Чистая прибыль']];
   }
-  function profitabilityDefinitions() {
+  function profitabilityGroups() {
     return isBankingSlice()
-      ? [['nim','Чистая процентная маржа'],['cir','Расходы / доходы'],['roe','ROE']]
-      : [['ebitda_margin','Рентабельность EBITDA'],['net_margin','Чистая рентабельность'],['roe','ROE']];
+      ? {margins:{label:'Доходность и эффективность',defs:[['bank_profitability','Рентабельность доходов'],['nim','Чистая процентная маржа'],['cir','Расходы / доходы']]},returns:{label:'Доходность капитала',defs:[['roa','ROA'],['roe','ROE']]}}
+      : {margins:{label:'Маржинальность',defs:[['operating_margin','Операционная рентабельность'],['ebitda_margin','Рентабельность EBITDA'],['net_margin','Чистая рентабельность']]},returns:{label:'Доходность капитала',defs:[['roa','ROA'],['roe','ROE']]}};
+  }
+  function profitabilityDefinitions() {
+    const groups=profitabilityGroups();
+    if(!groups[state.profitabilityView])state.profitabilityView='margins';
+    return groups[state.profitabilityView].defs;
   }
   function defaultMetricCode() {
     const options=metricOptions();
@@ -299,6 +335,7 @@
   function renderControls() {
     const standards=unique(rows.map(r=>r.standard)); segment('standardButtons',standards,{IFRS:'МСФО',RAS:'РСБУ',UNKNOWN:'Прочие'},state.standard,v=>{state.standard=v; const p=unique(rows.filter(r=>r.standard===v).map(r=>r.period_type)); state.periodType=p.includes('annual')?'annual':p[0]||''; state.metric=defaultMetricCode(); render();});
     const periods=unique(rows.filter(r=>r.standard===state.standard).map(r=>r.period_type)); segment('periodButtons',periods,{annual:'Годовые',quarterly:'Квартальные',unknown:'Периоды'},state.periodType,v=>{state.periodType=v;state.metric=defaultMetricCode();render();});
+    const profitabilitySelect=document.getElementById('profitabilityView'); const groups=profitabilityGroups(); profitabilitySelect.innerHTML=Object.entries(groups).map(([key,group])=>`<option value="${key}" ${key===state.profitabilityView?'selected':''}>${esc(group.label)}</option>`).join(''); profitabilitySelect.onchange=()=>{state.profitabilityView=profitabilitySelect.value;renderMargins();};
     const select=document.getElementById('metricSelect'); select.innerHTML=metricOptions().map(o=>`<option value="${esc(o.code)}" ${o.code===state.metric?'selected':''}>${esc(o.label)}</option>`).join(''); select.onchange=()=>{state.metric=select.value;renderStatement();};
   }
   function renderMetrics() {
@@ -327,12 +364,14 @@
   }
   function renderMargins() {
     const defs=profitabilityDefinitions().map(([key,name])=>[key,name,semanticColor(key)]);
-    const sets=defs.map(([key,name,color])=>{const data=seriesByRole(key).filter(r=>r.period!=='LTM');return {name,color,data:state.periodType==='annual'?data:data.slice(-24)}}).filter(x=>x.data.length);
+    const sets=defs.map(([key,name,color])=>{const data=profitabilitySeries(key).filter(r=>r.period!=='LTM');return {key,name,color,data:state.periodType==='annual'?data:data.slice(-24)}}).filter(x=>x.data.length);
     if(!sets.length){empty(document.getElementById('marginChart'));document.getElementById('marginFacts').innerHTML='';return;}
     const marginPeriods=unique(sets.flatMap(x=>x.data.map(r=>r.period))).sort((a,b)=>rank(a)-rank(b));
     Plotly.react('marginChart',sets.map(x=>({type:'scatter',mode:'lines+markers',name:x.name,x:x.data.map(r=>r.period),y:x.data.map(r=>Number(r.value)),line:{color:x.color,width:3},marker:{size:6},hoverinfo:'none'})),{...baseLayout(chartHeight('marginChart',310)),showlegend:true,margin:{l:50,r:15,t:20,b:42},legend:{orientation:'h',x:0,y:1.2},xaxis:periodAxis(marginPeriods)},config);
     bindChartTooltip('marginChart',point=>({period:periodLabel(point.x),rows:sets.map(set=>{const row=set.data.find(item=>String(item.period)===String(point.x));return {label:set.name,value:row?display(row):'—',color:set.color};})}));
-    document.getElementById('marginFacts').innerHTML=sets.map(x=>{const r=latest(x.data),d=ppChange(x.data);return `<div><span>${esc(x.name)}</span><strong>${esc(display(r))}</strong><small>${d===null?'Изменение н/д':`${d>=0?'+':''}${nf.format(d)} п.п.`}</small></div>`}).join('');
+    document.getElementById('marginFacts').innerHTML=sets.map(x=>{const r=latest(x.data),d=ppChange(x.data);return `<div><span>${esc(x.name)}</span><strong>${esc(display(r))}</strong><small>${r?.derived?'Расчетный показатель':d===null?'Изменение н/д':`${d>=0?'+':''}${nf.format(d)} п.п.`}</small></div>`}).join('');
+    const bank=isBankingSlice(),returns=state.profitabilityView==='returns';
+    document.getElementById('marginMethodology').textContent=returns?'ROA и ROE отражают доходность средних активов и среднего собственного капитала по данным отчетности.':bank?'Рентабельность доходов — чистая прибыль / совокупный операционный доход. NIM и CIR используются по раскрытию банка; для CIR снижение означает рост эффективности.':'Операционная, EBITDA- и чистая рентабельность рассчитываются к выручке; приоритет имеют раскрытые эмитентом значения.';
   }
   const peerLabels={revenue:'Выручка',operating_income:'Чистый операционный доход',net_interest_income:'Чистый процентный доход',net_fee_income:'Чистый комиссионный доход',ebitda:'EBITDA',operating_profit:'Операционная прибыль',profit:'Чистая прибыль',ebitda_margin:'Рентабельность EBITDA',nim:'Чистая процентная маржа',cir:'Расходы / доходы',net_margin:'Чистая рентабельность',roe:'ROE',net_debt_ebitda:'Чистый долг / EBITDA',ev_ebitda:'EV / EBITDA',pe:'P / E'};
   function renderPeers() {
