@@ -307,9 +307,7 @@
       <button type="button" data-kind="fund" aria-selected="false">Фонды</button>
       <button type="button" data-kind="currency" aria-selected="false">Валюты</button>
       <button type="button" data-kind="index" aria-selected="false">Индексы</button>
-      <button type="button" data-kind="commodity" aria-selected="false">Сырье</button>
-      <button type="button" data-kind="rate" aria-selected="false">Ставки</button>
-      <button type="button" data-kind="macro" aria-selected="false">Макроэкономика</button>
+      <button type="button" data-kind="other" aria-selected="false">Прочее</button>
     </div>
     <div class="quantis-search__meta" id="quantisSearchMeta"></div>
     <div class="quantis-search__results" id="quantisSearchResults" role="listbox"></div>`;
@@ -331,11 +329,8 @@
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const normalize = value => String(value || '').toLocaleLowerCase('ru').replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/gi, ' ').trim();
   const expertTop = {
-    macro: [
-      'RU_CPI', 'KEY_RATE',
-      'USD_RUB', 'EUR_RUB', 'CNY_RUB', 'EUR_USD', 'CHF_RUB', 'GBP_RUB',
-      'JPY_RUB', 'CHF_USD', 'CNY_USD', 'GBP_USD', 'JPY_USD',
-      'BRENT_USD',
+    other: [
+      'KEY_RATE', 'RU_CPI', 'BRENT_USD',
     ],
     currency: ['USD_RUB', 'EUR_RUB', 'CNY_RUB', 'EUR_USD', 'CHF_RUB', 'GBP_RUB'],
     index: [
@@ -345,9 +340,9 @@
       'MOEXOG', 'MOEXFN', 'MOEXMM', 'MOEXCN', 'MOEXEU', 'MOEXTL', 'MOEXTN', 'MOEXRE',
     ],
   };
-  const macroKinds = new Set(['macro', 'rate', 'currency', 'commodity']);
+  const otherKinds = new Set(['macro', 'rate', 'commodity']);
   const matchesKind = item => kind === 'all'
-    || (kind === 'macro' ? macroKinds.has(item.kind) : item.kind === kind);
+    || (kind === 'other' ? otherKinds.has(item.kind) : item.kind === kind);
   const excludedIndexTerms = ['альфа капитал', 'альфа-капитал', 'райффайзен', 'raiffeisen', 'raif'];
   const isVisibleIndexSuggestion = item => {
     if (item.kind !== 'index') return true;
