@@ -363,25 +363,25 @@ const state = {
             annual: {
               value: asset.ytdChange,
               unit: "% с начала года",
-              label: `Годовая инфляция · на ${dateRu(asset.asof)}`,
-              delta: "накопленным итогом · неполный год",
+              label: `Накопленная инфляция · ${asset.periodLabel || dateRu(asset.asof)}`,
+              delta: "изменение цен с начала года",
             },
             monthly: {
               value: asset.monthlyChange,
               unit: "% за месяц",
-              label: `Помесячная инфляция · ${asset.periodLabel || dateRu(asset.asof)}`,
+              label: `Месячная инфляция · ${asset.periodLabel || dateRu(asset.asof)}`,
               delta: "изменение потребительских цен за месяц",
             },
             monthlyAnnual: {
               value: asset.price,
-              unit: "% год к году",
-              label: `Помесячная инфляция в годовом выражении · ${asset.periodLabel || dateRu(asset.asof)}`,
+              unit: "% за 12 месяцев",
+              label: `Годовая инфляция · ${asset.periodLabel || dateRu(asset.asof)}`,
               delta: `${signedPoints(asset.deltaPoints)} к предыдущему месяцу`,
             },
           }[state.mode] || {
             value: asset.price,
-            unit: "% год к году",
-            label: `Помесячная инфляция в годовом выражении · ${asset.periodLabel || dateRu(asset.asof)}`,
+            unit: "% за 12 месяцев",
+            label: `Годовая инфляция · ${asset.periodLabel || dateRu(asset.asof)}`,
             delta: `${signedPoints(asset.deltaPoints)} к предыдущему месяцу`,
           };
           document.getElementById("chips").innerHTML = [
@@ -393,9 +393,9 @@ const state = {
           document.getElementById("dirtyPrice").textContent = macroSummary.label;
           setDelta(0, macroSummary.delta);
           const metrics = [
-            ["За месяц", `${num(asset.monthlyChange, 2)}%`, "изменение потребительских цен", false],
-            ["С начала года", `${num(asset.ytdChange, 2)}%`, "накопленным итогом", false],
-            ["Год к году", `${num(asset.price, 2)}%`, asset.periodLabel || "", false],
+            ["Месячная инфляция", `${num(asset.monthlyChange, 2)}%`, asset.periodLabel || "за месяц", false],
+            ["Накопленная инфляция", `${num(asset.ytdChange, 2)}%`, "с начала года", false],
+            ["Годовая инфляция", `${num(asset.price, 2)}%`, "за последние 12 месяцев", false],
           ];
           document.getElementById("metrics").innerHTML = metrics.map(([label, value, note, hot]) => {
             return `<div class="metric ${hot ? "hot" : ""}"><div class="${metricValueClass(value)}">${value}</div><div class="metric-label">${label}</div>${note ? `<div class="metric-note">${note}</div>` : ""}</div>`;
@@ -405,9 +405,14 @@ const state = {
             `${num(row.annualValue, 2)}%`,
             row.complete ? `${row.year} год` : `${row.year} · на ${dateRu(row.date)}`,
           ]));
-          const source = asset.sourceUrl
-            ? `<a href="${htmlEsc(asset.sourceUrl)}" target="_blank" rel="noopener noreferrer">${htmlEsc(asset.sourceLabel || "Источник")}</a>`
-            : htmlEsc(asset.sourceLabel || "Предоставленная таблица");
+          const sourceRows = Array.isArray(asset.sources)
+            ? asset.sources.filter(item => item && item.url && item.label)
+            : [];
+          const source = sourceRows.length
+            ? sourceRows.map(item => `<a href="${htmlEsc(item.url)}" target="_blank" rel="noopener noreferrer">${htmlEsc(item.label)}</a>`).join(" · ")
+            : asset.sourceUrl
+              ? `<a href="${htmlEsc(asset.sourceUrl)}" target="_blank" rel="noopener noreferrer">${htmlEsc(asset.sourceLabel || "Источник")}</a>`
+              : htmlEsc(asset.sourceLabel || "Предоставленная таблица");
           document.getElementById("description").innerHTML =
             `${htmlEsc(asset.description || "")}<div class="formula"><strong>${htmlEsc(asset.methodology || "")}</strong><span>${htmlEsc(asset.marketNote || "")}</span><span>Источник: ${source}</span></div>`;
           document.getElementById("footerNote").textContent =
@@ -606,7 +611,7 @@ const state = {
               : `В ${item.year} году к ${dateRu(item.date)} инфляция составила ${num(item.annualValue, 2)}%`}</div>
             <div class="flow-note">${item.complete
               ? "итог за январь–декабрь"
-              : `неполный год · за последний месяц ${num(item.monthly, 2)}% · год к году ${num(item.price, 2)}%`}</div>
+              : `неполный год · за последний месяц ${num(item.monthly, 2)}% · годовая инфляция ${num(item.price, 2)}%`}</div>
           </div>
           <div class="flow-value">${num(item.annualValue, 2)}%</div>
         </div>`).join("");
@@ -793,9 +798,9 @@ const state = {
     function renderChart(asset) {
       const allRows = filteredHistory(asset);
       const macroSeries = {
-        annual: { key: "ytd", label: "Годовая инфляция с начала года, %" },
-        monthly: { key: "monthly", label: "Помесячная инфляция, %" },
-        monthlyAnnual: { key: "price", label: "Помесячная инфляция в годовом выражении, %" },
+        annual: { key: "ytd", label: "Накопленная инфляция, %" },
+        monthly: { key: "monthly", label: "Месячная инфляция, %" },
+        monthlyAnnual: { key: "price", label: "Годовая инфляция, %" },
       };
       const selectedMacroSeries = asset.assetType === "macro"
         ? (macroSeries[state.mode] || macroSeries.monthlyAnnual)
