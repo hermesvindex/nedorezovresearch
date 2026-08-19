@@ -577,7 +577,7 @@
     results.innerHTML = rows.length ? rows.map(resultRow).join('') : '<div class="quantis-search__empty">Ничего не найдено. Проверьте тикер, ISIN или название актива.</div>';
     meta.textContent = needle
       ? (total > rows.length ? `Показано ${rows.length} наиболее релевантных результатов` : `Найдено: ${total}`)
-      : (expertTop[kind] ? 'Экспертный топ' : '');
+      : '';
   }
 
   async function openSearch(source) {
