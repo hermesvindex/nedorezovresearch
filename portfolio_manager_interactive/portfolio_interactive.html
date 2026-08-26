@@ -715,7 +715,62 @@
     }
 
     function rowRisk(row) {
-      return row.category === 'Денежный рынок' || row.broker_class === 'Money' ? 0 : Number(row.annual_vol || 0);
+      const nativeRisk = Number(row.risk_native ?? row.annual_vol ?? 0);
+      if (state.currencyView === row.currency) return nativeRisk;
+      if (state.currencyView === 'RUB') return Number(row.risk_rub ?? row.annual_vol ?? nativeRisk);
+      const fxKey = `${state.currencyView}_RUB`;
+      const fxRisk = Number((meta.fx_statistics || {})[fxKey]?.ewma_vol_pct || 0);
+      if (row.currency === 'RUB') return Math.sqrt(nativeRisk ** 2 + fxRisk ** 2);
+      return Number(row.risk_rub ?? row.annual_vol ?? nativeRisk);
+    }
+
+    function riskFactorExposure(row) {
+      const exposure = {};
+      const factor = row.risk_factor;
+      if (factor) exposure[factor] = Number(row.risk_beta || 0);
+      const currency = row.currency || 'RUB';
+      if (state.currencyView === 'RUB') {
+        if (currency !== 'RUB') exposure[`FX:${currency}_RUB`] = (exposure[`FX:${currency}_RUB`] || 0) + 1;
+      } else {
+        const viewFx = `FX:${state.currencyView}_RUB`;
+        exposure[viewFx] = (exposure[viewFx] || 0) - 1;
+        if (currency !== 'RUB') {
+          const assetFx = `FX:${currency}_RUB`;
+          exposure[assetFx] = (exposure[assetFx] || 0) + 1;
+        }
+      }
+      return exposure;
+    }
+
+    function systematicCovariance(left, right) {
+      const matrix = (meta.risk_model || {}).covariance_pct2 || {};
+      const leftExposure = riskFactorExposure(left);
+      const rightExposure = riskFactorExposure(right);
+      let covariance = 0;
+      Object.entries(leftExposure).forEach(([leftFactor, leftBeta]) => {
+        Object.entries(rightExposure).forEach(([rightFactor, rightBeta]) => {
+          covariance += leftBeta * rightBeta * Number((matrix[leftFactor] || {})[rightFactor] || 0);
+        });
+      });
+      return covariance;
+    }
+
+    function portfolioRisk(holdings, totalNow) {
+      if (!(totalNow > 0)) return 0;
+      let variance = 0;
+      for (let leftIndex = 0; leftIndex < holdings.length; leftIndex += 1) {
+        const left = holdings[leftIndex];
+        const leftWeight = left.currentValue / totalNow;
+        const leftRisk = rowRisk(left) / 100;
+        variance += leftWeight ** 2 * leftRisk ** 2;
+        for (let rightIndex = leftIndex + 1; rightIndex < holdings.length; rightIndex += 1) {
+          const right = holdings[rightIndex];
+          const rightWeight = right.currentValue / totalNow;
+          const covariance = systematicCovariance(left, right) / 10_000;
+          variance += 2 * leftWeight * rightWeight * covariance;
+        }
+      }
+      return Math.sqrt(Math.max(0, variance)) * 100;
     }
 
     function riskTone(risk) {
@@ -1147,7 +1202,7 @@
       const totalNowView = moneyInView(totalNow, 'current');
       const totalFutureView = moneyInView(totalFuture, 'future');
       const totalReturn = totalNowView > 0 ? (totalFutureView / totalNowView - 1) * 100 : 0;
-      const totalRisk = totalNow > 0 ? holdings.reduce((sum, row) => sum + row.currentValue / totalNow * rowRisk(row), 0) : 0;
+      const totalRisk = portfolioRisk(holdings, totalNow);
       const categoryStats = holdings.reduce((acc, row) => {
         if (!acc[row.category]) acc[row.category] = { value: 0 };
         acc[row.category].value += row.currentValue;
@@ -1276,7 +1331,7 @@
       const futureView = moneyInView(totalFuture, 'future');
       const pnlView = futureView - currentView;
       const ret = currentView > 0 ? pnlView / currentView * 100 : 0;
-      const risk = totalNow > 0 ? holdings.reduce((sum, row) => sum + (row.currentValue / totalNow) * rowRisk(row), 0) : 0;
+      const risk = portfolioRisk(holdings, totalNow);
       document.getElementById('kpiNowValue').textContent = fmtMoneyView(totalNow, 'current');
       document.getElementById('kpiFutureValue').textContent = fmtMoneyView(totalFuture, 'future');
       const pnlEl = document.getElementById('kpiPnlValue');
