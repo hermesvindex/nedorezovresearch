@@ -714,25 +714,15 @@
       return currentView > 0 ? (futureView / currentView - 1) * 100 : 0;
     }
 
-    function rowRisk(row) {
-      const nativeRisk = Number(row.risk_native ?? row.annual_vol ?? 0);
-      if (state.currencyView === row.currency) return nativeRisk;
-      if (state.currencyView === 'RUB') return Number(row.risk_rub ?? row.annual_vol ?? nativeRisk);
-      const fxKey = `${state.currencyView}_RUB`;
-      const fxRisk = Number((meta.fx_statistics || {})[fxKey]?.ewma_vol_pct || 0);
-      if (row.currency === 'RUB') return Math.sqrt(nativeRisk ** 2 + fxRisk ** 2);
-      return Number(row.risk_rub ?? row.annual_vol ?? nativeRisk);
-    }
-
-    function riskFactorExposure(row) {
+    function riskFactorExposureForView(row, viewCurrency) {
       const exposure = {};
       const factor = row.risk_factor;
       if (factor) exposure[factor] = Number(row.risk_beta || 0);
       const currency = row.currency || 'RUB';
-      if (state.currencyView === 'RUB') {
+      if (viewCurrency === 'RUB') {
         if (currency !== 'RUB') exposure[`FX:${currency}_RUB`] = (exposure[`FX:${currency}_RUB`] || 0) + 1;
       } else {
-        const viewFx = `FX:${state.currencyView}_RUB`;
+        const viewFx = `FX:${viewCurrency}_RUB`;
         exposure[viewFx] = (exposure[viewFx] || 0) - 1;
         if (currency !== 'RUB') {
           const assetFx = `FX:${currency}_RUB`;
@@ -742,8 +732,35 @@
       return exposure;
     }
 
+    function riskFactorExposure(row) {
+      return riskFactorExposureForView(row, state.currencyView || 'RUB');
+    }
+
+    function exposureVariance(exposure) {
+      const model = meta.risk_model || {};
+      const matrix = model.downside_covariance_pct2 || model.covariance_pct2 || {};
+      let variance = 0;
+      Object.entries(exposure).forEach(([leftFactor, leftBeta]) => {
+        Object.entries(exposure).forEach(([rightFactor, rightBeta]) => {
+          variance += leftBeta * rightBeta * Number((matrix[leftFactor] || {})[rightFactor] || 0);
+        });
+      });
+      return variance;
+    }
+
+    function rowRisk(row) {
+      const nativeRisk = Number(row.risk_native ?? row.annual_vol ?? 0);
+      const nativeView = row.currency || 'RUB';
+      const selectedView = state.currencyView || 'RUB';
+      if (selectedView === nativeView) return nativeRisk;
+      const nativeSystematic = exposureVariance(riskFactorExposureForView(row, nativeView));
+      const selectedSystematic = exposureVariance(riskFactorExposureForView(row, selectedView));
+      return Math.sqrt(Math.max(0, nativeRisk ** 2 + selectedSystematic - nativeSystematic));
+    }
+
     function systematicCovariance(left, right) {
-      const matrix = (meta.risk_model || {}).covariance_pct2 || {};
+      const model = meta.risk_model || {};
+      const matrix = model.downside_covariance_pct2 || model.covariance_pct2 || {};
       const leftExposure = riskFactorExposure(left);
       const rightExposure = riskFactorExposure(right);
       let covariance = 0;
@@ -1229,7 +1246,7 @@
               <th>Текущая стоимость</th>
               <th>Доля</th>
               <th>Доходность</th>
-              <th>Риск</th>
+              <th title="Робастное годовое downside-отклонение: учитываются только отрицательные дневные доходности, единичные выбросы ограничиваются, оценка усаживается к медиане класса активов.">Downside-риск</th>
               <th></th>
             </tr>
           </thead>
@@ -1777,7 +1794,7 @@
         const future = rubRate(ccy, resolvedHorizonDate());
         els.currencyNote.textContent = ccy === 'RUB'
           ? 'Оценка в рублях. Валютный прогноз применяется к ожидаемой стоимости.'
-          : `Оценка в ${ccy}: текущий курс ${fmtNum(spot, 4)} ₽, прогноз на горизонт ${fmtNum(future, 4)} ₽.`;
+          : `Оценка в ${ccy}: текущий курс ${fmtNum(spot, 4)} ₽, прогноз на горизонт ${fmtNum(future, 4)} ₽. Валютный риск пересчитан через совместную ковариацию актива и валютных факторов.`;
       }
       renderSearch();
       renderSelectedCard();
