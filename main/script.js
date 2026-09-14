@@ -65,9 +65,9 @@
     return Number.isNaN(date.getTime()) ? '—' : dateFormat.format(date);
   }
 
-  // TEMPORARY RELEASE BLOCK: live data for the September 2026 Bank of Russia decision.
-  const polymarketEndpoint = 'https://gamma-api.polymarket.com/events/slug/bank-of-russia-decision-in-september-20260623013858993';
-  const decisionBlock = document.querySelector('[data-temporary-block="cbr-september-2026"]');
+  // TEMPORARY RELEASE BLOCK: live data for the October 2026 Bank of Russia decision.
+  const polymarketEndpoint = 'https://gamma-api.polymarket.com/events/slug/bank-of-russia-decision-in-october-20260724021538830';
+  const decisionBlock = document.querySelector('[data-temporary-block="cbr-october-2026"]');
   const decisionChartCanvas = decisionBlock?.querySelector('[data-decision-chart]');
   const decisionChartPlot = decisionBlock?.querySelector('.decision-chart__plot');
   const decisionChartTooltip = decisionBlock?.querySelector('[data-decision-tooltip]');
