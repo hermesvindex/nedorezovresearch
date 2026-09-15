@@ -7,6 +7,7 @@
   const query = new URLSearchParams(window.location.search);
   const publicOrigin = 'https://nedorezov-research.ru';
   const isTildaEmbed = window.self !== window.top && query.get('embed') === 'tilda';
+  const forceShell = script?.dataset?.forceShell === 'true';
 
   const detailCta = document.getElementById('detailCta');
   const identityChips = document.getElementById('chips');
@@ -17,7 +18,7 @@
     identityActions.append(identityChips, detailCta);
   }
 
-  if (query.get('drawer') === '1' || (window.self !== window.top && !isTildaEmbed)) return;
+  if (query.get('drawer') === '1' || (window.self !== window.top && !isTildaEmbed && !forceShell)) return;
 
   const url = path => new URL(path, rootUrl).href;
   const siteHref = path => url(String(path || '').replace(/^(\.\.\/)+/, ''));

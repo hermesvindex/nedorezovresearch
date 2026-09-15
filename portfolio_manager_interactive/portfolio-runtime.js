@@ -21,7 +21,7 @@
       scenarioLabel: "Сценарии", allocationEyebrow: "СТРУКТУРА", allocationTitle: "Распределение капитала", modelDate: "Модельные параметры · 11.09.2026",
       stressEyebrow: "СТРЕСС-ТЕСТ", stressTitle: "Что может произойти", cashflowEyebrow: "ДЕНЕЖНЫЙ ПОТОК", cashflowTitle: "Выплаты и реинвестирование",
       brokerEyebrow: "РЕАЛИЗАЦИЯ", brokerTitle: "Брокер и расходы", checksEyebrow: "КОНТРОЛЬ", checksTitle: "Ограничения портфеля",
-      disclosureTitle: "Риски и правовой статус", disclosureText: "Материалы сервиса носят информационно-аналитический характер и не являются индивидуальной инвестиционной рекомендацией. Стоимость финансовых инструментов может снизиться; возможна частичная или полная потеря вложенных средств. Прошлая доходность не определяет будущую. Перед сделкой самостоятельно проверьте актуальные условия, комиссии, налоги, ликвидность и соответствие инструмента вашим целям и допустимому риску.",
+      disclosureTitle: "Ограничения расчета конструктора", disclosureText: "Ожидаемая стоимость, доходность, денежный поток и стресс-сценарии являются модельными оценками. Комиссии, налоги, спреды, доступность инструментов и индивидуальные ограничения в расчет не включены. Перед сделкой проверьте дату данных и актуальные условия выбранных инструментов.",
       restart: "Начать новый расчет", methodEyebrow: "МЕТОДИКА", methodTitle: "Как строятся сценарии", close: "Закрыть",
       methodStep1: "Определяется обязательный ликвидный резерв.", methodStep2: "Риск-способность и риск-готовность рассчитываются раздельно.", methodStep3: "Итоговый риск ограничивается более низкой оценкой.", methodStep4: "Инструменты фильтруются по сроку, доступу, ликвидности и структуре.", methodStep5: "Сформированный портфель проходит стресс-тест и проверку концентраций.", methodNote: "Ожидаемая доходность является модельной оценкой, а не обещанием результата.",
       q1k: "ЭТАП 1 · ЦЕЛЬ И СРОК", q1t: "Для чего и на какой срок размещаются деньги?", q1h: "Цель и срок задают основное ограничение риска.",
@@ -76,7 +76,7 @@
       progressLabel: "Questionnaire progress", exit: "Exit", liveProfile: "CURRENT PROFILE", profilePending: "Being assessed", previewGoal: "Objective", previewHorizon: "Horizon", previewLiquidity: "Liquidity reserve", previewBroker: "Broker", privacyShort: "This answer is stored only locally in this browser.",
       back: "Back", next: "Continue", calculate: "Generate portfolio", resetSavedData: "Reset saved data", resultEyebrow: "MODEL OUTPUT", resultsTitle: "Generated portfolio", editAnswers: "Edit answers", constructorMode: "Classic portfolio builder", constructorFrameTitle: "Interactive portfolio builder", constructorSection: "Fine-tune the portfolio", constructorSectionText: "The calculation is loaded into the builder. Edit capital, weights and instruments directly in the table.", scenarioLabel: "Scenarios",
       allocationEyebrow: "STRUCTURE", allocationTitle: "Capital allocation", modelDate: "Model parameters · 11 Sep 2026", stressEyebrow: "STRESS TEST", stressTitle: "Potential impact", cashflowEyebrow: "CASH FLOW", cashflowTitle: "Payments and reinvestment", brokerEyebrow: "IMPLEMENTATION", brokerTitle: "Broker and costs", checksEyebrow: "CONTROLS", checksTitle: "Portfolio constraints",
-      disclosureTitle: "Risks and legal status", disclosureText: "The service provides information and analytical materials and does not constitute an individual investment recommendation. Financial instruments can lose value and you may lose part or all of the invested capital. Past performance does not determine future results. Before trading, independently verify current terms, fees, taxes, liquidity and suitability for your objectives and acceptable risk.", restart: "Start a new calculation",
+      disclosureTitle: "Portfolio model limitations", disclosureText: "Expected value, return, cash flow and stress scenarios are model estimates. Fees, taxes, bid–ask spreads, instrument availability and individual restrictions are excluded. Check the data date and current instrument terms before trading.", restart: "Start a new calculation",
       methodEyebrow: "METHODOLOGY", methodTitle: "How the portfolio is built", close: "Close", methodStep1: "A mandatory liquidity reserve is calculated.", methodStep2: "Risk capacity and risk willingness are assessed separately.", methodStep3: "The final risk level is capped by the lower score.", methodStep4: "Instruments are filtered by horizon, access, liquidity and structure.", methodStep5: "The generated portfolio undergoes stress and concentration checks.", methodNote: "Expected return is a model estimate and not a promise of performance.",
       q1k: "STAGE 1 · OBJECTIVE AND HORIZON", q1t: "What is the capital for and when will it be needed?", q1h: "The objective and horizon set the main risk constraint.", q2k: "STAGE 2 · CAPITAL AND LIQUIDITY", q2t: "How much will be invested and what share may be needed unexpectedly?", q2h: "", q3k: "STAGE 3 · RISK", q3t: "Risk tolerance", q3h: "Choose the temporary decline at which you could retain the selected investment horizon.", q4k: "STAGE 4 · DISTRIBUTIONS AND EXPERIENCE", q4t: "How will distributions be used and what is your experience?", q4h: "Distribution policy affects cash flow; experience limits instrument complexity.", q5k: "STAGE 5 · INSTRUMENTS", q5t: "Which asset classes should be used?", q5h: "Credit quality and concentration limits are calculated automatically from your profile.",
       required: "Complete the required fields.", invalidAmount: "Enter an amount between RUB 10,000 and RUB 1,000,000,000.", invalidShare: "Enter a percentage from 0 to 100%.", invalidAssets: "Select at least one asset class.",
@@ -744,7 +744,7 @@
     const scenario = state.scenarios[state.selectedScenario];
     const constructorName = "constructor-ru.html";
     if (!scenario) {
-      const emptyUrl = `${constructorName}?v=20260915-prod1`;
+      const emptyUrl = `${constructorName}?v=20260915-prod2`;
       if ($("#constructorFrame").getAttribute("src") !== emptyUrl) $("#constructorFrame").src = emptyUrl;
       return;
     }
@@ -758,7 +758,7 @@
       }))
     };
     const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
-    const url = `${constructorName}?v=20260915-prod1&g=${payloadToken(encoded)}#nr-beta=${encoded}`;
+    const url = `${constructorName}?v=20260915-prod2&g=${payloadToken(encoded)}#nr-beta=${encoded}`;
     if ($("#constructorFrame").getAttribute("src") === url) return;
     $("#constructorFrame").src = url;
   }
