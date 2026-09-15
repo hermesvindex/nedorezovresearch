@@ -744,7 +744,7 @@
     const scenario = state.scenarios[state.selectedScenario];
     const constructorName = "constructor-ru.html";
     if (!scenario) {
-      const emptyUrl = `${constructorName}?v=20260915-prod2`;
+      const emptyUrl = `${constructorName}?v=20260915-prod3`;
       if ($("#constructorFrame").getAttribute("src") !== emptyUrl) $("#constructorFrame").src = emptyUrl;
       return;
     }
@@ -758,7 +758,7 @@
       }))
     };
     const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
-    const url = `${constructorName}?v=20260915-prod2&g=${payloadToken(encoded)}#nr-beta=${encoded}`;
+    const url = `${constructorName}?v=20260915-prod3&g=${payloadToken(encoded)}#nr-beta=${encoded}`;
     if ($("#constructorFrame").getAttribute("src") === url) return;
     $("#constructorFrame").src = url;
   }

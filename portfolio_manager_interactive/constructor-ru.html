@@ -6,7 +6,7 @@
   <link rel="icon" href="data:,">
   <title>Конструктор портфеля</title>
   <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
-  <script src="assets/data/bootstrap.js?v=20260915-prod2"></script>
+  <script src="assets/data/bootstrap.js?v=20260915-prod3"></script>
   <style>
     :root {
       --font:"Graphik","Graphik LCG","Graphik LC","Graphik Web",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -405,7 +405,7 @@
   <link rel="stylesheet" href="../assets/asset-drawer.css">
   <link rel="stylesheet" href="portfolio-header-design.css?v=20260722-mobile2">
   <link rel="stylesheet" href="../assets/integration-shell.css?v=20260820-runtime-79-tilda">
-  <link rel="stylesheet" href="constructor.css?v=20260915-prod2">
+  <link rel="stylesheet" href="constructor.css?v=20260915-prod3">
   <script src="../elements/assets/header-system.js" defer></script>
   <script src="../assets/asset-drawer.js" defer></script>
 </head>
@@ -575,7 +575,7 @@
     const isinMap = Object.fromEntries(catalog.filter(item => item.isin).map(item => [String(item.isin).toUpperCase(), item]));
     const storageKey = 'portfolio_manager_state_v1';
     const importTokenKey = 'portfolio_manager_import_token_v1';
-    const defaultPortfolioRaw = [
+    const legacyDefaultPortfolioRaw = [
       ['RU000A10AUE8', 65],
       ['RU000A10BSL5', 70],
       ['RU000A10ES57', 70],
@@ -594,6 +594,23 @@
       ['AKGD', 400],
       ['AKMM', 1500],
     ];
+    const defaultPortfolioRaw = [
+      ['AKFB', 920],
+      ['SU26232RMFS7', 80],
+      ['SU26236RMFS8', 75],
+      ['RU000A10F7L0', 49],
+      ['RU000A10C8T4', 47],
+      ['RU000A10BTU4', 6],
+      ['RU000A10AUX8', 6],
+      ['RU000A10AXW4', 6],
+      ['AKME', 593],
+      ['SBER', 135],
+      ['YDEX', 10],
+      ['LKOH', 7],
+      ['GMKN', 29],
+      ['AKMM', 830],
+      ['AKGD', 279],
+    ];
 
     function resolveIdentifierToSecid(identifier) {
       const key = String(identifier || '').trim().toUpperCase();
@@ -609,6 +626,13 @@
         return secid ? { secid, lots } : null;
       })
       .filter(Boolean);
+    const portfolioSignature = rows => rows
+      .map(row => `${row.secid}:${Number(row.lots)}`)
+      .sort()
+      .join('|');
+    const legacyDefaultSignature = portfolioSignature(
+      legacyDefaultPortfolioRaw.map(([secid, lots]) => ({ secid, lots }))
+    );
 
     function readBetaPortfolio() {
       const marker = '#nr-beta=';
@@ -703,8 +727,11 @@
             lots: Math.max(0, Number(row.lots) || 0)
           };
         });
+        const migratedPortfolio = portfolioSignature(portfolio) === legacyDefaultSignature
+          ? defaultPortfolio.map(row => ({ ...row }))
+          : portfolio;
         return {
-          portfolio,
+          portfolio: migratedPortfolio,
           horizonDate: !Array.isArray(parsed) && parsed.horizonDate ? parsed.horizonDate : meta.horizon_date,
           currencyView: !Array.isArray(parsed) && parsed.currencyView === 'USD' ? 'USD' : 'RUB'
         };
