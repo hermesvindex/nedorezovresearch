@@ -49,7 +49,7 @@ window.NR_BETA_DATA = {
 
     SBMX: { kind: "equity", manager: "Pervaya", ru: "BPIF Pervaya Top rossiyskikh aktsiy", en: "Pervaya Top Russian Equities fund", risk: 23.84, return: 7.2, liquidity: "high" },
     EQMX: { kind: "equity", manager: "VIM Investitsii", ru: "BPIF MOEX Russia Index", en: "MOEX Index fund", risk: 23.55, return: 7.38, liquidity: "high" },
-    AKME: { kind: "equity", manager: "Alfa-Equity", ru: "BPIF Alfa Upravlyaemye shares", en: "Alfa Managed Equities fund", risk: 23.6, return: 7.17, liquidity: "high" },
+    AKME: { kind: "equity", manager: "Alfa-Equity", ru: "Alfa Managed Equities fund", en: "Alfa Managed Equities fund", risk: 23.6, return: 7.17, liquidity: "high" },
     AMRE: { kind: "equity", manager: "Aton-menedzhment", ru: "BPIF ATON — Russian shares +", en: "ATON Russian Equities Plus fund", risk: 24.72, return: 6.23, liquidity: "medium" },
     TMOS: { kind: "equity", manager: "T-Equity", ru: "BPIF T-Equity MOEX Russia Index", en: "T-Capital MOEX Index fund", risk: 23.7, return: 7.41, liquidity: "medium" },
     BCSR: { kind: "equity", manager: "BKS", ru: "BPIF BKS Index rossiyskogo rynka", en: "BCS Russian Market Index fund", risk: 24.26, return: 6.79, liquidity: "medium" },
