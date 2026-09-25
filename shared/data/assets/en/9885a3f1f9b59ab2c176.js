@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EW85"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SFO VTB RKS Olympus A2"],"3":["v","SFO VTB RKS Olympus A2"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company VTB RKS Olimp\""]},52]},1]},2]},[]];

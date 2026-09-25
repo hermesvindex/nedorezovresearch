@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A109C24"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","CIB-SO-886"],"3":["v","CIB-SO-886"],"6":["v","Corporate"],"7":["v","Structured"],"9":["v","Joint-Stock Company \"Sberbank KIB\""],"42":["v","Corporate bond RU000A109C24 maturing on 2026-07-02."]},59]},1]},2]},[]];

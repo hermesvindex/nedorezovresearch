@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MRKV"]=["o",{"name":["v","Rosseti Volga"],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","Rosseti Volga"]},[]]},[]];

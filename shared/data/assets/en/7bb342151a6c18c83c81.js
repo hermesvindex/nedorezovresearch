@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EF52"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SBER52"],"3":["v","SBER52"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Sberbank of Russia\""],"42":["v","Corporate bond SBER52 maturing on 2028-08-29."]},60]},1]},2]},[]];

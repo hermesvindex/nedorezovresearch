@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:UNAC"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Ob.aviastroitelnaya korp."],"3":["v","Ob.aviastroitelnaya korp."],"6":["v","United aviastroitelnaya corporation"]},27]},1]},2]},[]];

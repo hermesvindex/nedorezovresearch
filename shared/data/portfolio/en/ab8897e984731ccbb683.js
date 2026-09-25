@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:ABRD"]=["o",{"name":["v","Abrau-Durso ao"],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","Abrau-Durso ao"]},[]]},[]];

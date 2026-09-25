@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MAGN"]=["o",{"name":["v","\"Magnitogorsk.met.komb\" PJSC ao"],"bucket":["v","Equities"],"sector_ru":["v","Metals and mining"],"public_fields":["o",{"full_name":["v","\"Magnitogorsk.met.komb\" PJSC ao"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:XS2384174228"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SUEK Securities o.to.15.09.26"],"6":["v","Corporate"],"7":["v","Fixed rate"],"42":["v","SUEK Securities o.to.15.09.26, Reg№ XS2384174228"]},60]},1]},2]},[]];

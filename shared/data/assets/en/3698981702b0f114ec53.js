@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CRP6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Buysell 001P-03"],"3":["v","Buysell 001P-03"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Baysel\""]},49]},1]},2]},[]];

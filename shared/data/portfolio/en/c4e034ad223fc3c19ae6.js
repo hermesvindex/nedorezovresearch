@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TGLD"]=["o",{"name":["v","TGLD ETF T-capital GOLD USD"],"bucket":["v","Precious metals"],"etf_structure":["v","Precious metals"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["v","TGLD ETF T-capital GOLD USD"]},[]]},[]];

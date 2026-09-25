@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SVAV"]=["o",{"name":["v","PJSC \"Sollers Avto\""],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","PJSC \"Sollers Avto\""]},[]]},[]];

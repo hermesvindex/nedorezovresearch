@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A107R03"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MKB ZO26-1"],"9":["v","Moscow Credit Bank (public joint-stock company)"]},42]},1]},2]},[]];

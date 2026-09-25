@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SVCB"]=["o",{"name":["v","Sovcombank"],"bucket":["v","Equities"],"sector_ru":["v","Financials"],"public_fields":["o",{"full_name":["v","Sovcombank"]},[]]},[]];

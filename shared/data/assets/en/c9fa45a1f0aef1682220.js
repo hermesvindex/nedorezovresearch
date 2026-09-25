@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DBB8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SFO GPB SPK B2"],"3":["v","SFO GPB SPK B2"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company GPB-SPK\""]},47]},1]},2]},[]];

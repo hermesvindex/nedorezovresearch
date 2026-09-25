@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SGZH"]=["o",{"name":["v","Segezha"],"bucket":["v","Equities"],"sector_ru":["v","Forestry and paper"],"public_fields":["o",{"full_name":["v","Segezha"]},[]]},[]];

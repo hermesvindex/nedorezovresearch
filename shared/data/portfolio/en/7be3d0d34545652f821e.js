@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:LSRG"]=["o",{"name":["v","LSR"],"bucket":["v","Equities"],"sector_ru":["v","Construction"],"public_fields":["o",{"full_name":["v","LSR"]},[]]},[]];

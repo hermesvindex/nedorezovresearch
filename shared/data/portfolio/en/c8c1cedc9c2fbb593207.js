@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TATNP"]=["o",{"name":["v","PJSC \"Tatneft\" ap 3 vypoints"],"bucket":["v","Equities"],"sector_ru":["v","Energy (oil and gas)"],"public_fields":["o",{"full_name":["v","PJSC \"Tatneft\" ap 3 vypoints"]},[]]},[]];

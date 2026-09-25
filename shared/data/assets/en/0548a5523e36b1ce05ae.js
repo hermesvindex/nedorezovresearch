@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FDZ8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Magnit BO-005P-06"],"3":["v","Magnit BO-005P-06"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"Magnit\""],"22":["v","Ozhidanie"]},51]},1]},2]},[]];

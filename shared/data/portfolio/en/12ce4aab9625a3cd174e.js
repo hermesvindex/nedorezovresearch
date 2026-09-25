@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:FMBR"]=["o",{"name":["v","FMBR ETF bonds with payment"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","Finam Menedzhment"],"public_fields":["o",{"full_name":["v","FMBR ETF bonds with payment"]},[]]},[]];

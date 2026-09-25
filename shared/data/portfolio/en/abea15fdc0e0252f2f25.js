@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:PSRE"]=["o",{"name":["v","PSRE ETF PSB - Russian Equitie"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Promsvyaz"],"public_fields":["o",{"full_name":["v","PSRE ETF PSB - Russian Equitie"]},[]]},[]];

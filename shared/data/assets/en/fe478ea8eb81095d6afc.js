@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A109NM3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","RST-01"],"3":["v","RST-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"RegionSpetsTrans\""],"42":["v","Corporate bond RST-01 maturing on 2027-09-15."]},59]},1]},2]},[]];

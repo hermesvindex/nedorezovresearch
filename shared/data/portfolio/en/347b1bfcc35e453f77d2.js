@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:RU000A10C2J8"]=["o",{"name":["v","MTS 001P-26"],"bucket":["v","Rouble-denominated bonds"],"note":["v","Coupons are reinvested in fractional units of the same issue at the model price on the payment date."],"public_fields":["o",{"full_name":["v","MTS 001P-26"]},[]]},[]];

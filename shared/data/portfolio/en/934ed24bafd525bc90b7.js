@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:YKENP"]=["o",{"name":["v","AK \"Yakutskenergo\" (PJSC) ap"],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","AK \"Yakutskenergo\" (PJSC) ap"]},[]]},[]];

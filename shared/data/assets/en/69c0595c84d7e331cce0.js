@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10D4A2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SPE Elton class A"],"3":["v","SPE Elton class A"],"6":["v","Corporate"],"7":["v","Structured notes"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company Elton\""]},47]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:GOLD"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","GOLD ETF Gold Fund"],"3":["v","GOLD ETF Gold Fund"],"6":["v","Liquidity. Chinese yuan"]},27]},1]},2]},[]];

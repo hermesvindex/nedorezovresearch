@@ -7,6 +7,11 @@
   const ownScript = [...document.scripts].find(script => /issuer-instruments\.js(?:\?|$)/.test(script.src));
   const iconBase = ownScript?.src || window.location.href;
   const iconUrl = name => new URL(`icons/${name}.png?v=20260723`, iconBase).href;
+  const localeRoot = new URL('../', iconBase);
+  const localizedBondsmapHref = (() => {
+    const source = new URL(data.bondsmapHref || 'bondsmap/bondsmap.html', window.location.href);
+    return new URL(`bondsmap/bondsmap.html${source.search}${source.hash}`, localeRoot).href;
+  })();
 
   if (!data.stocks?.length && !data.bonds?.length) {
     root.innerHTML = '<div class="issuer-instruments__head"><div><p class="issuer-instruments__eyebrow">Инструменты</p><h2>Рыночные инструменты эмитента</h2><p>Связанные акции и облигации отсутствуют в текущем локальном каталоге.</p></div></div>';
@@ -59,7 +64,7 @@
       <div class="issuer-table-toolbar"><span id="issuerTableMeta"></span><label class="issuer-sort-control"><span>Сортировка</span><span class="issuer-sort-picker"><strong id="issuerSortValue">По обороту</strong><img src="${iconUrl('chevron-down')}" alt="" aria-hidden="true"><select id="issuerSort" aria-label="Сортировка выпусков">${option('turnover','По обороту')}${option('ytm','По доходности')}${option('maturity','По погашению')}${option('title','По названию')}</select></span></label></div>
       <div class="issuer-instruments__table issuer-instruments__table--bonds"><table><thead><tr><th>Выпуск</th><th>ISIN</th><th>Цена, %</th><th>Купон, %</th><th>Текущая, %</th><th>YTM, %</th><th>Тип</th><th>Валюта</th><th>Рейтинг</th><th>Погашение</th></tr></thead><tbody id="issuerBondRows"></tbody></table></div>
       <div class="issuer-pagination"><span id="issuerPageMeta"></span><span class="issuer-pagination-buttons"><button id="issuerPrev" type="button" aria-label="Предыдущая страница" title="Предыдущая страница"><img src="${iconUrl('chevron-left')}" alt="" aria-hidden="true"></button><button id="issuerNext" type="button" aria-label="Следующая страница" title="Следующая страница"><img src="${iconUrl('chevron-right')}" alt="" aria-hidden="true"></button></span></div>
-      <a class="issuer-instruments__more" href="${esc(data.bondsmapHref)}"><span><strong>Общая карта облигаций</strong><small>Сравнить выпуски эмитента со всем рынком</small></span><span>Открыть карту</span></a>
+      <a class="issuer-instruments__more" href="${esc(localizedBondsmapHref)}"><span><strong>Общая карта облигаций</strong><small>Сравнить выпуски эмитента со всем рынком</small></span><span>Открыть карту</span></a>
     </section>`;
 
   const rows = root.querySelector('#issuerBondRows');

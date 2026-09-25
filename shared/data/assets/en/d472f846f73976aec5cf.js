@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:ENPG"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","EN+ GROUP IPJSC ORD SHS"],"3":["v","EN+ GROUP IPJSC ORD SHS"],"6":["v","EN+ GROUP IPJSC ORD SHS"]},27]},1]},2]},[]];

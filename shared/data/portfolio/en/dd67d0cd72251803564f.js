@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:PRMD"]=["o",{"name":["v","iPROMOMED"],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","iPROMOMED"]},[]]},[]];

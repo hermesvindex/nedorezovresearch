@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:CHMK"]=["o",{"name":["v","\"ChMK\" PJSC ao"],"bucket":["v","Equities"],"sector_ru":["v","Metals and mining"],"public_fields":["o",{"full_name":["v","\"ChMK\" PJSC ao"]},[]]},[]];

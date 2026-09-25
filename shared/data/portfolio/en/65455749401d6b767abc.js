@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MBNK"]=["o",{"name":["v","MTS Bank"],"bucket":["v","Equities"],"sector_ru":["v","Financials"],"public_fields":["o",{"full_name":["v","MTS Bank"]},[]]},[]];

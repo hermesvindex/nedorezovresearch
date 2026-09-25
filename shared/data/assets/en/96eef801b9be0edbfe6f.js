@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A104VD6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SFO Sputnik Fin 01"],"3":["v","SFO Sputnik Fin 01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"42":["v","Bonds 01 issue 00655R, Reg№ 4-01-00655-R"]},51]},1]},2]},[]];

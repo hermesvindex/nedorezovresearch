@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:KROTP"]=["o",{"name":["v","KrasnyiOctabr-1(pr)"],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","KrasnyiOctabr-1(pr)"]},[]]},[]];

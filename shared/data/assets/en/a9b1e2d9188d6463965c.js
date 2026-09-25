@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A103NU9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Avtodor Group BO-004R-01"],"3":["v","Avtodor4R1 Russian Highways BO-004P-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","State company \"Russian avtomobilnye dorogi\""]},49]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TASBP"]=["o",{"name":["v","ap\"Tambov.energsbyt.kompoints\"PJSC"],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","ap\"Tambov.energsbyt.kompoints\"PJSC"]},[]]},[]];

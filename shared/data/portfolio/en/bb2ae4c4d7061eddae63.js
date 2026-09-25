@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:FIXR"]=["o",{"name":["v","Fix Price PJSC"],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","Fix Price PJSC"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CKY3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","LSR 001P-11"],"3":["v","LSR 001P-11"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Group LSR\""],"42":["v","Corporate bond LSR 001P-11 maturing on 2028-08-11."]},60]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:USBN"]=["o",{"name":["v","BANK URALSIB ao"],"bucket":["v","Equities"],"sector_ru":["v","Financials"],"public_fields":["o",{"full_name":["v","BANK URALSIB ao"]},[]]},[]];

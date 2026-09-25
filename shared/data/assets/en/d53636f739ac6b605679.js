@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A107C26"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Gazprom capital 003B-01"],"3":["v","Gazprom capital 003B-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Gazprom Capital LLC"],"42":["v","Bonds 01 issue 36400R, Reg№ 4-01-36400-R-004P"]},51]},1]},2]},[]];

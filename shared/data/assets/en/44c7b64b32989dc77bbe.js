@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:TATNP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Tatneft (pref)"],"3":["v","Tatneft (pref)"],"6":["v","Tatneft named after In.D. Shashina"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:LSNGP"]=["o",{"name":["v","Rosseti LenEnrg (pref)"],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","Rosseti LenEnrg (pref)"]},[]]},[]];

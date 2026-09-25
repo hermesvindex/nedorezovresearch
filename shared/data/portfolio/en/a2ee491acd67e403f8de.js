@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:LMBZ"]=["o",{"name":["v","Lambumiz"],"bucket":["v","Equities"],"sector_ru":["v","Industrials"],"public_fields":["o",{"full_name":["v","Lambumiz"]},[]]},[]];

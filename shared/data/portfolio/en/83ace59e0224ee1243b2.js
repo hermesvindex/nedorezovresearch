@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:RTKM"]=["o",{"name":["v","Rostelecom"],"bucket":["v","Equities"],"sector_ru":["v","Telecommunications"],"public_fields":["o",{"full_name":["v","Rostelecom"]},[]]},[]];

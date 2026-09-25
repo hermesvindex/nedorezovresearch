@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:MGTSP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MGTS-4"],"3":["v","MGTS-4"],"6":["v","PJSC MGTS ao (5 in)"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:PHOR"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","PhosAgro ao"],"3":["v","PhosAgro ao"],"6":["v","PhosAgro"]},27]},1]},2]},[]];

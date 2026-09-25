@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="data:,">
   <title>Конструктор портфеля</title>
-  <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
-  <script src="assets/data/bootstrap.js?v=20260915-prod7"></script>
+  <script src="../shared/vendor/plotly-2.35.2.min.js"></script>
+  <script src="../shared/compact-data.js"></script>
+  <script src="../shared/data/portfolio/base/e4fd6f328871b5c83f1a.js"></script>
+  <script>window.__PMI_BOOTSTRAP__=window.NRCompact.materialize("portfolio:bootstrap");</script>
   <style>
     :root {
       --font:"Graphik","Graphik LCG","Graphik LC","Graphik Web",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -404,10 +406,13 @@
   <link rel="stylesheet" href="../elements/assets/header-system.css">
   <link rel="stylesheet" href="../assets/asset-drawer.css">
   <link rel="stylesheet" href="portfolio-header-design.css?v=20260722-mobile2">
-  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260820-runtime-79-tilda">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260924-interface-quality-3">
   <link rel="stylesheet" href="constructor.css?v=20260915-prod7">
   <script src="../elements/assets/header-system.js" defer></script>
   <script src="../assets/asset-drawer.js" defer></script>
+  <link rel="stylesheet" href="../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
+  <script src="../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="ru" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
+  <script src="../shared/data/portfolio/manifest.js"></script>
 </head>
 <body>
   <div class="page">
@@ -752,22 +757,27 @@
       if (!secid) return Promise.reject(new Error('Missing secid'));
       if (detailBySecid[secid]) return Promise.resolve(detailBySecid[secid]);
       if (detailScriptPromises[secid]) return detailScriptPromises[secid];
-      detailScriptPromises[secid] = new Promise((resolve, reject) => {
+      const record = window.__NR_PORTFOLIO_MANIFEST__?.[secid];
+      if (!record) return Promise.reject(new Error(`Detail not found: ${secid}`));
+      const load = source => new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = `./assets/details/${encodeURIComponent(secid)}.js`;
-        script.onload = () => {
-          const payload = window.__PMI_DETAIL__ || null;
-          if (!payload) {
-            reject(new Error(`Не удалось загрузить details/${secid}.js`));
-            return;
-          }
-          detailBySecid[secid] = payload;
-          window.__PMI_DETAIL__ = null;
-          resolve(payload);
-        };
-        script.onerror = () => reject(new Error(`Не удалось загрузить details/${secid}.js`));
+        script.src = source;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error(`Failed to load compact detail: ${secid}`));
         document.head.appendChild(script);
       });
+      const baseUrl = new URL(`../shared/data/portfolio/base/${record[0]}.js`, location.href);
+      const patchUrl = record[1] && 'ru' === 'en'
+        ? new URL(`../shared/data/portfolio/en/${record[1]}.js`, location.href)
+        : null;
+      detailScriptPromises[secid] = load(baseUrl.href)
+        .then(() => patchUrl ? load(patchUrl.href) : null)
+        .then(() => {
+          const payload = window.NRCompact.materialize(`portfolio:${secid}`);
+          detailBySecid[secid] = payload;
+          window.NRCompact.release(`portfolio:${secid}`);
+          return payload;
+        });
       return detailScriptPromises[secid];
     }
 

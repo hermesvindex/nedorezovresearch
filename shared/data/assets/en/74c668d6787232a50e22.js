@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10BRY0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SPRINT B2"],"3":["v","With-PRINT BO-02"],"6":["v","Bond"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"With-Print\""],"42":["v","Corporate bond RU000A10BRY0 maturing on 2030-05-15."]},50]},1]},2]},[]];

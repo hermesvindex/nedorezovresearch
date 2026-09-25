@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:BOND"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","BOND ETF DOHOD Cbonds corp. RU"],"3":["v","BOND ETF DOHOD Cbonds corp. RU"],"6":["v","Limited Liability Company Asset manager DOKhOD"]},27]},1]},2]},[]];

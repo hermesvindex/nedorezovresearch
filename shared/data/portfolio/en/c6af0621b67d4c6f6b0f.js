@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AFKS"]=["o",{"name":["v","AFK \"Sistema\" PJSC ao"],"bucket":["v","Equities"],"sector_ru":["v","Diversified holdings"],"public_fields":["o",{"full_name":["v","AFK \"Sistema\" PJSC ao"]},[]]},[]];

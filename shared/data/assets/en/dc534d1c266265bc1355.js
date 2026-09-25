@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:ELMT"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ELEMENT"],"3":["v","ELEMENT"],"6":["v","ELEMENT"]},27]},1]},2]},[]];

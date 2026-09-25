@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:MRKV"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rosseti Volga"],"3":["v","Rosseti Volga"],"6":["v","Rosseti Volga"]},27]},1]},2]},[]];

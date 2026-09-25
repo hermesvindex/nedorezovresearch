@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A101ZU7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MA Absolut 5 01"],"3":["v","MA Absolut 5 01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"42":["v","Corporate bond MA Absolut 5 01 maturing on 2052-12-12."]},59]},1]},2]},[]];

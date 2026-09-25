@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A107456"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MTS-Bank 001P-03"],"3":["v","MTS-Bank 001P-03"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"MTS-Bank\""],"22":["v","Ozhidanie"]},50]},1]},2]},[]];

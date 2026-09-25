@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10F793"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MA TB-7 class B"],"3":["v","MA TB-7 class B"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Ipotechnyy agent TB-7\""]},47]},1]},2]},[]];

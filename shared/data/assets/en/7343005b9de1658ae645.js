@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:TLCB"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TLCB T-Capital CURRENCY BONDS"],"3":["v","TLCB T-Capital CURRENCY BONDS"],"6":["v","Limited Liability Company T-Equity"]},27]},1]},2]},[]];

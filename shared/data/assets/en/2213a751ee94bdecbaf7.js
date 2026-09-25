@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:VSEH"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","VI.ru"],"3":["v","VI.ru"],"6":["v","VI.ru"]},27]},1]},2]},[]];

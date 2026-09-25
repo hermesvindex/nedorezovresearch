@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:ROST"]=["o",{"name":["v","ROSINTER RESTAURANTS ao"],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","ROSINTER RESTAURANTS ao"]},[]]},[]];

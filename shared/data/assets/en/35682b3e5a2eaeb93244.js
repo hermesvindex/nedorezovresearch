@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:BELU"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","NovaBev Group ao"],"3":["v","NovaBev Group ao"],"6":["v","NovaBev Grupp"]},27]},1]},2]},[]];

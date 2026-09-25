@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CSP4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Republic of Bashkortostan34016"],"3":["v","Republic of Bashkortostan34016"],"6":["v","Municipal bonds"],"7":["v","Fixed rate"],"9":["v","Ministry Finance Respubliki Bashkortostan"]},53]},1]},2]},[]];

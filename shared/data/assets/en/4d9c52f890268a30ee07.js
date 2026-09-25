@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EMG2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","NovaBev Group 003P-03"],"3":["v","NovaBev Group 003P-03"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"NovaBev Grupp\""]},53]},1]},2]},[]];

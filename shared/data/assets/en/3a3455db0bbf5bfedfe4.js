@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10ECA6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","LK AdvansTruck 001P-02"],"3":["v","LK AdvansTruck 001P-02"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"LK AdvansTrak\""]},53]},1]},2]},[]];

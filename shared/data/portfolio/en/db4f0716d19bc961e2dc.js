@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:RU000A10BTT6"]=["o",{"name":["v","ULK 001P-01"],"bucket":["v","Rouble-denominated bonds"],"note":["v","Coupons are reinvested in fractional units of the same issue at the model price on the payment date."],"public_fields":["o",{"full_name":["v","ULK 001P-01"]},[]]},[]];

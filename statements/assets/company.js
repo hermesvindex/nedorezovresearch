@@ -316,8 +316,8 @@
   }
   function profitabilityGroups() {
     return isBankingSlice()
-      ? {margins:{label:'Доходность и эффективность',defs:[['bank_profitability','Рентабельность доходов'],['nim','Чистая процентная маржа'],['cir','Расходы / доходы']]},returns:{label:'Доходность капитала',defs:[['roa','ROA'],['roe','ROE']]}}
-      : {margins:{label:'Маржинальность',defs:[['operating_margin','Операционная рентабельность'],['ebitda_margin','Рентабельность EBITDA'],['net_margin','Чистая рентабельность']]},returns:{label:'Доходность капитала',defs:[['roa','ROA'],['roe','ROE']]}};
+      ? {margins:{label:'Рентабельность и эффективность',defs:[['bank_profitability','Рентабельность доходов'],['nim','Чистая процентная маржа'],['cir','Расходы / доходы']]},returns:{label:'Рентабельность капитала',defs:[['roa','ROA'],['roe','ROE']]}}
+      : {margins:{label:'Рентабельность продаж',defs:[['operating_margin','Операционная рентабельность'],['ebitda_margin','Рентабельность EBITDA'],['net_margin','Чистая рентабельность']]},returns:{label:'Рентабельность капитала',defs:[['roa','ROA'],['roe','ROE']]}};
   }
   function profitabilityDefinitions() {
     const groups=profitabilityGroups();
@@ -367,7 +367,7 @@
     const sets=defs.map(([key,name,color])=>{const data=profitabilitySeries(key).filter(r=>r.period!=='LTM');return {key,name,color,data:state.periodType==='annual'?data:data.slice(-24)}}).filter(x=>x.data.length);
     if(!sets.length){empty(document.getElementById('marginChart'));document.getElementById('marginFacts').innerHTML='';return;}
     const marginPeriods=unique(sets.flatMap(x=>x.data.map(r=>r.period))).sort((a,b)=>rank(a)-rank(b));
-    Plotly.react('marginChart',sets.map(x=>({type:'scatter',mode:'lines+markers',name:x.name,x:x.data.map(r=>r.period),y:x.data.map(r=>Number(r.value)),line:{color:x.color,width:3},marker:{size:6},hoverinfo:'none'})),{...baseLayout(chartHeight('marginChart',310)),showlegend:true,margin:{l:50,r:15,t:20,b:42},legend:{orientation:'h',x:0,y:1.2},xaxis:periodAxis(marginPeriods)},config);
+    Plotly.react('marginChart',sets.map(x=>({type:'scatter',mode:'lines+markers',name:x.name,x:x.data.map(r=>r.period),y:x.data.map(r=>Number(r.value)),line:{color:x.color,width:3},marker:{size:6},hoverinfo:'none'})),{...baseLayout(chartHeight('marginChart',310)),showlegend:true,margin:{l:50,r:15,t:88,b:42},legend:{orientation:'h',x:0,y:1.12,xanchor:'left',yanchor:'bottom'},xaxis:periodAxis(marginPeriods)},config);
     bindChartTooltip('marginChart',point=>({period:periodLabel(point.x),rows:sets.map(set=>{const row=set.data.find(item=>String(item.period)===String(point.x));return {label:set.name,value:row?display(row):'—',color:set.color};})}));
     document.getElementById('marginFacts').innerHTML=sets.map(x=>{const r=latest(x.data),d=ppChange(x.data);return `<div><span>${esc(x.name)}</span><strong>${esc(display(r))}</strong><small>${r?.derived?'Расчетный показатель':d===null?'Изменение н/д':`${d>=0?'+':''}${nf.format(d)} п.п.`}</small></div>`}).join('');
     const bank=isBankingSlice(),returns=state.profitabilityView==='returns';
@@ -386,7 +386,7 @@
     bindChartTooltip('peerChart',point=>({period:point.y,label:peerLabels[state.peerMetric],value:point.customdata,color:colors[point.pointNumber]||palette.muted,guide:false,hit:'horizontal-bar'}));
     const median=[...items].sort((a,b)=>a.value-b.value)[Math.floor(items.length/2)]?.value;
     const peerTable=document.getElementById('peerTable');
-    peerTable.innerHTML=`<table class="peer-table"><thead><tr><th>Эмитент</th><th>Показатель</th><th>К медиане</th></tr></thead><tbody>${items.map(i=>{const href=`${encodeURIComponent(i.ticker)}.html?from=peer&ticker=${encodeURIComponent(i.ticker)}`;return `<tr class="peer-table__row ${i.ticker===current?'current':''}" data-href="${esc(href)}" tabindex="0" role="link" aria-label="Открыть финансовую отчетность: ${esc(i.company_name||i.ticker)}"><td><a class="peer-table__link" href="${esc(href)}"><b>${esc(i.ticker)}</b><span>${esc(i.company_name)}</span></a></td><td>${esc(displayPeer(i))}</td><td>${median?`${i.value>=median?'+':''}${nf.format((i.value/median-1)*100)}%`:'—'}</td></tr>`;}).join('')}</tbody></table>`;
+    peerTable.innerHTML=`<table class="peer-table"><thead><tr><th>Эмитент</th><th>Показатель</th><th>К медиане</th></tr></thead><tbody>${items.map(i=>{const href=`company.html?ticker=${encodeURIComponent(i.ticker)}&from=peer`;return `<tr class="peer-table__row ${i.ticker===current?'current':''}" data-href="${esc(href)}" tabindex="0" role="link" aria-label="Открыть финансовую отчетность: ${esc(i.company_name||i.ticker)}"><td><a class="peer-table__link" href="${esc(href)}"><b>${esc(i.ticker)}</b><span>${esc(i.company_name)}</span></a></td><td>${esc(displayPeer(i))}</td><td>${median?`${i.value>=median?'+':''}${nf.format((i.value/median-1)*100)}%`:'—'}</td></tr>`;}).join('')}</tbody></table>`;
     peerTable.querySelectorAll('.peer-table__row').forEach(row=>{
       const open=()=>{window.location.href=row.dataset.href;};
       row.addEventListener('click',event=>{if(!event.target.closest('a'))open();});

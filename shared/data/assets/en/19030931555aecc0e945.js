@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A103JK8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Metallinvestbank C-01"],"3":["v","Metallinvestbank C-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"42":["v","Bonds 02 issue 02440B, Reg№ 4-02-02440-B"]},51]},1]},2]},[]];

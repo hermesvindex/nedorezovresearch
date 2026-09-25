@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKFB"]=["o",{"name":["v","AKFB ETF floating rate bonds"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["v","AKFB ETF floating rate bonds"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:BYM000002154"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Republic Bel 340 29.06.2027"],"3":["v","Republic Bel 340 29.06.2027"],"6":["v","Other"],"7":["v","Fixed rate"],"9":["v","Respublika Belarus in litse Ministerstva Finance Respubliki Belarus"]},51]},1]},2]},[]];

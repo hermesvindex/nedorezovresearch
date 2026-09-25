@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A108DH6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TKB SUB-ZO"],"3":["v","TKB SUB-ZO"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"TRANSEQUITYBank\""],"22":["v","Ozhidanie"]},48]},1]},2]},[]];

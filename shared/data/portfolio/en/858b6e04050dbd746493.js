@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BISVP"]=["o",{"name":["v","BashInformSvyaz ap"],"bucket":["v","Equities"],"sector_ru":["v","Telecommunications"],"public_fields":["o",{"full_name":["v","BashInformSvyaz ap"]},[]]},[]];

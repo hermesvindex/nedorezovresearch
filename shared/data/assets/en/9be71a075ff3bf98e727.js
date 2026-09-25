@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A102YH5"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Sber Sb26R"],"9":["v","Sberbank of Russia"]},40]},1]},2]},[]];

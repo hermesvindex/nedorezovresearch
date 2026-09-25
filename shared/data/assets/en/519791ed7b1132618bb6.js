@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10AMD7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Sber CIB-CO-IND-001S-123"],"3":["v","Sber CIB-CO-IND-001S-123"],"6":["v","Corporate"],"7":["v","Structured notes"],"9":["v","Joint-Stock Company \"Sberbank KIB\""]},49]},1]},2]},[]];

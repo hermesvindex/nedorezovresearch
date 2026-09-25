@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TRND"]=["o",{"name":["v","TRND ETF Trend stocks"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["v","TRND ETF Trend stocks"]},[]]},[]];

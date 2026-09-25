@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0ZZBV2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","EuroplanB8"],"9":["v","Leasing company Europlan"]},42]},1]},2]},[]];

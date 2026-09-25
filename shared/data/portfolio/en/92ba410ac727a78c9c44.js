@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BCSR"]=["o",{"name":["v","BCSR ETF MX"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","BKS"],"public_fields":["o",{"full_name":["v","BCSR ETF MX"]},[]]},[]];

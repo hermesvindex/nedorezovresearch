@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SBSC"]=["o",{"name":["v","First-Equities mid small cap"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Pervaya"],"public_fields":["o",{"full_name":["v","First-Equities mid small cap"]},[]]},[]];

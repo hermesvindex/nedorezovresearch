@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:AKGD"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","AKGD ETF Gold"],"3":["v","AKGD ETF Gold"],"6":["v","AKAI ETF Anti-inflationary"]},27]},1]},2]},[]];

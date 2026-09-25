@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:HIMCP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Himprom ap"],"3":["v","Himprom ap"],"6":["v","Himprom ap"]},27]},1]},2]},[]];

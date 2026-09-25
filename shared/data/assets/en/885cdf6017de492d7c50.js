@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:CBOM"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MKB ao"],"3":["v","MKB ao"],"6":["v","Moscow Credit Bank (public joint-stock company)"]},27]},1]},2]},[]];

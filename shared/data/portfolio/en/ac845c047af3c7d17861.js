@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TUSD"]=["o",{"name":["v","TCAPITAL ETF ALL-WEATHER D"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["v","TCAPITAL ETF ALL-WEATHER D"]},[]]},[]];

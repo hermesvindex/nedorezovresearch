@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10ENA3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Yumi BO-01"],"3":["v","Yumi BO-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Yumi\""],"42":["v","Corporate bond Yumi BO-01 maturing on 2029-03-09."]},60]},1]},2]},[]];

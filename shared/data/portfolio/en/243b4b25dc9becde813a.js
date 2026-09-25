@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:STME"]=["o",{"name":["v","STME ETF eternal portfolio"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","Pervaya"],"public_fields":["o",{"full_name":["v","STME ETF eternal portfolio"]},[]]},[]];

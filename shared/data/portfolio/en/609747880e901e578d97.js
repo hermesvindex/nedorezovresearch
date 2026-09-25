@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:GAZS"]=["o",{"name":["v","Gaz-servis ao"],"bucket":["v","Equities"],"sector_ru":["v","Industrials"],"public_fields":["o",{"full_name":["v","Gaz-servis ao"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:ROLO"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rusolovo PAO ao"],"3":["v","Rusolovo PAO ao"],"6":["v","Rusolovo PAO ao"]},27]},1]},2]},[]];

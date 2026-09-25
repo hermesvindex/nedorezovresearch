@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10C9Y2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","NOVATEK 001-P05"],"3":["v","NOVATEK 001-P05"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","public joint-stock company \"NOVATEK\""]},53]},1]},2]},[]];

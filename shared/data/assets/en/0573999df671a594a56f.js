@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DJA3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Nizhny Novgorod Region 34017"],"3":["v","Nizhny Novgorod Region 34017"],"6":["v","Municipal bonds"],"7":["v","Floating rate"],"9":["v","Ministry Finance Nizhegorodskoy oblasti"]},54]},1]},2]},[]];

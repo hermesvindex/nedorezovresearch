@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CZC7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Aerofuels002P-06"],"3":["v","Aerofuels002P-06"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"Aerofyuelz\""]},52]},1]},2]},[]];

@@ -130,6 +130,7 @@
 
   const restoredBeta = loadSavedBetaState();
   const state = { ...DEFAULT_STATE, ...(restoredBeta?.state || {}), scenarios: [] };
+  state.locale = document.documentElement.lang === "en" ? "en" : "ru";
   if (!["reinvest", "withdraw"].includes(state.payouts)) state.payouts = "reinvest";
   if (!state.assetTypes) state.assetTypes = DEFAULT_STATE.assetTypes;
   state.maxIssuer = 15;

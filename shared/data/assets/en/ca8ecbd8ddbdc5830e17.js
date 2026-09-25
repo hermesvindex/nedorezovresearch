@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DDT6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Sibsulfur BO-02-001P"],"3":["v","Sibsulfur BO-02-001P"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"SibSulfur\""]},53]},1]},2]},[]];

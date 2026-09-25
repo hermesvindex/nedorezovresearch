@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A1083C2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Tekhport03"],"3":["v","Tekhport.ru BO-03"],"6":["v","Bond"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"SELLER\""],"42":["v","Corporate bond RU000A1083C2 maturing on 2026-03-16."]},50]},1]},2]},[]];

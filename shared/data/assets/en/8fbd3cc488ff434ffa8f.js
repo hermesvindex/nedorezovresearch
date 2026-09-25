@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:YUAN"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","YUAN Bonds ETF"],"3":["v","YUAN Bonds ETF"],"6":["v","Issuer of YUAN"]},27]},1]},2]},[]];

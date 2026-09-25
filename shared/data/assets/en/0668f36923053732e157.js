@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A105TY3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","VimpelKom 001P-06"],"3":["v","VimpelKom 001P-06"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Vympel-Kommunikatsii\""]},49]},1]},2]},[]];

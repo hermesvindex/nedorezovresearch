@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10BQG9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","FLEET 001P-01"],"3":["v","FLEET 001P-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"FLIT\""],"42":["v","Corporate bond FLEET 001P-01 maturing on 2028-05-19."]},59]},1]},2]},[]];

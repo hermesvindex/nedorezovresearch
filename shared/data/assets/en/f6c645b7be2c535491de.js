@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:DZRDP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","DZRD pref."],"3":["v","DZRD pref."],"6":["v","DZRD ao"]},27]},1]},2]},[]];

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#e8eef1">
+  <link rel="icon" href="data:,">
+  <title>Portfolio builder — Nedorezov Research</title>
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260924-interface-quality-3">
+  <link rel="stylesheet" href="portfolio-runtime.css?v=20260915-prod7">
+  <link rel="stylesheet" href="../../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
+  <script src="../../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="en" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#appMain" data-i18n="skip">Skip to content</a>
+
+  <main id="appMain" class="app-shell">
+    <section class="screen intro-screen" id="introScreen" aria-labelledby="introTitle" hidden>
+      <div class="intro-grid">
+        <div class="hero-panel">
+          <p class="eyebrow" data-i18n="eyebrow">PORTFOLIO BUILDER</p>
+          <h1 id="introTitle" data-i18n="introTitle">Razmestite dengi in sootvetstvii with vashey tselyu</h1>
+          <p class="hero-copy" data-i18n="introCopy">The builder allocates capital by horizon, liquidity and risk, then presents three explainable scenarios using bonds, equities, exchange-traded funds and gold.</p>
+          <div class="hero-actions">
+            <button class="button button--primary" id="startButton" type="button" data-i18n="start">Nachat calculation</button>
+            <button class="button button--ghost" id="methodButton" type="button" data-i18n="method">Kak rabotaet calculation</button>
+          </div>
+          <p class="hero-meta" data-i18n="timeEstimate">Obychno zanimaet 4–6 minut · otvety mozhno izmenit</p>
+        </div>
+
+        <aside class="trust-panel" aria-label="Osnovnye svoystva" data-i18n-aria="trustLabel">
+          <div class="trust-panel__item">
+            <strong data-i18n="trustLocalTitle">Otvety ostayutsya on ustroystve</strong>
+            <span data-i18n="trustLocalText">Without akkaunta, otpravki on server and postoyannogo khraneniya.</span>
+          </div>
+          <div class="trust-panel__item">
+            <strong data-i18n="trustRiskTitle">Risk razlozhen by actualoram</strong>
+            <span data-i18n="trustRiskText">Liquidity, drawdown, credit, interest-rate and currency risk.</span>
+          </div>
+          <div class="trust-panel__item">
+            <strong data-i18n="trustChoiceTitle">Reshenie ostaetsya for vami</strong>
+            <span data-i18n="trustChoiceText">Servis sravnivaet stsenarii and raskryvaet ogranicheniya rascheta.</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="privacy-card" role="note">
+        <div>
+          <strong data-i18n="privacyTitle">Konfidentsialnost</strong>
+          <p data-i18n="privacyFull">My ne zaprashivaem FIO, telefon, email or rekvizity scheta. Otvety and sostav portfolio sokhranyayutsya tolko in lokalnom khranilishche etogo brauzera, ne peredayutsya on server or in analitiku. Ikh mozhno udalit knopkoy sbrosa.</p>
+        </div>
+        <span class="privacy-card__status" data-i18n="privacyStatus">Lokalnaya obrabotka</span>
+      </div>
+    </section>
+
+    <dialog class="generator-dialog" id="generatorDialog" aria-labelledby="questionTitle">
+    <section class="wizard-screen" id="wizardScreen" aria-labelledby="questionTitle">
+      <div class="wizard-progress" aria-label="Progress ankety" data-i18n-aria="progressLabel">
+        <div class="wizard-progress__topline">
+          <span id="progressLabel">1 / 10</span>
+          <button class="text-button" id="exitWizardButton" type="button" data-i18n="exit">Vyyti</button>
+        </div>
+        <div class="wizard-progress__track"><span id="progressBar"></span></div>
+      </div>
+
+      <div class="wizard-layout">
+        <form class="question-card" id="questionForm" novalidate>
+          <div class="question-card__heading">
+            <p class="eyebrow" id="questionKicker"></p>
+            <h1 id="questionTitle"></h1>
+            <p id="questionHelp" class="question-help"></p>
+          </div>
+          <div id="questionBody" class="question-body"></div>
+          <p class="validation-message" id="validationMessage" role="alert" aria-live="polite"></p>
+          <div class="question-actions">
+            <button class="button button--ghost" id="backButton" type="button" data-i18n="back">Back</button>
+            <button class="button button--primary" id="nextButton" type="submit" data-i18n="next">Prodolzhit</button>
+          </div>
+        </form>
+      </div>
+    </section>
+    </dialog>
+
+    <section class="screen results-screen is-active" id="resultsScreen" aria-label="Portfolio builder">
+      <section class="classic-embedded" aria-label="Portfolio builder" data-i18n-aria="constructorFrameTitle">
+        <iframe id="constructorFrame" title="Portfolio builder" data-i18n-title="constructorFrameTitle" scrolling="no"></iframe>
+      </section>
+
+      <section class="generated-insights" id="generatedInsights" aria-live="polite" hidden>
+        <div class="insight-grid">
+          <article class="result-card result-card--stress">
+            <p class="eyebrow" data-i18n="stressEyebrow">STRESS-TEST</p>
+            <h2 data-i18n="stressTitle">Chto mozhet proizoyti</h2>
+            <div class="stress-list" id="stressList"></div>
+          </article>
+
+          <div class="insight-stack">
+            <article class="result-card result-card--compact">
+              <p class="eyebrow" data-i18n="cashflowEyebrow">Cash Flow</p>
+              <h2 data-i18n="cashflowTitle">Vyplaty and reinvestirovanie</h2>
+              <div id="cashflowCard"></div>
+            </article>
+
+            <article class="result-card result-card--compact">
+              <p class="eyebrow" data-i18n="brokerEyebrow">REALIZATsIYa</p>
+              <h2 data-i18n="brokerTitle">Broker and expenses</h2>
+              <div id="brokerCard"></div>
+            </article>
+          </div>
+        </div>
+
+          <article class="result-card result-card--checks">
+            <p class="eyebrow" data-i18n="checksEyebrow">KONTROL</p>
+            <h2 data-i18n="checksTitle">Ogranicheniya portfolio</h2>
+            <div id="checksCard"></div>
+          </article>
+      </section>
+
+      <section class="portfolio-disclaimer" aria-label="Calculation limitations">
+        <div>
+          <p data-i18n="disclosureText">Expected value, return, cash flow and stress scenarios are model estimates. Fees, taxes, spreads, instrument availability and individual constraints are excluded from the calculation. Before trading, verify the data date and the current terms of the selected instruments. Nedorezov Research does not receive, transmit, store or analyse questionnaire responses or the composition of your portfolio.</p>
+        </div>
+        <button class="text-button saved-data-reset" id="resetSavedDataButton" type="button" data-i18n="resetSavedData">Reset</button>
+      </section>
+    </section>
+  </main>
+
+  <section class="asset-modal" id="assetModal" role="dialog" aria-modal="true" aria-label="Asset profile" aria-hidden="true" inert>
+    <button class="asset-modal__backdrop" id="assetModalBackdrop" type="button" aria-label="Close card by clicking the backdrop"></button>
+    <div class="asset-modal__panel">
+      <button class="asset-modal__close" id="assetModalClose" type="button" aria-label="Close card">
+        <span aria-hidden="true"></span>
+      </button>
+      <iframe class="asset-modal__frame" id="assetModalFrame" title="Asset profile"></iframe>
+    </div>
+  </section>
+
+  <dialog class="method-dialog" id="methodDialog" aria-labelledby="methodTitle">
+    <div class="method-dialog__head">
+      <div>
+        <p class="eyebrow" data-i18n="methodEyebrow">METODIKA</p>
+        <h2 id="methodTitle" data-i18n="methodTitle">Kak stroyatsya stsenarii</h2>
+      </div>
+      <button class="dialog-close" id="closeMethodButton" type="button" aria-label="Close" data-i18n-aria="close">×</button>
+    </div>
+    <ol class="method-list">
+      <li data-i18n="methodStep1">A mandatory liquidity reserve is calculated.</li>
+      <li data-i18n="methodStep2">Risk capacity and risk tolerance are assessed separately.</li>
+      <li data-i18n="methodStep3">Totalvyy risk ogranichivaetsya bolee nizkoy otsenkoy.</li>
+      <li data-i18n="methodStep4">Instruments filtruyutsya by sroku, dostupu, likvidnosti and strukture.</li>
+      <li data-i18n="methodStep5">Tri stsenariya prokhodyat stress-test and proverku kontsentratsiy.</li>
+    </ol>
+    <p class="method-note" data-i18n="methodNote">Expected return pokazana diapazonom. Ona ne yavlyaetsya obeshchaniem rezultata.</p>
+  </dialog>
+
+  <noscript>For raboty konstruktora trebuetsya JavaScript.</noscript>
+  <script src="portfolio-profiles.js?v=20260924-locale-1"></script>
+  <script src="portfolio-runtime.js?v=20260924-locale-1"></script>
+  <script src="../assets/integration-shell.js?v=20260924-interface-quality-3" data-force-shell="true" defer></script>
+</body>
+</html>

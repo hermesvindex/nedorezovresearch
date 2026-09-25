@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:LMBZ"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Lambumiz"],"3":["v","Lambumiz"],"6":["v","Lambumiz"]},27]},1]},2]},[]];

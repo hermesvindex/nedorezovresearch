@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:NNSB"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TNS energo Nizhniy-Novgorod ao"],"3":["v","TNS energo Nizhniy-Novgorod ao"],"6":["v","TNS energo Nizhniy-Novgorod ao"]},27]},1]},2]},[]];

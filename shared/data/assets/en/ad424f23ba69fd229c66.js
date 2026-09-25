@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A105JT4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","GazpromKapital ZO31-1-D"],"3":["v","GazpromKapital ZO31-1-D"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Gazprom Capital LLC"]},49]},1]},2]},[]];

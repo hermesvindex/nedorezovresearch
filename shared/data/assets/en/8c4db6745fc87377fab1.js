@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A106G56"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","PhosAgro ZO28-D"],"3":["v","PhosAgro ZO28-D"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"PhosAgro\""],"42":["v","Bonds 02 issue FosAgro, Reg№ 4-02-06556-A"]},60]},1]},2]},[]];

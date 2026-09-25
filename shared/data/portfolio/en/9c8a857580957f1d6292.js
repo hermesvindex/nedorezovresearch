@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:INGO"]=["o",{"name":["v","INGO ETF Ingosstrakh Corpbonds"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","Ingosstrakh Investitsii"],"public_fields":["o",{"full_name":["v","INGO ETF Ingosstrakh Corpbonds"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TUZA"]=["o",{"name":["v","Tuimaz. Zavod Avtobetonovozov"],"bucket":["v","Equities"],"sector_ru":["v","Industrials"],"public_fields":["o",{"full_name":["v","Tuimaz. Zavod Avtobetonovozov"]},[]]},[]];

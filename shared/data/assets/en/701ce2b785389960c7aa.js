@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:LPSB"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","LESK ao"],"3":["v","LESK ao"],"6":["v","LESK ao"]},27]},1]},2]},[]];

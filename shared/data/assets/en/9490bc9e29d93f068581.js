@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:URKZ"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Uralskaya kuznica ao"],"3":["v","Uralskaya kuznica ao"],"6":["v","Uralskaya kuznitsa"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKBC"]=["o",{"name":["v","AKBC ETF blue chip Index"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["v","AKBC ETF blue chip Index"]},[]]},[]];

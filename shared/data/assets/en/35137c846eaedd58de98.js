@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:GMKN"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","NorNickel GMK"],"3":["v","NorNickel GMK"],"6":["v","Gorno-metallurgicheskaya company Nornickel"]},27]},1]},2]},[]];

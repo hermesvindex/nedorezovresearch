@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SAFE"]=["o",{"name":["v","SAFE ETF Conservative"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","Pervaya"],"public_fields":["o",{"full_name":["v","SAFE ETF Conservative"]},[]]},[]];

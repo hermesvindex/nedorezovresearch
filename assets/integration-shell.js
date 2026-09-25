@@ -7,7 +7,6 @@
   const query = new URLSearchParams(window.location.search);
   const publicOrigin = 'https://nedorezov-research.ru';
   const isTildaEmbed = window.self !== window.top && query.get('embed') === 'tilda';
-  const forceShell = script?.dataset?.forceShell === 'true';
 
   const detailCta = document.getElementById('detailCta');
   const identityChips = document.getElementById('chips');
@@ -18,6 +17,7 @@
     identityActions.append(identityChips, detailCta);
   }
 
+  const forceShell = script?.dataset?.forceShell === 'true';
   if (query.get('drawer') === '1' || (window.self !== window.top && !isTildaEmbed && !forceShell)) return;
 
   const url = path => new URL(path, rootUrl).href;
@@ -159,51 +159,6 @@
 
   ensureSiteFooter();
 
-  function publicRouteFor(target) {
-    const pathname = target.pathname;
-    if (pathname.includes('/issuer_pages/')) {
-      const filename = pathname.split('/').pop() || '';
-      const issuerId = filename.replace(/\.html$/i, '');
-      return /^\d+$/.test(issuerId) ? publicHref(`/issuer?id=${encodeURIComponent(issuerId)}`) : null;
-    }
-    if (pathname.endsWith('/statements/company.html')) {
-      const ticker = target.searchParams.get('ticker');
-      return ticker ? publicHref(`/reports?ticker=${encodeURIComponent(ticker)}`) : publicHref('/reports');
-    }
-    if (pathname.endsWith('/main/index.html')) return publicHref('/');
-    if (pathname.endsWith('/heatmap/heatmap.html')) return publicHref('/shares');
-    if (pathname.endsWith('/statements/statements.html')) return publicHref('/reports');
-    if (pathname.endsWith('/statements.html')) return publicHref('/reports');
-    if (pathname.endsWith('/bondsmap/bondsmap.html')) {
-      const destination = new URL(publicHref('/bonds'));
-      target.searchParams.forEach((value, key) => {
-        if (key !== 'embed') destination.searchParams.set(key, value);
-      });
-      return destination.href;
-    }
-    if (pathname.endsWith('/portfolio_manager_interactive/portfolio_interactive.html')) return publicHref('/pm');
-    if (pathname.endsWith('/mature_bonds_report/mature_bonds_report.html')) return publicHref('/maturebonds');
-    return null;
-  }
-
-  function rewritePublicLinks(root = document) {
-    root.querySelectorAll('a[href]').forEach(link => {
-      if (link.matches('.brand, .site-footer__brand, .quantis-global-shell__brand')) {
-        link.href = publicHref('/');
-        link.target = '_top';
-        return;
-      }
-      let target;
-      try { target = new URL(link.href, window.location.href); } catch (_) { return; }
-      const destination = publicRouteFor(target);
-      if (!destination) return;
-      link.href = destination;
-      link.target = '_top';
-    });
-  }
-
-  rewritePublicLinks();
-
   function closeMobileMenu() {
     document.body.classList.remove('qn-mobile-menu-open');
     mobileMenuButton.setAttribute('aria-expanded', 'false');
@@ -328,7 +283,7 @@
   let returnFocus = null;
 
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-  const normalize = value => String(value || '').toLocaleLowerCase('ru').replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/gi, ' ').trim();
+  const normalize = value => String(value || '').normalize('NFKC').toLocaleLowerCase('ru').replace(/\u0451/g, '\u0435').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
   const expertTop = {
     other: [
       'KEY_RATE', 'RU_CPI', 'BRENT_USD',
@@ -404,14 +359,14 @@
     if (window.location.protocol === 'file:') {
       loading = new Promise(resolve => {
         const source = document.createElement('script');
-        source.src = new URL('search-index.js', scriptUrl).href;
+        source.src = new URL('search-index.js?v=20260924-interface-quality-3', scriptUrl).href;
         source.onload = () => resolve(prepare(window.QUANTIS_SEARCH_INDEX));
         source.onerror = () => resolve([]);
         document.head.append(source);
       });
       return loading;
     }
-    loading = fetch(new URL('search-index.json', scriptUrl))
+    loading = fetch(new URL('search-index.json?v=20260924-interface-quality-3', scriptUrl))
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
@@ -464,15 +419,11 @@
         : deltaValue > 0
           ? 'is-positive'
           : 'is-neutral';
-    const localHref = siteHref(item.href);
-    const publicHrefValue = publicRouteFor(new URL(localHref));
-    const href = publicHrefValue || localHref;
-    const target = publicHrefValue ? ' target="_top"' : '';
     const marketMeta = marketValue
       ? `<span class="quantis-search-result__market"><strong>${esc(marketValue)}</strong>${dayDelta ? `<small class="${deltaTone}">${esc(dayDelta)}</small>` : ''}</span>`
       : `<span class="quantis-search-result__type">${esc(item.isin || item.currency || '')}</span>`;
     return `<article class="quantis-search-result ${fullTicker && !item.logo ? 'quantis-search-result--market-identity' : ''}" role="option" aria-selected="${position === selected}">
-      <a class="quantis-search-result__main" href="${esc(href)}"${target}>
+      <a class="quantis-search-result__main" href="${siteHref(item.href)}">
         <span class="quantis-search-result__ticker">${item.logo ? `<img src="${url(item.logo)}" alt="">` : esc(fullTicker ? item.ticker : item.ticker.slice(0, 5))}</span>
         <span class="quantis-search-result__copy"><strong>${esc(item.shortName && normalize(item.shortName) !== normalize(item.ticker) ? item.shortName : item.name)}</strong><small>${esc(item.ticker)} · ${esc(item.kindLabel)}${esc(detail)}</small></span>
         ${marketMeta}
@@ -485,10 +436,12 @@
     const label = isBonds ? 'Все выпуски облигаций' : 'О компании и финансовая отчетность';
     const metaLabel = isBonds ? `${row.issuer.bondIds.length} выпусков · фильтр будет применен` : 'Профиль эмитента · отчетность';
     const href = isBonds
-      ? publicHref(`/issuer?id=${encodeURIComponent(row.issuer.id)}`)
-      : publicHref(`/reports?ticker=${encodeURIComponent(row.ticker)}`);
+      ? (row.issuer.statementTickers.length
+        ? url(`statements/company.html?ticker=${encodeURIComponent(row.issuer.statementTickers[0])}&from=search#instruments`)
+        : url(`issuer_pages/${encodeURIComponent(row.issuer.id)}.html?from=search`))
+      : url(`statements/company.html?ticker=${encodeURIComponent(row.ticker)}&from=search`);
     return `<article class="quantis-search-result quantis-search-result--action" role="option" aria-selected="${position === selected}">
-      <a class="quantis-search-result__main" href="${href}" target="_top">
+      <a class="quantis-search-result__main" href="${href}">
         <span class="quantis-search-result__ticker">${row.issuer.logo ? `<img src="${url(row.issuer.logo)}" alt="">` : (isBonds ? 'Выпуски' : 'Компания')}</span>
         <span class="quantis-search-result__copy"><strong>${esc(row.issuer.shortName || row.issuer.name)} — ${label}</strong><small>${esc(metaLabel)}</small></span>
         <span class="quantis-search-result__type">Открыть</span>
@@ -916,20 +869,6 @@
     unifyPaginationLayout(root);
   }
 
-  function keepFirstPeriodInset() {
-    ['bondsPeriodToolbar', 'heatmapPeriodTabs'].forEach(id => {
-      const toolbar = document.getElementById(id);
-      if (!toolbar || toolbar.dataset.qnPeriodInset === 'true') return;
-      toolbar.dataset.qnPeriodInset = 'true';
-      toolbar.addEventListener('click', event => {
-        const button = event.target.closest('button');
-        if (!button || button !== toolbar.querySelector('button')) return;
-        requestAnimationFrame(() => toolbar.scrollTo({ left: 0, behavior: 'auto' }));
-      });
-    });
-  }
-
-  keepFirstPeriodInset();
   compactActions();
   const observer = new MutationObserver(records => {
     for (const record of records) {
@@ -948,6 +887,27 @@
   observer.observe(document.documentElement, { childList: true, characterData: true, subtree: true });
 })();
 
+/* apple-active-center-v37 */
+(() => {
+  const centerActive = group => {
+    if (!group || group.scrollWidth <= group.clientWidth) return;
+    const active = group.querySelector('[aria-selected="true"], [aria-pressed="true"]');
+    if (!active) return;
+    const target = active.offsetLeft - (group.clientWidth - active.offsetWidth) / 2;
+    group.scrollLeft = Math.max(0, target);
+  };
+  const centerAll = () => document.querySelectorAll(
+    '.header-liquid-glass, .size-metric-control, .quantis-search__filters'
+  ).forEach(centerActive);
+  document.addEventListener('click', event => {
+    const group = event.target.closest?.(
+      '.header-liquid-glass, .size-metric-control, .quantis-search__filters'
+    );
+    if (group) requestAnimationFrame(() => centerActive(group));
+  });
+  window.addEventListener('load', () => requestAnimationFrame(centerAll), { once: true });
+  window.addEventListener('resize', centerAll, { passive: true });
+})();
 
 /* apple-active-center-lifecycle-v39 */
 (() => {
@@ -986,7 +946,6 @@
   });
 })();
 
-
 /* apple-active-center-geometry-v40 */
 (() => {
   const selector = '.header-liquid-glass, .size-metric-control, .quantis-search__filters';
@@ -1021,4 +980,91 @@
     attributes: true,
     attributeFilter: ['aria-selected', 'aria-pressed']
   });
+})();
+
+/* exact-logo-accent-switchers-v49 */
+(() => {
+  const selector = [
+    '.header-liquid-glass', '.size-metric-control', '.quantis-search__filters',
+    '.asset-accent-segmented', '.company-segment'
+  ].join(',');
+  const parse = value => {
+    const match = String(value || '').trim().match(/^#([0-9a-f]{6})$/i);
+    if (!match) return null;
+    const hex = match[1];
+    return [0, 2, 4].map(index => parseInt(hex.slice(index, index + 2), 16));
+  };
+  const textColor = value => {
+    const rgb = parse(value);
+    if (!rgb) return '#fff';
+    const linear = rgb.map(channel => {
+      const value = channel / 255;
+      return value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4;
+    });
+    const luminance = .2126 * linear[0] + .7152 * linear[1] + .0722 * linear[2];
+    return luminance > .42 ? '#0f2233' : '#fff';
+  };
+  const update = group => {
+    const style = getComputedStyle(group);
+    const accent = style.getPropertyValue('--qn-switch-accent').trim()
+      || style.getPropertyValue('--issuer-accent').trim()
+      || style.getPropertyValue('--accent').trim()
+      || '#274c63';
+    const foreground = textColor(accent);
+    if (group.style.getPropertyValue('--qn-switch-active').trim() !== accent) {
+      group.style.setProperty('--qn-switch-active', accent);
+    }
+    if (group.style.getPropertyValue('--qn-switch-active-text').trim() !== foreground) {
+      group.style.setProperty('--qn-switch-active-text', foreground);
+    }
+    if (group.scrollWidth > group.clientWidth) {
+      const active = group.querySelector('[aria-selected="true"], [aria-pressed="true"]');
+      if (active) {
+        const target = active.offsetLeft - (group.clientWidth - active.offsetWidth) / 2;
+        group.scrollLeft = Math.max(0, target);
+      }
+    }
+  };
+  const updateAll = () => document.querySelectorAll(selector).forEach(update);
+  [0, 120, 420].forEach(delay => window.setTimeout(updateAll, delay));
+  window.addEventListener('load', updateAll, { once: true });
+  window.addEventListener('resize', updateAll, { passive: true });
+  document.addEventListener('click', event => {
+    const group = event.target.closest?.(selector);
+    if (group) requestAnimationFrame(() => update(group));
+  });
+  new MutationObserver(records => {
+    const groups = new Set();
+    records.forEach(record => {
+      const target = record.target instanceof Element ? record.target : null;
+      const group = target?.matches(selector) ? target : target?.closest(selector);
+      if (group) groups.add(group);
+    });
+    if (groups.size) requestAnimationFrame(() => groups.forEach(update));
+  }).observe(document.documentElement, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['aria-selected', 'aria-pressed', 'style']
+  });
+})();
+
+/* asset-heading-scale-v52 */
+(() => {
+  const classes = [
+    'asset-title--medium',
+    'asset-title--long',
+    'asset-title--xlong'
+  ];
+  const applyScale = () => {
+    const title = document.querySelector('body.lg-root .topline h1#title');
+    if (!title) return;
+    const length = Array.from((title.textContent || '').replace(/\s+/g, ' ').trim()).length;
+    title.classList.remove(...classes);
+    if (length >= 47) title.classList.add('asset-title--xlong');
+    else if (length >= 31) title.classList.add('asset-title--long');
+    else if (length >= 19) title.classList.add('asset-title--medium');
+  };
+  const title = document.querySelector('body.lg-root .topline h1#title');
+  if (title) new MutationObserver(applyScale).observe(title, {childList: true, subtree: true});
+  [0, 80, 240, 600].forEach(delay => window.setTimeout(applyScale, delay));
 })();

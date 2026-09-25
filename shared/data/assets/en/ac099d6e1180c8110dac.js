@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A106C50"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SELLServ02"],"9":["v","Limited Liability Company SELL-Servis"]},42]},1]},2]},[]];

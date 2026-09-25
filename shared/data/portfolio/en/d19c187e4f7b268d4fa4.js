@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SCFT"]=["o",{"name":["v","SCFT ETF Future Technologies"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Sistema Equity"],"public_fields":["o",{"full_name":["v","SCFT ETF Future Technologies"]},[]]},[]];

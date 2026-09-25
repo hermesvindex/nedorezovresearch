@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A103VP2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SberIOS 001P-479R 5Y RBC-M"],"3":["v","SberIOS 001P-479R 5Y RBC-M"],"6":["v","Corporate"],"7":["v","Structured notes"],"9":["v","Public Joint-Stock Company \"Sberbank of Russia\""]},48]},1]},2]},[]];

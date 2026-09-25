@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EYJ1"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","VIS FINANCE BO-P12"],"3":["v","VIS FINANCE BO-P12"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"VIS Finance\""]},53]},1]},2]},[]];

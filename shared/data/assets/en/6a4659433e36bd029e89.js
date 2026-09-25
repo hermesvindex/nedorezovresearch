@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10E5C4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","APRI BO-002P-13"],"3":["v","APRI BO-002P-13"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"APRI\""]},53]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:TBEU"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TBEU ETF TCAPITAL BONDS E"],"3":["v","TBEU ETF TCAPITAL BONDS E"],"6":["v","Limited Liability Company T-Equity"]},27]},1]},2]},[]];

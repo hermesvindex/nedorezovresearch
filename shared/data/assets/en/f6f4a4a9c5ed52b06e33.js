@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:FINC"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","FINSTAR Money market +"],"3":["v","FINSTAR Money market +"],"6":["v","FINSTAR Money market +"]},27]},1]},2]},[]];

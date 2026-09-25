@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:LENT"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Lenta IPJSC ORD SHS"],"3":["v","Lenta IPJSC ORD SHS"],"6":["v","Lenta IPJSC ORD SHS"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SIPO"]=["o",{"name":["v","SIPO ETF First IPO"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Pervaya"],"public_fields":["o",{"full_name":["v","SIPO ETF First IPO"]},[]]},[]];

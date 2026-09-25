@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:NVTK"]=["o",{"name":["v","PJSC \"NOVATEK\" ao"],"bucket":["v","Equities"],"sector_ru":["v","Energy (oil and gas)"],"public_fields":["o",{"full_name":["v","PJSC \"NOVATEK\" ao"]},[]]},[]];

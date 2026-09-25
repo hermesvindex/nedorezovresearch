@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:MSNG"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MosEnrg"],"3":["v","MosEnrg"],"6":["v","MosEnrg"]},27]},1]},2]},[]];

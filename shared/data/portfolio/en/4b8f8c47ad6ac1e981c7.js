@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:GOLD"]=["o",{"name":["v","BPIF Gold.Birzhevoy Asset Manager VIM"],"bucket":["v","Precious metals"],"etf_structure":["v","Precious metals"],"etf_company":["v","VIM Investitsii"],"public_fields":["o",{"full_name":["v","BPIF Gold.Birzhevoy Asset Manager VIM"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:JNOSP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Slavneft-JANOS (pref)"],"3":["v","Slavneft-JANOS (pref)"],"6":["v","Slavneft-JANOS"]},27]},1]},2]},[]];

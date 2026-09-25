@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EK63"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","BANK ROSSIYA 001P-02"],"3":["v","BANK ROSSIYA 001P-02"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Joint-Stock Company \"Aktsionernyy Bank \"ROSSIYa\""],"22":["v","Ozhidanie"]},51]},1]},2]},[]];

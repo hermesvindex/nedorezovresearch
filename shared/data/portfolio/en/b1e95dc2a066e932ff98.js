@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SMCF"]=["o",{"name":["v","SMCF ETF Cash flow"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","Solid Menedzhment"],"public_fields":["o",{"full_name":["v","SMCF ETF Cash flow"]},[]]},[]];

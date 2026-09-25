@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SIBN"]=["o",{"name":["v","Gazprom neft"],"bucket":["v","Equities"],"sector_ru":["v","Energy (oil and gas)"],"public_fields":["o",{"full_name":["v","Gazprom neft"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FGH9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SFO Split Finance PV-3"],"3":["v","SFO Split Finance PV-3"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company Split Finance\""]},52]},1]},2]},[]];

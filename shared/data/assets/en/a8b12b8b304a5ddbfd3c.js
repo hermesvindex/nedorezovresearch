@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10B0C8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Metalloinvest 001P-12"],"3":["v","Metalloinvest 001P-12"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"Kholdingovaya company \"METALLOINVEST\""]},49]},1]},2]},[]];

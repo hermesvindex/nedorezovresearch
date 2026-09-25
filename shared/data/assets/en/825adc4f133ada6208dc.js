@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CZ35"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Transportnaya LC 001P-04"],"3":["v","Transportnaya LC 001P-04"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Transportationnaya leasing company\""]},53]},1]},2]},[]];

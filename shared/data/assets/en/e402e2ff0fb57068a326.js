@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A109UN6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Sber CIB-CO-932"],"3":["v","Sber CIB-CO-932"],"6":["v","Corporate"],"7":["v","Structured"],"9":["v","Joint-Stock Company \"Sberbank KIB\""],"42":["v","Bonds 93 issue 201793, Reg№ 6-932-01793-A"]},51]},1]},2]},[]];

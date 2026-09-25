@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:OKEY"]=["o",{"name":["v","GDR OKEY Group ORD SHS"],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","GDR OKEY Group ORD SHS"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DTV8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SPFC DOM.RF 14"],"3":["v","SPFC DOM.RF 14"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Special-purpose company proektnogo finansirovaniya DOM.RF\""]},50]},1]},2]},[]];

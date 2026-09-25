@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A108P79"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Polyus ZO28-D"],"3":["v","Polyus ZO28-D"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Polyus\""],"42":["v","Bonds 01 issue Polus, Reg№ 4-01-55192-E"]},60]},1]},2]},[]];

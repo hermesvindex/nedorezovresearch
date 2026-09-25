@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BNDB"]=["o",{"name":["v","DOHOD Bonds Dec 2026/2029/2032"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","DOKhOD"],"public_fields":["o",{"full_name":["v","DOHOD Bonds Dec 2026/2029/2032"]},[]]},[]];

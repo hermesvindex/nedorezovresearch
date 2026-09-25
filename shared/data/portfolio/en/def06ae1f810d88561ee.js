@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:OBLG"]=["o",{"name":["v","BPIF Rossiyskieobligatsii Asset ManagerVIM"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","VIM Investitsii"],"public_fields":["o",{"full_name":["v","BPIF Rossiyskieobligatsii Asset ManagerVIM"]},[]]},[]];

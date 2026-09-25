@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A104TQ2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","EABR BO 001P-08"],"3":["v","EABR BO 001P-08"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Evraziyskiy bank razvitiya"],"42":["v","EABR BO 001P-08, Reg№ RU000A104TQ2"]},59]},1]},2]},[]];

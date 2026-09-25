@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FQC9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rosseti Sibir 001P-02"],"3":["v","Rosseti Sibir 001P-02"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"Rosseti Siberia\""],"22":["v","Ozhidanie"]},51]},1]},2]},[]];

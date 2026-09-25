@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CHX1"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MGKL-G01"],"3":["v","MGKL-G01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"MGKL\""],"42":["v","Corporate bond MGKL-G01 maturing on 2028-08-06."]},60]},1]},2]},[]];

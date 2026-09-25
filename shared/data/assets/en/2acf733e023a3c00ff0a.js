@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:BCSR"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","BCSR ETF MX"],"3":["v","BCSR ETF MX"],"6":["v","BCSB ETF High Yield Bonds"]},27]},1]},2]},[]];

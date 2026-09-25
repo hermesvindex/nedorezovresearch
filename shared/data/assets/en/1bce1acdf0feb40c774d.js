@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EAB8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ARENZA-PRO 001P-07"],"3":["v","ARENZA-PRO 001P-07"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"ARENZA-PRO\""]},53]},1]},2]},[]];

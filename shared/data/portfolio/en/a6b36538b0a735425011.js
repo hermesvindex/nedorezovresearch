@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:KUZB"]=["o",{"name":["v","Bank \"Kuznetskiy\" PJSC ao"],"bucket":["v","Equities"],"sector_ru":["v","Financials"],"public_fields":["o",{"full_name":["v","Bank \"Kuznetskiy\" PJSC ao"]},[]]},[]];

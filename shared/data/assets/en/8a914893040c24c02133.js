@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CT74"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","FERA 001P-01"],"3":["v","FERA 001P-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Fera\""],"42":["v","Corporate bond FERA 001P-01 maturing on 2028-09-07."]},59]},1]},2]},[]];

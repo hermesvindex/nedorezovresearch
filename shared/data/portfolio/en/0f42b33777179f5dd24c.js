@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKAI"]=["o",{"name":["v","AKAI ETF Anti-inflationary"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["v","AKAI ETF Anti-inflationary"]},[]]},[]];

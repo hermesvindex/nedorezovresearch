@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:ASSB"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Astrakhan Energo Sbyt"],"3":["v","Astrakhan Energo Sbyt"],"6":["v","Astrakhanskaya ESK PJSC"]},27]},1]},2]},[]];

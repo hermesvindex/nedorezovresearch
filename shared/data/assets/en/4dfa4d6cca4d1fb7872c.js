@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:MFGSP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Megion (pref)"],"3":["v","Megion (pref)"],"6":["v","ao Slavneft-Megionneftegaz"]},27]},1]},2]},[]];

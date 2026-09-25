@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0JVB27"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","RZhD 34"],"3":["v","RZhD 34"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","open joint-stock company \"Russian Railways\""],"49":["v","Bonds 34 issue OJSC \"RZhD\", Reg№ 4-34-65045-D"]},52]},1]},2]},[]];

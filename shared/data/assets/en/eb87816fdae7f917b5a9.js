@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:OBLG"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","OBLG ETF VIM Corp Bonds"],"3":["v","OBLG ETF VIM Corp Bonds"],"6":["v","Liquidity. Chinese yuan"]},27]},1]},2]},[]];

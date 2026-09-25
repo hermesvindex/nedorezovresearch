@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DSM9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Freight One 003P-03"],"3":["v","Freight One 003P-03"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Joint-Stock Company \"Pervaya Gruzovaya Company\""],"22":["v","Ozhidanie"]},51]},1]},2]},[]];

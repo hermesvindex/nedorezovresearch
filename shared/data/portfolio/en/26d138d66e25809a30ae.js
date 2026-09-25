@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKGD"]=["o",{"name":["v","AKGD ETF Gold"],"bucket":["v","Precious metals"],"etf_structure":["v","Precious metals"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["v","AKGD ETF Gold"]},[]]},[]];

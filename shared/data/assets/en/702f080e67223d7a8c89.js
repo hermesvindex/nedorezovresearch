@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DWV2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","VEB.RF PBO-002P-56"],"3":["v","VEB.RF PBO-002P-56"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","state corporation razvitiya \"VEB.RF\""],"22":["v","Ozhidanie"]},49]},1]},2]},[]];

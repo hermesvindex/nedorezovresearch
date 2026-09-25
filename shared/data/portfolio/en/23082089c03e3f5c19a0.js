@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AMGL"]=["o",{"name":["v","AMGL ETF Cumulative in Gold"],"bucket":["v","Precious metals"],"etf_structure":["v","Precious metals"],"etf_company":["v","Aton-menedzhment"],"public_fields":["o",{"full_name":["v","AMGL ETF Cumulative in Gold"]},[]]},[]];

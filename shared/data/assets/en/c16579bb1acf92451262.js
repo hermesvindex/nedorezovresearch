@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A105WZ4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","LIZING-TREYD 001P-07"],"3":["v","LIZING-TREYD 001P-07"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Lizing-Treyd\""]},49]},1]},2]},[]];

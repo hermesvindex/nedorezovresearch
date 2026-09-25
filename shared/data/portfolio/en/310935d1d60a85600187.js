@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MRKC"]=["o",{"name":["v","PJSC \"Rosseti Centre\" ao"],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","PJSC \"Rosseti Centre\" ao"]},[]]},[]];

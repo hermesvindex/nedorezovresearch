@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:YDEX"]=["o",{"name":["v","YANDEX"],"bucket":["v","Equities"],"sector_ru":["v","Information technology"],"public_fields":["o",{"full_name":["v","YANDEX"]},[]]},[]];

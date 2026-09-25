@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:BISVP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","BashInformSvyaz ap"],"3":["v","BashInformSvyaz ap"],"6":["v","BashInformSvyaz ap"]},27]},1]},2]},[]];

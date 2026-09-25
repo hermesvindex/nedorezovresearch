@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A109UE5"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","RAF 001-01"],"3":["v","RAF 001-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"AVTOASSISTANS\""],"42":["v","Bonds 01 issue Avtoassistans, Reg№ 4-01-63519-H-001P"]},59]},1]},2]},[]];

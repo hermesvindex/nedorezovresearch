@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:RTSB"]=["o",{"name":["v","TNS energo Rostov-na-Dony ao"],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","TNS energo Rostov-na-Dony ao"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:SAGOP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SamaraEnergo(pref)"],"3":["v","SamaraEnergo(pref)"],"6":["v","energy and electrification Samaraenergo"]},27]},1]},2]},[]];

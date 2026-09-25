@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A104BC0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Kaliningrad region 35004"],"3":["v","Kaliningrad region 35004"],"6":["v","Municipal bonds"],"7":["v","Fixed rate"],"9":["v","Ministry Finance Kaliningradskoy oblasti"]},49]},1]},2]},[]];

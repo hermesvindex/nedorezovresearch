@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:LNZL"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Lenzoloto"],"3":["v","Lenzoloto"],"6":["v","Lenzoloto PJSC ao"]},27]},1]},2]},[]];

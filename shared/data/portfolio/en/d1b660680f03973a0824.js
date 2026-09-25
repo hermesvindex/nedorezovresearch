@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:IRKT"]=["o",{"name":["v","\"Yakovlev\" PJSC ak.ob.-3"],"bucket":["v","Equities"],"sector_ru":["v","Industrials"],"public_fields":["o",{"full_name":["v","\"Yakovlev\" PJSC ak.ob.-3"]},[]]},[]];

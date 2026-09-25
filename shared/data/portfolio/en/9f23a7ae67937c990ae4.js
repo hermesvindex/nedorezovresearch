@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:NMTP"]=["o",{"name":["v","NMTP"],"bucket":["v","Equities"],"sector_ru":["v","Transportation"],"public_fields":["o",{"full_name":["v","NMTP"]},[]]},[]];

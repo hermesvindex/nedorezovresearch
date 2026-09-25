@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:PRFN"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TEPLANT vostok"],"3":["v","TEPLANT vostok"],"6":["v","TEPLANT east"]},27]},1]},2]},[]];

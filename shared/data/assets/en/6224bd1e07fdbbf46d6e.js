@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CM71"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Ideco BO-01"],"3":["v","Ideco BO-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Aydeko\""],"42":["v","Corporate bond Ideco BO-01 maturing on 2028-08-29."]},59]},1]},2]},[]];

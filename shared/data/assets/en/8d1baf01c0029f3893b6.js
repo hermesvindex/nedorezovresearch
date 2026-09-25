@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:OMZZP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","OMZ (pref)"],"3":["v","OMZ (pref)"],"6":["v","apObedinen. mash. zavody"]},27]},1]},2]},[]];

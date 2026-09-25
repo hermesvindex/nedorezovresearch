@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RKKE"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","RKK Energia"],"3":["v","RKK Energia"],"6":["v","Raketno-kosmicheskaya corporation Energiya named after With.P. Koroleva"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:BCSW"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","BCSW ETF All Weather Portfolio"],"3":["v","BCSW ETF All Weather Portfolio"],"6":["v","BCSB ETF High Yield Bonds"]},27]},1]},2]},[]];

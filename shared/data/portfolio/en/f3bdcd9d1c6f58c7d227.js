@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:PSGM"]=["o",{"name":["v","PSGM ETF PSB Gold Market"],"bucket":["v","Precious metals"],"etf_structure":["v","Precious metals"],"etf_company":["v","Promsvyaz"],"public_fields":["o",{"full_name":["v","PSGM ETF PSB Gold Market"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BCSW"]=["o",{"name":["v","BCSW ETF All Weather Portfolio"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","BKS"],"public_fields":["o",{"full_name":["v","BCSW ETF All Weather Portfolio"]},[]]},[]];

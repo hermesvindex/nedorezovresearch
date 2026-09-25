@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:VGSB"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Volgograd Energo Sbyt"],"3":["v","Volgograd Energo Sbyt"],"6":["v","Volgogradenergosbyt"]},27]},1]},2]},[]];

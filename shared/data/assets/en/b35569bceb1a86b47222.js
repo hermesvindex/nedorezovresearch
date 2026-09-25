@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CRT8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rumberg CP-1-58"],"3":["v","Rumberg CP-1-58"],"6":["v","Corporate"],"7":["v","Structured notes"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company Rumberg Structured Produkty\""]},48]},1]},2]},[]];

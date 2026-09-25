@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AMRE"]=["o",{"name":["v","ATON Russian Equities + ETF"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Aton-menedzhment"],"public_fields":["o",{"full_name":["v","ATON Russian Equities + ETF"]},[]]},[]];

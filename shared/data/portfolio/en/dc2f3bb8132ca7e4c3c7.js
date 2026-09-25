@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AMGB"]=["o",{"name":["v","ATON Long OFZ"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","Aton-menedzhment"],"public_fields":["o",{"full_name":["v","ATON Long OFZ"]},[]]},[]];

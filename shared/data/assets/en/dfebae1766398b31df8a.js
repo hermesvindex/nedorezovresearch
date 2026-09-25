@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FQ58"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TBank IS-1-8"],"3":["v","TBank IS-1-8"],"6":["v","Bond"],"7":["v","Structured"],"9":["v","Joint-Stock Company \"TBank\""],"42":["v","Corporate bond TBank IS-1-8 maturing on 2027-07-20."]},59]},1]},2]},[]];

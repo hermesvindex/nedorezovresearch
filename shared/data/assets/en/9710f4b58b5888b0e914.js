@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:AKFN"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","AKFN ETF finance index"],"3":["v","AKFN ETF finance index"],"6":["v","AKAI ETF Anti-inflationary"]},27]},1]},2]},[]];

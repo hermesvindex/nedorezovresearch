@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10A6U8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rolf o.to. 001R-05"],"3":["v","ROLF BO 001R-05"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"ROLF\""],"42":["v","Corporate bond RU000A10A6U8 maturing on 2026-05-23."]},59]},1]},2]},[]];

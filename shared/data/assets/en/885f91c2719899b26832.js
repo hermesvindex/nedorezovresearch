@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10ECH1"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MTS 2R-15"],"3":["v","MTS 2R-15"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Mobile TeleSystems\""]},50]},1]},2]},[]];

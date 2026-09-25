@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:ASTR"]=["o",{"name":["v","Astra Group"],"bucket":["v","Equities"],"sector_ru":["v","Information technology"],"public_fields":["o",{"full_name":["v","Astra Group"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A104WJ1"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MTS 1P-21"],"9":["v","Mobile TeleSystems"]},42]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:CHKZ"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","CKPZ"],"3":["v","CKPZ"],"6":["v","ChKPZ PJSC ao"]},27]},1]},2]},[]];

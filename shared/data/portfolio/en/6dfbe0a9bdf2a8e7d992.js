@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:CNRU"]=["o",{"name":["v","IPJSC \"Tsian\""],"bucket":["v","Equities"],"sector_ru":["v","Information technology"],"public_fields":["o",{"full_name":["v","IPJSC \"Tsian\""]},[]]},[]];

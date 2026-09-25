@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0JWB59"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Derzhava 03"],"3":["v","Derzhava 03"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","\"Aktsionernyy kommercheskiy bank \"Derzhava\" public joint-stock company\""]},49]},1]},2]},[]];

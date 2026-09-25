@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CRG5"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Ferrum BP2"],"3":["v","Ferrum BP2"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Ferrum\""]},52]},1]},2]},[]];

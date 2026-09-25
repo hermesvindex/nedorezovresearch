@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:CNTLP"]=["o",{"name":["v","\"Tsentralnyy Centrlnyi Telegraf\" PJSC ap"],"bucket":["v","Equities"],"sector_ru":["v","Telecommunications"],"public_fields":["o",{"full_name":["v","\"Tsentralnyy Centrlnyi Telegraf\" PJSC ap"]},[]]},[]];

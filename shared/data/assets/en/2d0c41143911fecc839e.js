@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DTU0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","GLAVSNAB BO-02"],"3":["v","GLAVSNAB BO-02"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"GLAVSNAB\""],"42":["v","Corporate bond RU000A10DTU0 maturing on 2029-11-26."]},59]},1]},2]},[]];

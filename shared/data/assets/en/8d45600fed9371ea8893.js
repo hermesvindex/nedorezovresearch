@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A105EV1"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Eurasian Develop Bank P03-04"],"3":["v","Eurasian Develop Bank P03-04"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Evraziyskiy bank razvitiya"]},53]},1]},2]},[]];

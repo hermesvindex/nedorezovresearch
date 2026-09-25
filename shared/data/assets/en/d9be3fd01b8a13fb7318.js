@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EN37"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","KAMAZ PTC BO-P21"],"3":["v","KAMAZ PTC BO-P21"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"KAMAZ\""],"22":["v","Ozhidanie"]},51]},1]},2]},[]];

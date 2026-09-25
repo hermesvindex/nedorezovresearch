@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:YDEX"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","YANDEX"],"3":["v","YANDEX"],"6":["v","International Public Joint-Stock Company YANDEX"]},27]},1]},2]},[]];

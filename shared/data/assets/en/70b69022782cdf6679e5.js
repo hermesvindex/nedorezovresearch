@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EFL6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ALFA-BANK T2-CR-06"],"3":["v","ALFA-BANK T2-CR-06"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Joint-stock Company \"Alfa-Bank\""]},53]},1]},2]},[]];

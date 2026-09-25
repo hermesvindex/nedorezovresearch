@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A107TR3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","GarInv2P08"],"3":["v","FPK Garant-Invest BO 002R-08"],"6":["v","Bond"],"7":["v","Fixed rate"],"9":["v","Issuer of RU000A107TR3"],"42":["v","Corporate bond RU000A107TR3 maturing on 2026-02-10."]},50]},1]},2]},[]];

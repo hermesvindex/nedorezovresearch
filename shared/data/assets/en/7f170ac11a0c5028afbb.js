@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10D5C5"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","RZD BO 001P-48R"],"3":["v","RZD BO 001P-48R"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","open joint-stock company \"Russian Railways\""]},52]},1]},2]},[]];

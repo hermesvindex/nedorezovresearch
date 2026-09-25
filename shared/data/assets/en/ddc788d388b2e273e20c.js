@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DC80"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Bank VTB C-1-1687"],"3":["v","Bank VTB C-1-1687"],"6":["v","Corporate"],"7":["v","Structured notes"],"9":["v","Bank VTB (public joint-stock company)"]},51]},1]},2]},[]];

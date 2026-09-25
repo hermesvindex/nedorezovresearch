@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:XS1843437036"]=["o",{"bucket":["v","Foreign-currency bonds"],"note":["v","Valyutnaya obligatsiya: forecast zavisit from stsenariya kursa EUR/RUB. Coupons are reinvested in fractional units of the same issue at the model price on the payment date."]},[]];

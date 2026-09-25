@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A1006Z4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SEVERGAZBANK 03"],"3":["v","SEVERGAZBANK 03"],"6":["v","Corporate"],"7":["v","Fixed rate"],"42":["v","Bonds 06 issue 02816B, Reg№ 40602816B"]},51]},1]},2]},[]];

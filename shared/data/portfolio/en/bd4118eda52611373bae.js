@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:ESGR"]=["o",{"name":["v","ESGR ETF RSHB-MOEX-RSPP VecTR"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","RSKhB Upravlenie Aktivami"],"public_fields":["o",{"full_name":["v","ESGR ETF RSHB-MOEX-RSPP VecTR"]},[]]},[]];

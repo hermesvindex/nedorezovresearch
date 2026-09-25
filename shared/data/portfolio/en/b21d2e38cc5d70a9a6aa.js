@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TRUR"]=["o",{"name":["v","TRUR ETF ALL-WEATHER RUB"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["v","TRUR ETF ALL-WEATHER RUB"]},[]]},[]];

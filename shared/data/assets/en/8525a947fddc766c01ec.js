@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:KGKCP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Kurganskaja Gener.Kompanija ap"],"3":["v","Kurganskaja Gener.Kompanija ap"],"6":["v","Kurganskaja Gener.Kompanija"]},27]},1]},2]},[]];

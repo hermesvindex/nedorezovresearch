@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:TASBP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Tambov EnergoSbyt Comp. (pref)"],"3":["v","Tambov EnergoSbyt Comp. (pref)"],"6":["v","Tambovskaya energosbytovaya company"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:PMSBP"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Perm' EnergoSbyt (pref)"],"3":["v","Perm' EnergoSbyt (pref)"],"6":["v","Permskaya energosbytovaya company"]},27]},1]},2]},[]];

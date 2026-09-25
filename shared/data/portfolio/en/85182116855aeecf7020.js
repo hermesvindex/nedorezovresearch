@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MGTS"]=["o",{"name":["v","PJSC \"MGTS\" ao (5 in)"],"bucket":["v","Equities"],"sector_ru":["v","Telecommunications"],"public_fields":["o",{"full_name":["v","PJSC \"MGTS\" ao (5 in)"]},[]]},[]];

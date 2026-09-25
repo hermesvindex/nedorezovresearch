@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:TGKN"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TGK-14"],"3":["v","TGK-14"],"6":["v","Territorialnaya generating company № 14"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DJV9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SCF 1P2"],"3":["v","SCF 1P2"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","public joint-stock company \"Sovremennyy kommercheskiy flot\""]},53]},1]},2]},[]];

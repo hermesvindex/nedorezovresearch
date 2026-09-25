@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A1087A7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ER-Telekom Holding PBO-02-06"],"3":["v","ER-Telekom Holding PBO-02-06"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"ER-Telekom Holding\""]},49]},1]},2]},[]];

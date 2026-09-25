@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A108KT6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rosagroleasing 002P-01"],"3":["v","Rosagroleasing 002P-01"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Joint-Stock Company \"Rosagrolizing\""],"22":["v","Ozhidanie"]},50]},1]},2]},[]];

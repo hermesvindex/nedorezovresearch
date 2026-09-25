@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:AKRN"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Acron"],"3":["v","Acron"],"6":["v","Acron"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A107MM9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","KAMAZ BP11"],"9":["v","KAMAZ"]},42]},1]},2]},[]];

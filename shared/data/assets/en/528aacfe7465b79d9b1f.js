@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EG44"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Ilon 001P-01"],"3":["v","Ilon 001P-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"ILON\""],"42":["v","Corporate bond Ilon 001P-01 maturing on 2028-02-24."]},60]},1]},2]},[]];

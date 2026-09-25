@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:TITR"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","T-Capital GROWTH SHARES"],"3":["v","T-Capital GROWTH SHARES"],"6":["v","Limited Liability Company T-Equity"]},27]},1]},2]},[]];

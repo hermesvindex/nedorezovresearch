@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FBP3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SFO Neva Finance 01"],"3":["v","SFO Neva Finance 01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company \"Neva Finance\""]},49]},1]},2]},[]];

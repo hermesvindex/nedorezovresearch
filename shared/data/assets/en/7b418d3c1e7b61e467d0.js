@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A106EV9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","KIFA 001P-01"],"3":["v","KIFA 001P-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"KIFA\""],"42":["v","Corporate bond RU000A106EV9 maturing on 2026-06-22."]},59]},1]},2]},[]];

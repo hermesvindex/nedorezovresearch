@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKGP"]=["o",{"name":["v","AKGP ETF Currency bonds"],"bucket":["v","Foreign-currency bonds"],"etf_structure":["v","Foreign-currency bonds"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["v","AKGP ETF Currency bonds"]},[]]},[]];

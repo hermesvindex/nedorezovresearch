@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BCSG"]=["o",{"name":["v","BCSG ETF Gold"],"bucket":["v","Precious metals"],"etf_structure":["v","Precious metals"],"etf_company":["v","BKS"],"public_fields":["o",{"full_name":["v","BCSG ETF Gold"]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:GROD"]=["o",{"name":["v","ETF GROD DOHOD GROWTH IND"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","DOKhOD"],"public_fields":["o",{"full_name":["v","ETF GROD DOHOD GROWTH IND"]},[]]},[]];

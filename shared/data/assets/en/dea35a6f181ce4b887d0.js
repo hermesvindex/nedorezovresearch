@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10E291"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","GK Azot 001P-01"],"3":["v","GK Azot 001P-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company Group companies \"Azot\""]},53]},1]},2]},[]];

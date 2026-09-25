@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:TEUR"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","TCAPITAL ETF ALL-WEATHER E"],"3":["v","TCAPITAL ETF ALL-WEATHER E"],"6":["v","Limited Liability Company T-Equity"]},27]},1]},2]},[]];

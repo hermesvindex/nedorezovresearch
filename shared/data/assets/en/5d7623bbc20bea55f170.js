@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A103XD4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SFO IB 01"],"3":["v","SFO IB 01"],"6":["v","Corporate"],"7":["v","Structured"],"42":["v","Bonds 01 issue 00596R, Reg№ 6-01-00596-R"]},51]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EXW6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SELIGDAR 001-11"],"3":["v","SELIGDAR 001-11"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Seligdar\""]},53]},1]},2]},[]];

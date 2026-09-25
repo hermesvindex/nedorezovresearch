@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:SU29028RMFS6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","OFZ-PK 29028"],"3":["v","OFZ-PK 29028"],"6":["v","OFZ"],"7":["v","Floating rate"],"9":["v","Ministry of Finance of the Russian Federation"]},53]},1]},2]},[]];

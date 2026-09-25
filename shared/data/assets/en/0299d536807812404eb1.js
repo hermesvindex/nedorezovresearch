@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FGX6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Avto Finance Bank BO-001P-19"],"3":["v","Avto Finance Bank BO-001P-19"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"Avto Finance Bank\""]},53]},1]},2]},[]];

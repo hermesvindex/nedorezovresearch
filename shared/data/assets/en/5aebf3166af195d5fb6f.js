@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10BLG0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Interskol BO-001P-01"],"3":["v","Interskol BO-001P-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"KLS-Treyd\""]},53]},1]},2]},[]];

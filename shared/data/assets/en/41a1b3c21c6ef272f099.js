@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10D3R8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","StankoMashstroy BO-01"],"3":["v","StankoMashstroy BO-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"StankoMashStroy\""]},52]},1]},2]},[]];

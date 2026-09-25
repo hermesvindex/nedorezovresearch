@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:KOGK"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Korshunovskii GOK"],"3":["v","Korshunovskii GOK"],"6":["v","Korshunovskii GOK"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:AMGL"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","AMGL ETF Cumulative in Gold"],"3":["v","AMGL ETF Cumulative in Gold"],"6":["v","ATON Floaters"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:HNFG"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","HENDERSON"],"3":["v","HENDERSON"],"6":["v","HENDERSON FEShN GRUPP"]},27]},1]},2]},[]];

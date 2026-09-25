@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TITR"]=["o",{"name":["v","T-Equity Russian Tekhnologi"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["v","T-Capital GROWTH SHARES"]},[]]},[]];

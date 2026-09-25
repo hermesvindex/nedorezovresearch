@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FGV0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Polyus PBO-11"],"3":["v","Polyus PBO-11"],"6":["v","Bond"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Polyus\""],"42":["v","Corporate bond Polyus PBO-11 maturing on 2033-05-17."]},60]},1]},2]},[]];

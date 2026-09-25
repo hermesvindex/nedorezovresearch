@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TPAY"]=["o",{"name":["v","TPAY ETF T-Capital Passive Inc"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["v","TPAY ETF T-Capital Passive Inc"]},[]]},[]];

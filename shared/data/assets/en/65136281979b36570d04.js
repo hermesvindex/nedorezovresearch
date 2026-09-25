@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A1098U2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","AYGENIS-01"],"3":["v","AYGENIS-01"],"6":["v","Bond"],"7":["v","Fixed rate"],"9":["v","Issuer of RU000A1098U2"],"42":["v","Corporate bond RU000A1098U2 maturing on 2026-02-12."]},50]},1]},2]},[]];

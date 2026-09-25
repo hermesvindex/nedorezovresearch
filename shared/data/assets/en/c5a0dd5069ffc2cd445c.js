@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0ZYX28"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Sovcombank 1B02"],"3":["v","Sovcombank 1B02"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"Sovcombank\""],"49":["v","Bonds 10 issue 00963B, Reg№ 41000963B"]},52]},1]},2]},[]];

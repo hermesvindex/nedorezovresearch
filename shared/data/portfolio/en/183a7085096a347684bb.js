@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MGNZ"]=["o",{"name":["v","SMZ"],"bucket":["v","Equities"],"sector_ru":["v","Metals and mining"],"public_fields":["o",{"full_name":["v","SMZ"]},[]]},[]];

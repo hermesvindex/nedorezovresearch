@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TGKBP"]=["o",{"name":["v","ap PJSC \"TGK-2\""],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","ap PJSC \"TGK-2\""]},[]]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EXS4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","AGROCLUB BO-01"],"3":["v","AGROCLUB BO-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"AgroKlub\""]},53]},1]},2]},[]];

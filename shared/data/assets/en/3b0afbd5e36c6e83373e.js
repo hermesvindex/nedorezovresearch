@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10BPD8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Gazprombank BO 004P-21"],"3":["v","Gazprombank BO 004P-21"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","\"Gazprombank\" (Joint-Stock Company)"]},52]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EJQ7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Atomenergoprom 001P-11"],"3":["v","Atomenergoprom 001P-11"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","joint-stock company \"Atomnyy energopromyshlennyy kompleks\""]},53]},1]},2]},[]];

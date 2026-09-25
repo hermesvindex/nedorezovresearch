@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CSD0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","IPJSC UC RUSAL BO-001P-15"],"3":["v","IPJSC UC RUSAL BO-001P-15"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","International Public Joint-Stock Company \"Obedinennaya Company \"RUSAL\"\""]},53]},1]},2]},[]];

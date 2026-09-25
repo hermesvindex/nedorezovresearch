@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:DIVD"]=["o",{"name":["v","ETF DIVD DOHOD DIV"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","DOKhOD"],"public_fields":["o",{"full_name":["v","ETF DIVD DOHOD DIV"]},[]]},[]];

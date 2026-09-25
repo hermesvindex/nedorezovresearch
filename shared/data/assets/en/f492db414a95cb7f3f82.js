@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10C5P8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","PIR BO-04-001P"],"3":["v","PIR BO-04-001P"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Issuer of RU000A10C5P8"],"42":["v","Corporate bond PIR BO-04-001P maturing on 2028-07-07."]},60]},1]},2]},[]];

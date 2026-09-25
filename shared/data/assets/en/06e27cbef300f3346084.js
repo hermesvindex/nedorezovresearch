@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10A6B8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","RusGid2R02"],"9":["v","Federal gidrogeneriruyushchaya company - RusGidro"]},42]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BCSE"]=["o",{"name":["v","BCSE ETF Currency Bonds"],"bucket":["v","Other"],"etf_structure":["v","Val"],"etf_company":["v","BKS"],"public_fields":["o",{"full_name":["v","BCSE ETF Currency Bonds"]},[]]},[]];

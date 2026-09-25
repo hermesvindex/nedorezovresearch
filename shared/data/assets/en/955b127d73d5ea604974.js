@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0JTW83"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","DOM.RF - 25"],"3":["v","DOM.RF - 25"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"DOM.RF\""],"51":["v","Bonds 25 issue PJSC \"DOM.RF\", Reg№ 4-25-00739-A"]},55]},1]},2]},[]];

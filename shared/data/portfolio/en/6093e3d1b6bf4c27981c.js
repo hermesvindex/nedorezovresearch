@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:RU000A1089L0"]=["o",{"name":["v","LCA BO-02-001P"],"bucket":["v","Rouble-denominated bonds"],"note":["v","Coupons are reinvested in fractional units of the same issue at the model price on the payment date."],"public_fields":["o",{"full_name":["v","LCA BO-02-001P"]},[]]},[]];

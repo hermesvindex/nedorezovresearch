@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:KLVZ"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","KLVZ KRISTALL"],"3":["v","KLVZ KRISTALL"],"6":["v","KLVZ KRISTALL"]},27]},1]},2]},[]];

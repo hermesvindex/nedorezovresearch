@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FHQ8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","T Plus 002P-02"],"3":["v","T Plus 002P-02"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"T Plyus\""],"22":["v","Ozhidanie"]},51]},1]},2]},[]];

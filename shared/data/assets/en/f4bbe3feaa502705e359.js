@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DBM5"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SPO TB-5 class A"],"3":["v","SPO TB-5 class A"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company TB-5\""]},52]},1]},2]},[]];

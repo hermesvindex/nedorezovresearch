@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:LENT"]=["o",{"name":["v","Lenta IPJSC ORD SHS"],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["v","Lenta IPJSC ORD SHS"]},[]]},[]];

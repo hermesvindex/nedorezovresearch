@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Financial statements · Nedorezov Research</title>
+  <link rel="stylesheet" href="assets/product-system.css?v=ad9fde8cfa29">
+  <link rel="stylesheet" href="assets/liquid-glass.css?v=20260820-runtime-79">
+  <link rel="stylesheet" href="assets/company.css?v=20260820-runtime-79">
+  <link rel="stylesheet" href="../assets/issuer-instruments.css?v=ad9fde8cfa29">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260924-interface-quality-3">
+  <script src="../../shared/vendor/plotly-2.35.2.min.js"></script>
+  <link rel="stylesheet" href="../../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
+  <script src="../../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="en" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
+</head>
+<body class="qn-product-page">
+  <main class="company-page" id="top">
+    <header class="company-header">
+      <div class="company-header__top">
+        <div class="company-brand">
+          <div class="company-brand__logo" id="companyLogo"></div>
+          <div>
+            <p class="company-kicker">Nedorezov Research · issuer financial statements</p>
+            <h1 class="company-title" id="companyTitle"></h1>
+            <div class="company-chips" id="companyChips"></div>
+          </div>
+        </div>
+        <a class="back-link" id="companyBackLink" href="./statements.html">Back to issuers</a>
+      </div>
+    </header>
+    <section class="company-toolbar company-panel" id="overview">
+      <div class="company-segment" id="standardButtons" aria-label="Reporting standard"></div>
+      <div class="company-segment" id="periodButtons" aria-label="Reporting frequency"></div>
+      <p class="unit-note">Figures are shown in the units used in the source statements. Monetary metrics are normalised to roubles for cross-company comparison.</p>
+    </section>
+    <section class="metric-grid" id="latestMetrics"></section>
+    <section class="analytics-grid" id="results">
+      <article class="company-panel company-panel--wide">
+        <div class="section-head"><div><p class="section-kicker">Financial performance</p><h2 id="resultsTitle">Revenue, EBITDA and net profit</h2></div><span id="resultsPeriod" class="section-meta"></span></div>
+        <div id="resultsChart" class="large-chart"></div>
+      </article>
+      <article class="company-panel" id="profitability">
+        <div class="section-head"><div><p class="section-kicker">Efficiency</p><h2>Profitability</h2></div><select id="profitabilityView" class="metric-select" aria-label="Profitability analysis"></select></div>
+        <div id="marginChart" class="side-chart"></div>
+        <div id="marginFacts" class="fact-list"></div><p id="marginMethodology" class="profitability-methodology"></p>
+      </article>
+    </section>
+    <section class="company-panel peer-panel" id="peers">
+      <div class="section-head"><div><p class="section-kicker">Peer comparison</p><h2 id="peerTitle">Issuer and peer companies</h2></div><select id="peerMetric" class="metric-select" aria-label="Comparison metric"></select></div>
+      <div class="peer-grid"><div id="peerChart" class="peer-chart"></div><div id="peerTable" class="peer-table-wrap"></div></div>
+    </section>
+    <section class="company-panel" id="statements">
+      <div class="section-head"><div><p class="section-kicker">Financial statements</p><h2>Metric history</h2></div><select class="metric-select" id="metricSelect" aria-label="Financial metric"></select></div>
+      <div class="statement-grid"><div id="focusChart" class="statement-chart"></div><div class="company-table-wrap" id="companyTableWrap"></div></div>
+    </section>
+    <section class="company-panel issuer-instruments" id="instruments" data-issuer-instruments></section>
+  </main>
+    <script src="company-manifest.js"></script>
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const ticker = params.get("ticker") || decodeURIComponent(location.hash.slice(1)) || "SBER";
+      const record = window.NED_COMPANY_MANIFEST[ticker];
+      if (!record) {
+        document.body.innerHTML = '<main class="company-page"><section class="company-panel"><h1>Issuer not found</h1><p></p></section></main>';
+        document.querySelector("p").textContent = ticker;
+        return;
+      }
+      const runtimeUrl = new URL("../../shared/compact-data.js", location.href);
+      const baseUrl = new URL("../../shared/data/statements/base/" + record[0] + ".js", location.href);
+      const patchUrl = record[1] && "en" === "en" ? new URL("../../shared/data/statements/en/" + record[1] + ".js", location.href) : null;
+      const bootUrl = new URL("assets/company-bootstrap.js", location.href);
+      document.write('<script src="' + runtimeUrl.href + '"><\/script>');
+      document.write('<script src="' + baseUrl.href + '"><\/script>');
+      if (patchUrl) document.write('<script src="' + patchUrl.href + '"><\/script>');
+      document.write('<script>window.STATEMENTS_PACKED=window.NRCompact.materialize(' + JSON.stringify("statements:" + ticker) + ');<\/script>');
+      document.write('<script src="' + bootUrl.href + '"><\/script>');
+    }());
+  </script>
+  <script src="assets/company.js?v=20260924-statements-3"></script>
+  <script src="../assets/issuer-instruments.js?v=20260924-statements-4"></script>
+  <script src="../assets/integration-shell.js?v=20260924-interface-quality-3" defer></script>
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MOEX Heatmap</title>
-  <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
+  <script src="../shared/vendor/plotly-2.35.2.min.js"></script>
   <style>
     :root {
       --font: "Graphik", "Graphik LCG", "Graphik LC", "Graphik Web", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -846,12 +846,14 @@
   <link rel="stylesheet" href="../elements/assets/header-system.css">
   <link rel="stylesheet" href="../assets/asset-drawer.css">
   <link rel="stylesheet" href="heatmap-design.css?v=20260722-filter-pill-controls">
-  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260820-runtime-79-tilda">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260924-interface-quality-3">
   <script>try{const q=JSON.parse(sessionStorage.getItem('quantis-transition-v2')||'null');if(q&&Date.now()-q.time<5000)document.documentElement.classList.add('qn-transition-pending')}catch(e){}</script>
   <script src="../elements/assets/header-system.js" defer></script>
   <script src="../assets/asset-drawer.js" defer></script>
   <script src="heatmap-design.js" defer></script>
-  <script src="../assets/integration-shell.js?v=20260820-runtime-79-tilda" defer></script>
+  <script src="../assets/integration-shell.js?v=20260924-interface-quality-3" defer></script>
+  <link rel="stylesheet" href="../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
+  <script src="../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="ru" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
 </head>
 <body>
 <div class="app">
@@ -1008,7 +1010,9 @@
   </section>
 </div>
 
-<script src="assets/data/bootstrap.js"></script>
+<script src="../shared/compact-data.js"></script>
+  <script src="../shared/data/heatmap/base/82dc86d4c10ecc809b40.js"></script>
+  <script>window.__NED_HEATMAP_DATA__=window.NRCompact.materialize("heatmap:bootstrap");</script>
 <script>
 const DATA = window.__NED_HEATMAP_DATA__;
 
@@ -2429,7 +2433,7 @@ function renderStockFilters() {
     const scale = column?.type === 'money' ? 1e9 : 1;
     const min = filter.min === null ? '' : filter.min / scale;
     const max = filter.max === null ? '' : filter.max / scale;
-    return `<div class="stock-filter-card stock-filter-card-range"><div class="stock-filter-card-head"><span class="stock-filter-label">${esc(column?.label || filter.key)}${column?.type === 'money' ? ', млрд ₽' : ''}</span><button type="button" class="stock-filter-remove" data-remove-filter="${index}" aria-label="Убрать фильтр">×</button></div><div class="stock-filter-range"><input type="number" inputmode="decimal" data-active-filter="${index}" data-role="min" value="${min}" placeholder="от"><input type="number" inputmode="decimal" data-active-filter="${index}" data-role="max" value="${max}" placeholder="до"></div></div>`;
+    return `<div class="stock-filter-card stock-filter-card-range" data-stock-filter-key="${esc(filter.key)}"><div class="stock-filter-card-head"><span class="stock-filter-label">${esc(column?.label || filter.key)}${column?.type === 'money' ? ', млрд ₽' : ''}</span><button type="button" class="stock-filter-remove" data-remove-filter="${index}" aria-label="Убрать фильтр">×</button></div><div class="stock-filter-range"><input type="number" inputmode="decimal" data-active-filter="${index}" data-role="min" value="${min}" placeholder="от"><input type="number" inputmode="decimal" data-active-filter="${index}" data-role="max" value="${max}" placeholder="до"></div></div>`;
   }).join('');
   const baseOptions = Object.entries(stockBaseFilters).filter(([, visible]) => !visible).map(([key]) => `<button type="button" data-add-base="${key}">${STOCK_BASE_LABELS[key]}</button>`);
   const metricOptions = STOCK_METRICS.filter(metric => !stockState.filters.some(filter => filter.key === metric.key)).map(metric => `<button type="button" data-add-stock-metric="${metric.key}">${esc(metric.label)}${metric.type === 'money' ? ', млрд ₽' : ''}</button>`);

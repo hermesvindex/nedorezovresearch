@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:APTK"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Apteki 36,6"],"3":["v","Apteki 36,6"],"6":["v","Aptechnaya set 36,6"]},27]},1]},2]},[]];

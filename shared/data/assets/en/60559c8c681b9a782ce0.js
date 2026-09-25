@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A1060Q0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SKF 1R1CNY"],"9":["v","Sovremennyy kommercheskiy flot"]},42]},1]},2]},[]];

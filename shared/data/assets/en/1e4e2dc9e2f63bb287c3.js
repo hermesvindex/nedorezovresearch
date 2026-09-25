@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CQB8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Sovcombank BO-And05"],"3":["v","SovkomBI05 Sovkombank BO-I05"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Sovcombank\""]},52]},1]},2]},[]];

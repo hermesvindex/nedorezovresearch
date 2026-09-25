@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DWQ2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Tomsk Region 34076"],"3":["v","Tomsk Region 34076"],"6":["v","Municipal bonds"],"7":["v","Fixed rate"],"9":["v","Departament Finance Tomskoy oblasti"]},53]},1]},2]},[]];

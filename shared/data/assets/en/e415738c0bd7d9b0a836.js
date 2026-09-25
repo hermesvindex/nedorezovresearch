@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DHX9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Inarkt2P4"],"3":["v","Inarkt2P4"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"INARCTIKA\""],"42":["v","Corporate bond Inarkt2P4 maturing on 2028-11-03."]},60]},1]},2]},[]];

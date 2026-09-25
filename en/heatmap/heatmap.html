@@ -1,0 +1,2541 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MOEX Heatmap</title>
+  <script src="../../shared/vendor/plotly-2.35.2.min.js"></script>
+  <style>
+    :root {
+      --font: "Graphik", "Graphik LCG", "Graphik LC", "Graphik Web", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      --bg: #eef2f5;
+      --panel: rgba(255,255,255,0.72);
+      --panel-strong: rgba(255,255,255,0.9);
+      --line: rgba(42, 55, 72, 0.13);
+      --text: #0f172a;
+      --muted: #5b6472;
+      --tile-border: rgba(255,255,255,0.62);
+      --neutral: #b3bac2;
+      --pos-1: #69c98c;
+      --pos-2: #16a35f;
+      --pos-3: #06733d;
+      --neg-1: #e67682;
+      --neg-2: #db3048;
+      --neg-3: #980f25;
+      --accent: #7A1027;
+      --accent-soft: rgba(122,16,39,.14);
+      --shadow: 0 22px 54px rgba(15,23,42,0.14);
+      --hero-shadow: 0 28px 62px rgba(16, 18, 21, 0.26);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    button, input, select, textarea { font-family: var(--font); }
+    svg text, .js-plotly-plot .plotly text { font-family: var(--font) !important; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: var(--font);
+      background:
+        radial-gradient(circle at 9% 2%, rgba(102, 143, 189, 0.16), transparent 22%),
+        radial-gradient(circle at 90% 8%, rgba(190, 212, 226, 0.18), transparent 20%),
+        linear-gradient(180deg, #f4f7f9 0%, var(--bg) 48%, #e7edf2 100%);
+      color: var(--text);
+    }
+
+    .app {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 10px 0;
+    }
+
+    .topbar {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 8px;
+      padding: 14px 16px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)),
+        radial-gradient(circle at 13% 72%, rgba(6, 179, 110, 0.32), transparent 26%),
+        radial-gradient(circle at 35% 18%, rgba(231, 239, 241, 0.22), transparent 18%),
+        radial-gradient(circle at 63% 42%, rgba(248, 247, 243, 0.16), transparent 16%),
+        radial-gradient(circle at 82% 28%, rgba(246, 170, 181, 0.26), transparent 20%),
+        radial-gradient(circle at 97% 22%, rgba(196, 12, 42, 0.42), transparent 18%),
+        linear-gradient(135deg, rgba(5, 17, 13, 0.98) 0%, rgba(14, 33, 26, 0.98) 36%, rgba(43, 25, 32, 0.97) 76%, rgba(73, 9, 24, 0.96) 100%);
+      box-shadow: var(--hero-shadow);
+      isolation: isolate;
+    }
+
+    .topbar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.09), rgba(255,255,255,0) 32%),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.035) 0 2px,
+          rgba(255,255,255,0.01) 2px 18px,
+          rgba(255,255,255,0) 18px 34px
+        );
+      mix-blend-mode: screen;
+      opacity: 0.68;
+      pointer-events: none;
+    }
+
+    .topbar::after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      bottom: -120px;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 245, 246, 0.16), rgba(255,255,255,0) 68%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .topbar-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero-copy {
+      max-width: 1040px;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: rgba(232, 240, 237, 0.72);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .hero-sub {
+      margin: 0;
+      max-width: 1120px;
+      color: rgba(231, 236, 240, 0.76);
+      font-size: 12.5px;
+      line-height: 1.28;
+    }
+
+    .title {
+      margin: 0;
+      color: #f7fafc;
+      max-width: 1040px;
+      font-size: clamp(30px, 3.2vw, 46px);
+      line-height: 1.02;
+      font-weight: 820;
+      letter-spacing: 0;
+      text-wrap: balance;
+      margin-bottom: 4px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 5px;
+      border-radius: 14px;
+      background: rgba(250, 252, 255, 0.06);
+      border: 1px solid rgba(240, 245, 250, 0.10);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .period-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 8px 10px 8px 14px;
+      border-radius: 18px;
+      color: #f7fafc;
+      font-size: 18px;
+      font-weight: 800;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(16,18,21,.14);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .period-select-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.92);
+      border: 4px solid rgba(52,116,190,.86);
+      box-shadow: 0 8px 18px rgba(16,18,21,.14), inset 0 1px 0 rgba(255,255,255,.8);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 12px;
+      padding: 6px 9px;
+      color: #f7fafc;
+      font-size: 12.5px;
+      font-weight: 620;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .dot-flag {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #fff 0 33%, #2563eb 33% 66%, #ef4444 66% 100%);
+      border: 1px solid rgba(0,0,0,0.08);
+      flex: 0 0 auto;
+    }
+
+    .select {
+      width: 100%;
+      min-width: 104px;
+      min-height: 32px;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      padding: 3px 30px 3px 12px;
+      color: #111827;
+      font-size: 17px;
+      font-weight: 820;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .period-select-wrap::after {
+      content: "⌄";
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-54%);
+      color: #111827;
+      font-size: 20px;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    .market-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .market-card {
+      position: relative;
+      min-height: 132px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 7px;
+      border-radius: 16px;
+      padding: 12px 13px 10px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.72);
+      color: #111827;
+      box-shadow: 0 14px 34px rgba(16,18,21,.10), inset 0 1px 0 rgba(255,255,255,.86);
+      backdrop-filter: blur(18px) saturate(130%);
+      -webkit-backdrop-filter: blur(18px) saturate(130%);
+    }
+
+    .market-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.72), transparent 42%),
+        linear-gradient(180deg, rgba(122,16,39,.045), transparent 70%);
+      pointer-events: none;
+    }
+
+    .market-head {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .market-label {
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 880;
+      color: #111827;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+
+    .market-name {
+      position: relative;
+      z-index: 1;
+      min-height: 24px;
+      color: rgba(17,24,39,.58);
+      font-size: 11.5px;
+      line-height: 1.08;
+      font-weight: 720;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .market-code {
+      flex: 0 0 auto;
+      font-size: 10px;
+      line-height: 1;
+      padding: 4px 6px;
+      border-radius: 999px;
+      color: rgba(17,24,39,.60);
+      background: rgba(17,24,39,.05);
+      border: 1px solid rgba(17,24,39,.07);
+    }
+
+    .market-value {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(22px, 2.0vw, 31px);
+      line-height: 1;
+      font-weight: 860;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .market-foot {
+      position: relative;
+      z-index: 1;
+      margin-top: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: rgba(17,24,39,.50);
+      font-size: 11px;
+      font-weight: 680;
+    }
+
+    .market-delta.positive { color: #087f49; }
+    .market-delta.negative { color: #b91c35; }
+    .market-delta.neutral { color: rgba(17,24,39,.54); }
+    .market-spark {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 34px;
+      opacity: .72;
+      color: var(--accent);
+      margin-top: 1px;
+    }
+    .market-spark.positive { color: #087f49; }
+    .market-spark.negative { color: #b91c35; }
+    .market-spark.neutral { color: #7A1027; }
+    .market-spark svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .market-spark .spark-fill { opacity: .12; }
+    .market-spark .spark-line { opacity: .95; }
+
+    .content {
+      position: relative;
+      flex: 1 0 auto;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      flex: 1 1 auto;
+      height: clamp(560px, 68vh, 920px);
+      min-height: 560px;
+      padding: 8px 6px 0;
+    }
+
+    #heatmap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 560px;
+      background: rgba(236, 240, 244, 0.82);
+      border-top: 1px solid rgba(42, 55, 72, 0.12);
+      overflow: hidden;
+    }
+
+    .sector {
+      position: absolute;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.64);
+      background: rgba(255,255,255,0.64);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .sector-header {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 13px;
+      color: #111827;
+      font-weight: 560;
+      background: rgba(255,255,255,0.84);
+      border-bottom: 1px solid rgba(42, 55, 72, 0.1);
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .sector-body {
+      position: absolute;
+      left: 0;
+      top: 26px;
+      right: 0;
+      bottom: 0;
+    }
+
+    .tile {
+      position: absolute;
+      border: 1px solid var(--tile-border);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      cursor: pointer;
+      transition: filter .08s ease;
+      color: #fff;
+      font: inherit;
+      text-align: left;
+      appearance: none;
+      user-select: none;
+    }
+
+    .tile:hover { filter: brightness(1.06); }
+
+    .tile-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5px;
+      gap: 5px;
+      pointer-events: none;
+    }
+
+    .tile-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .tile-ticker {
+      font-weight: 680;
+      letter-spacing: 0;
+      line-height: 1.04;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.22);
+    }
+
+    .tile-ret {
+      font-weight: 600;
+      opacity: .96;
+      line-height: 1.05;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+
+    .legend {
+      width: 420px;
+      max-width: calc(100% - 24px);
+      margin: 8px 12px 10px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .legend-bar {
+      margin-top: 6px;
+      height: 14px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 3px;
+    }
+    .legend-seg {
+      border-radius: 2px;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
+    }
+
+    .legend-ticks {
+      display: flex;
+      justify-content: space-between;
+      color: #1f2937;
+      font-size: 16px;
+      font-weight: 560;
+    }
+
+    .sidepanel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 460px;
+      max-width: min(96vw, 460px);
+      background: rgba(255,255,255,0.82);
+      border-left: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      transform: translateX(100%);
+      transition: transform 180ms ease;
+      z-index: 20;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .sidepanel.open { transform: translateX(0); }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(251,252,253,0.76);
+      min-width: 0;
+    }
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+      min-width: 0;
+      overflow: hidden;
+      white-space: normal;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .btn-close {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .panel-body {
+      overflow: auto;
+      overflow-x: hidden;
+      padding: 12px 14px 16px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+    .panel-body > * {
+      max-width: 100%;
+      min-width: 0;
+    }
+    .sidepanel {
+      width:min(760px,96vw);
+      max-width:min(96vw,760px);
+      padding:clamp(12px,2vw,22px);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(14,165,107,.13), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.88), rgba(247,252,250,.70));
+      border-left:1px solid rgba(255,255,255,.76);
+      box-shadow:-28px 0 70px rgba(15,23,42,.18);
+      backdrop-filter:blur(30px) saturate(1.28);
+      -webkit-backdrop-filter:blur(30px) saturate(1.28);
+      gap:12px;
+    }
+    .panel-head {
+      padding:0 0 8px;
+      border:0;
+      background:transparent;
+      align-items:flex-start;
+    }
+    .panel-title {
+      font-size:clamp(28px,4.5vw,48px);
+      line-height:.96;
+      font-weight:900;
+      letter-spacing:0;
+      overflow-wrap:normal;
+      word-break:normal;
+    }
+    .btn-close {
+      border-radius:999px;
+      background:rgba(255,255,255,.62);
+      border:1px solid rgba(255,255,255,.78);
+      padding:8px 12px;
+    }
+    .panel-body { padding:0; gap:12px; }
+    .sidepanel.asset-card-mode {
+      position:fixed;
+      top:0;
+      right:0;
+      bottom:0;
+      height:100vh;
+      max-height:100vh;
+      grid-template-rows:1fr;
+      z-index:100;
+    }
+    .sidepanel.asset-card-mode .panel-head {
+      position:absolute;
+      right:12px;
+      top:12px;
+      z-index:3;
+      padding:0;
+    }
+    .sidepanel.asset-card-mode .panel-title {
+      display:none;
+    }
+    .sidepanel.asset-card-mode .panel-body {
+      position:absolute;
+      inset:0;
+      height:100%;
+      min-height:100%;
+      gap:0;
+      align-content:stretch;
+    }
+    .asset-card-shell {
+      height:100%;
+      min-height:100vh;
+      overflow:hidden;
+      border:0;
+      background:transparent;
+      box-shadow:none;
+      padding:0;
+    }
+    .asset-card-frame {
+      display:block;
+      width:100%;
+      height:100%;
+      min-height:100vh;
+      border:0;
+      background:#f6fbf7;
+    }
+    .kv {
+      min-height:78px;
+      border-radius:20px;
+      padding:14px;
+      background:rgba(255,255,255,.50);
+      border:1px solid rgba(255,255,255,.70);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.74);
+    }
+    .k { font-size:12px; color:rgba(16,18,21,.58); margin-bottom:6px; overflow-wrap:normal; word-break:normal; }
+    .v { font-size:19px; line-height:1.08; font-weight:900; color:rgba(16,18,21,.90); overflow-wrap:normal; word-break:normal; }
+    .small { color:rgba(16,18,21,.58); overflow-wrap:normal; word-break:normal; }
+    .chart-card,.list-card {
+      border-radius:24px;
+      background:rgba(255,255,255,.46);
+      border:1px solid rgba(255,255,255,.68);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.72);
+      padding:12px;
+    }
+    .chart-head {
+      background:transparent;
+      border:0;
+      padding:2px 0 8px;
+    }
+    .range-select { border-radius:999px; background:rgba(255,255,255,.62); border:1px solid rgba(255,255,255,.78); }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .kv {
+      border: 1px solid #e4e7eb;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.72);
+      min-width: 0;
+    }
+
+    .k {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 2px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .v {
+      font-size: 14px;
+      font-weight: 620;
+      color: #0f172a;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .ret-chip {
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .chart-card {
+      border: 1px solid #dbe1e8;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.78);
+      overflow: visible;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-bottom: 1px solid #ecf0f3;
+      background: rgba(249,251,253,0.76);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .range-select {
+      min-width: 180px;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #d7dde4;
+      background: rgba(255,255,255,0.78);
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    #sparkPlot {
+      width: 100%;
+      height: 300px;
+      min-height: 250px;
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .list-card {
+      border: 1px solid #dbe1e8;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .list-title { font-size: 14px; font-weight: 700; color: #111827; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .mono { font-variant-numeric: tabular-nums; }
+
+    .small {
+      font-size: 12px;
+      color: #6b7280;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease;
+      z-index: 10;
+    }
+
+    .overlay.show { opacity: 1; pointer-events: auto; }
+
+    .sector-preview {
+      position: absolute;
+      z-index: 30;
+      min-width: 220px;
+      max-width: 320px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid #dbe1e8;
+      border-radius: 10px;
+      box-shadow: 0 12px 24px rgba(15,23,42,0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding: 8px 10px;
+      display: none;
+      pointer-events: none;
+    }
+    .sector-preview .title { font-size: 13px; font-weight: 700; margin: 0 0 4px; }
+    .sector-preview .line { font-size: 12px; color: #475569; }
+
+    @media (max-width: 960px) {
+      .app { padding: 10px 10px 0; }
+      .topbar { padding: 12px 14px 12px; border-radius: 18px; }
+      .title {
+        font-size: clamp(24px, 6vw, 34px);
+        line-height: 1.01;
+        letter-spacing: 0;
+        margin-bottom: 4px;
+      }
+      .hero-sub { font-size: 12px; }
+      .controls { width: 100%; padding: 6px; border-radius: 15px; }
+      .market-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .legend { width: 320px; margin: 8px 10px 10px; }
+      .sidepanel { width: min(96vw, 420px); }
+      .tile-logo { width: 42px; height: 42px; }
+      #sparkPlot { height: 250px; min-height: 210px; }
+      .content { min-height: 580px; }
+      .canvas-wrap { height: 520px; min-height: 520px; }
+      #heatmap { min-height: 520px; }
+    }
+    @media (max-width: 560px) {
+      .market-strip { grid-template-columns: 1fr; }
+      .market-card { min-height: 74px; }
+      .market-value { font-size: 18px; }
+      .content { min-height: 520px; }
+      .canvas-wrap { height: 460px; min-height: 460px; }
+      #heatmap { min-height: 460px; }
+    }
+  </style>
+  <link rel="stylesheet" href="../elements/assets/header-system.css">
+  <link rel="stylesheet" href="../assets/asset-drawer.css">
+  <link rel="stylesheet" href="heatmap-design.css?v=20260722-filter-pill-controls">
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260924-interface-quality-3">
+  <script>try{const q=JSON.parse(sessionStorage.getItem('quantis-transition-v2')||'null');if(q&&Date.now()-q.time<5000)document.documentElement.classList.add('qn-transition-pending')}catch(e){}</script>
+  <script src="../elements/assets/header-system.js" defer></script>
+  <script src="../assets/asset-drawer.js" defer></script>
+  <script src="heatmap-design.js" defer></script>
+  <script src="../assets/integration-shell.js?v=20260924-interface-quality-3" defer></script>
+  <link rel="stylesheet" href="../../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
+  <script src="../../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="en" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
+</head>
+<body>
+<div class="app">
+  <header class="product-header product-header--heatmap">
+    <div class="product-header__copy">
+      <p class="product-header__eyebrow">Equities</p>
+      <h1 class="product-header__title" style="color:#ffffff">Equity heat map</h1>
+      <p class="product-header__description">Market-capitalisation and performance map of MOEX-listed equities, with sector groupings, issuer profiles and an adaptive colour scale.</p>
+    </div>
+    <div class="product-header__utility">
+      <div class="product-header__controls">
+        <div class="header-liquid-glass" id="heatmapPeriodTabs" role="tablist" aria-label="Heat-map period" data-output="heatmapPeriodOutput">
+          <span class="header-liquid-glass__glider" aria-hidden="true"></span>
+          <button type="button" role="tab" data-value="D" aria-selected="true" tabindex="0">D</button>
+          <button type="button" role="tab" data-value="W" aria-selected="false" tabindex="-1">W</button>
+          <button type="button" role="tab" data-value="M" aria-selected="false" tabindex="-1">M</button>
+          <button type="button" role="tab" data-value="3M" aria-selected="false" tabindex="-1">3M</button>
+          <button type="button" role="tab" data-value="6M" aria-selected="false" tabindex="-1">6M</button>
+          <button type="button" role="tab" data-value="YTD" aria-selected="false" tabindex="-1">YTD</button>
+          <button type="button" role="tab" data-value="1Y" aria-selected="false" tabindex="-1">1Y</button>
+          <button type="button" role="tab" data-value="3Y" aria-selected="false" tabindex="-1">3Y</button>
+          <button type="button" role="tab" data-value="5Y" aria-selected="false" tabindex="-1">5Y</button>
+          <button type="button" role="tab" data-value="ALL" aria-selected="false" tabindex="-1">ALL</button>
+        </div>
+        <select id="periodSelect" class="visually-hidden-select" aria-label="Heat-map period">
+          <option value="D" selected>D</option><option value="W">W</option><option value="M">M</option>
+          <option value="3M">3M</option><option value="6M">6M</option><option value="YTD">YTD</option>
+          <option value="1Y">1Y</option><option value="3Y">3Y</option><option value="5Y">5Y</option><option value="ALL">ALL</option>
+        </select>
+      </div>
+      <div class="product-header__meta">
+        <div class="meta-list">
+          <span class="meta-item"><span class="meta-item__label">Exchange</span><b class="meta-item__value">MOEX</b></span>
+          <span class="meta-item"><span class="meta-item__label">Issuers</span><b class="meta-item__value" id="heatmapIssuerCount">—</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="header-blocks header-blocks--market" id="marketStrip" aria-label="Equity-market summary indices"></div>
+  </header>
+
+  <div class="content">
+    <div class="heatmap-explorer" aria-label="Heat-map controls">
+      <div class="sector-nav" id="sectorNav" aria-label="Market sectors"></div>
+      <label class="sector-select-wrap" for="sectorSelect">
+        <span>Sector</span>
+        <select id="sectorSelect" aria-label="Select sector"></select>
+      </label>
+      <div class="map-controls" aria-label="Scale and display">
+        <div class="size-metric-control" role="group" aria-label="Tile area">
+          <span class="size-metric-glider" aria-hidden="true"></span>
+          <button class="map-control size-metric-button" type="button" data-size-mode="cap" aria-pressed="true">Market capitalisation</button>
+          <button class="map-control size-metric-button" type="button" data-size-mode="value" aria-pressed="false">Turnover</button>
+          <button class="map-control size-metric-button" type="button" data-size-mode="equal" aria-pressed="false">Equal weighted</button>
+        </div>
+        <span class="map-control-group" role="group" aria-label="Zoom">
+          <button class="map-control map-control--square" id="zoomOutButton" type="button" aria-label="Zoom out">−</button>
+          <button class="map-control map-zoom-value" id="zoomResetButton" type="button" aria-label="Reset zoom">100%</button>
+          <button class="map-control map-control--square" id="zoomInButton" type="button" aria-label="Zoom in">+</button>
+        </span>
+        <button class="map-control map-control--square map-focus" id="focusModeButton" type="button" aria-label="Expand map" title="Expand map" aria-pressed="false">
+          <img class="map-focus__icon map-focus__icon--expand" src="assets/maximize.png" alt="" aria-hidden="true">
+          <img class="map-focus__icon map-focus__icon--collapse" src="assets/minimize.png" alt="" aria-hidden="true">
+        </button>
+      </div>
+    </div>
+    <div class="canvas-wrap">
+      <div id="heatmap" tabindex="0" aria-label="Interaktivnaya teplovaya karta. Ispolzuyte knopki masshtaba or koleso myshi; under uvelichenii kartu mozhno peremeshchat."></div>
+    </div>
+    <div class="legend">
+      <div class="legend-ticks" id="legendTicks">
+        <span>-13%</span><span>-8%</span><span>-3%</span><span>0%</span><span>3%</span><span>8%</span><span>13%</span>
+      </div>
+      <div class="legend-bar" id="legendBar"></div>
+    </div>
+
+    <button class="overlay" id="overlay" type="button" aria-label="Close card by clicking the backdrop"></button>
+    <div class="sector-preview" id="sectorPreview"></div>
+
+    <aside class="sidepanel" id="panel">
+      <div class="panel-head">
+        <div class="panel-title" id="panelTitle">Details</div>
+        <button class="btn-close asset-unified-close" id="closePanel" type="button" aria-label="Close asset profile"><span class="asset-unified-close__icon" aria-hidden="true"></span></button>
+      </div>
+      <div class="panel-body" id="panelBody"></div>
+    </aside>
+  </div>
+
+  <section class="stock-screener" id="stockScreener" aria-labelledby="stockScreenerTitle">
+    <div class="stock-section-head">
+      <h2 id="stockScreenerTitle">Equities</h2>
+      <div class="stock-screener__coverage" id="stockCoverage">—</div>
+    </div>
+
+    <section class="stock-filters-shell" aria-label="Equity filters">
+      <div class="stock-filters-head">
+        <div><div class="stock-eyebrow">Filters</div></div>
+        <div class="stock-filter-actions">
+          <details class="stock-add-filter" id="stockAddFilterMenu">
+            <summary id="addStockFilter">+ Add filter</summary>
+            <div class="stock-smart-panel" id="stockSmartPanel"></div>
+          </details>
+          <button class="stock-action-secondary" id="resetStockFilters" type="button">Reset vse</button>
+          <button class="stock-action-secondary" id="toggleStockFilters" type="button" aria-expanded="true">Hide filters</button>
+        </div>
+      </div>
+      <div class="stock-filters-grid" id="stockFiltersGrid">
+        <label class="stock-filter-card stock-search-card" data-base-filter="search"><span class="stock-filter-card-head"><span class="stock-filter-label">Search</span><button class="stock-filter-remove" type="button" data-remove-base="search" aria-label="Remove filter">×</button></span><input id="stockSearch" type="search" autocomplete="off"></label>
+        <label class="stock-filter-card" data-base-filter="year"><span class="stock-filter-card-head"><span class="stock-filter-label">Period</span><button class="stock-filter-remove" type="button" data-remove-base="year" aria-label="Remove filter">×</button></span><select id="stockYear"><option value="2026Q1">Q1 2026</option><option value="2025Q4">Q4 2025</option><option value="2025Q3">Q3 2025</option><option value="2025Q2">Q2 2025</option><option value="2025Q1">Q1 2025</option><option value="2024Q4">Q4 2024</option><option value="2024Q3">Q3 2024</option><option value="2024Q2">Q2 2024</option><option value="2024Q1">Q1 2024</option><option value="2023Q4">Q4 2023</option><option value="2023Q3">Q3 2023</option><option value="2023Q2">Q2 2023</option><option value="2023Q1">Q1 2023</option><option value="2022Q4">Q4 2022</option><option value="2022Q3">Q3 2022</option><option value="2022Q2">Q2 2022</option><option value="2022Q1">Q1 2022</option><option value="2025" selected>2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option><option value="2018">2018</option><option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option></select></label>
+        <label class="stock-filter-card" data-base-filter="sector"><span class="stock-filter-card-head"><span class="stock-filter-label">Sector</span><button class="stock-filter-remove" type="button" data-remove-base="sector" aria-label="Remove filter">×</button></span><select id="stockSector"><option value="">All sectors</option></select></label>
+        <label class="stock-filter-card" data-base-filter="standard"><span class="stock-filter-card-head"><span class="stock-filter-label">Financials</span><button class="stock-filter-remove" type="button" data-remove-base="standard" aria-label="Remove filter">×</button></span><select id="stockStandard"><option value="">All reporting standards</option><option value="IFRS">IFRS</option><option value="RAS">RAS</option><option value="missing">Net dannykh</option></select></label>
+        <div class="stock-active-filters" id="stockActiveFilters" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="stock-table-shell">
+      <div class="stock-table-topbar">
+        <div class="stock-table-meta" id="stockTableMeta">—</div>
+        <label class="stock-page-size-label page-size-control"><span>Per page</span><select id="stockPageSize"><option>40</option><option selected>80</option><option>160</option><option>320</option></select></label>
+      </div>
+      <div class="stock-table-wrap">
+        <table class="stock-table">
+          <thead id="stockTableHead"></thead>
+          <tbody id="stockTableBody"></tbody>
+        </table>
+      </div>
+      <div class="stock-table-topbar stock-table-bottom">
+        <div class="stock-table-meta"><span id="stockTableSummary">—</span><span id="stockPageLabel">Page 1 / 1</span></div>
+        <div class="stock-pagination">
+          <button id="stockPagePrev" type="button" aria-label="Previous page">Back</button>
+          <button class="primary" id="stockPageNext" type="button" aria-label="Next page">Vpered</button>
+        </div>
+      </div>
+    </section>
+    <aside class="stock-methodology" aria-labelledby="stockMethodologyTitle">
+      <div class="stock-methodology__title" id="stockMethodologyTitle">Sector-specific metric equivalents</div>
+      <ol>
+        <li><sup>1</sup><span><b>Revenue and bank operating income.</b> For banks, revenue is represented by total operating income, including net interest, fee and other operating income; for insurers, insurance revenue is used when disclosed by the source. Developers recognise revenue when properties are transferred, so it does not equal cash sales during the period.</span></li>
+        <li><sup>2</sup><span><b>EBITDA and margin.</b> For banks, the figures show pre-provision operating profit and net interest margin (NIM). For insurers, operating profit is used instead of EBITDA. For airlines, the metric depends on lease accounting under IFRS 16.</span></li>
+        <li><sup>3</sup><span><b>Cost of sales.</b> For banks, operating expenses are shown. Interest expense is already reflected in net interest income.</span></li>
+        <li><sup>4</sup><span><b>Debt.</b> For banks, deposits are shown as the principal source of funding. They are liabilities to customers rather than industrial-company corporate debt.</span></li>
+        <li><sup>5</sup><span><b>Debt/EBITDA.</b> For banks, the total capital adequacy ratio is shown. Lower leverage is favourable for an industrial company, while higher capital adequacy is favourable for a bank.</span></li>
+        <li><sup>6</sup><span><b>Asset turnover.</b> For banks, the cost-to-income ratio (CIR) is shown. Higher asset turnover usually indicates more efficient use of industrial-company assets; a lower CIR indicates greater bank efficiency.</span></li>
+        <li><sup>7</sup><span><b>FCF.</b> Standard free cash flow is not applicable to banks and insurers. Their cash-generation capacity is assessed through earnings, capital, solvency ratios and dividend capacity.</span></li>
+        <li><sup>8</sup><span><b>EV/EBITDA.</b> The metric is not applicable to banks and insurers; P/E and P/BV are the primary comparable multiples.</span></li>
+        <li><sup>9</sup><span><b>Profitability.</b> For non-financial companies, profitability is calculated as net income divided by revenue. For banks, it is net income divided by total operating income.</span></li>
+        <li><sup>10</sup><span><b>P/E.</b> Market capitalisation divided by net income. It shows how many years of annual earnings are reflected in the market price.</span></li>
+        <li><sup>11</sup><span><b>P/BV.</b> Market capitalisation divided by book equity. The metric is particularly relevant for banks and other financial institutions.</span></li>
+        <li><sup>12</sup><span><b>P/S.</b> Market capitalisation divided by revenue. The metric is not economically meaningful for banks.</span></li>
+        <li><sup>13</sup><span><b>ROE.</b> Net profit divided by average equity.</span></li>
+        <li><sup>14</sup><span><b>ROA.</b> Net profit divided by average assets.</span></li>
+      </ol>
+      <p><b>Oboznacheniya:</b> “—” means that the metric is unavailable or failed scale and economic-plausibility checks; “n/a” means that the metric is not economically applicable to the company’s profile.</p>
+    </aside>
+  </section>
+</div>
+
+<script src="../../shared/compact-data.js"></script>
+  <script src="../../shared/data/heatmap/base/82dc86d4c10ecc809b40.js"></script>
+  <script src="../../shared/data/heatmap/en/c5c4657ae5a2d63a4645.js"></script>
+  <script>window.__NED_HEATMAP_DATA__=window.NRCompact.materialize("heatmap:bootstrap");</script>
+<script>
+const DATA = window.__NED_HEATMAP_DATA__;
+
+const state = {
+  period: 'D',
+  selectedTicker: null,
+  sectorMap: null,
+  sizeMode: 'cap',
+  view: { scale: 1, x: 0, y: 0 },
+  focusMode: false,
+  suppressClickUntil: 0,
+};
+
+const heatmapEl = document.getElementById('heatmap');
+const periodEl = document.getElementById('periodSelect');
+const panelEl = document.getElementById('panel');
+const panelBodyEl = document.getElementById('panelBody');
+const panelTitleEl = document.getElementById('panelTitle');
+const overlayEl = document.getElementById('overlay');
+const contentEl = document.querySelector('.content');
+const sectorPreviewEl = document.getElementById('sectorPreview');
+const closePanelEl = document.getElementById('closePanel');
+const legendTicksEl = document.getElementById('legendTicks');
+const legendBarEl = document.getElementById('legendBar');
+const marketStripEl = document.getElementById('marketStrip');
+const issuerCountEl = document.getElementById('heatmapIssuerCount');
+const sectorNavEl = document.getElementById('sectorNav');
+const sectorSelectEl = document.getElementById('sectorSelect');
+const sizeMetricControlEl = document.querySelector('.size-metric-control');
+const sizeMetricGliderEl = document.querySelector('.size-metric-glider');
+const sizeModeButtonEls = Array.from(document.querySelectorAll('.size-metric-button'));
+const zoomOutButtonEl = document.getElementById('zoomOutButton');
+const zoomResetButtonEl = document.getElementById('zoomResetButton');
+const zoomInButtonEl = document.getElementById('zoomInButton');
+const focusModeButtonEl = document.getElementById('focusModeButton');
+const MAX_ZOOM = 10;
+let heatmapStageEl = null;
+let semanticRenderFrame = 0;
+let lastSectorNavKey = '';
+if (issuerCountEl) issuerCountEl.textContent = String(DATA.tickers?.length || 0);
+
+const positiveTurnovers = (DATA.tickers || [])
+  .map(t => Number(t.value))
+  .filter(value => Number.isFinite(value) && value > 0)
+  .sort((a, b) => a - b);
+const turnoverFloor = positiveTurnovers.length ? positiveTurnovers[0] * 0.15 : 1;
+const tradeDates = (DATA.tickers || [])
+  .map(t => t.asof || '')
+  .filter(Boolean)
+  .sort();
+const latestTradeDate = tradeDates.length ? tradeDates[tradeDates.length - 1] : '';
+
+function shortDate(iso) {
+  const parts = String(iso || '').split('-');
+  return parts.length === 3 ? `${parts[2]}.${parts[1]}.${parts[0]}` : String(iso || '');
+}
+
+function sizeValue(t) {
+  if (state.sizeMode === 'equal') return 1;
+  if (state.sizeMode === 'value') return Number(t.value) > 0 ? Number(t.value) : turnoverFloor;
+  return Number(t.marketcap) > 0 ? Number(t.marketcap) : 0;
+}
+
+function sizeModeLabel() {
+  if (state.sizeMode === 'equal') return 'number of companies';
+  if (state.sizeMode === 'value') return `turnover on ${shortDate(latestTradeDate)}`;
+  return 'of market capitalisation';
+}
+
+function syncSizeMetricGlider(animate = true) {
+  if (!sizeMetricControlEl || !sizeMetricGliderEl) return;
+  const activeButton = sizeModeButtonEls.find(button => button.getAttribute('aria-pressed') === 'true');
+  if (!activeButton) return;
+  if (!animate) sizeMetricGliderEl.style.transition = 'none';
+  sizeMetricGliderEl.style.width = `${activeButton.offsetWidth}px`;
+  sizeMetricGliderEl.style.transform = `translate3d(${activeButton.offsetLeft}px, 0, 0)`;
+  sizeMetricGliderEl.classList.add('is-ready');
+  if (!animate) window.requestAnimationFrame(() => { sizeMetricGliderEl.style.transition = ''; });
+}
+
+function money(v) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return 'n/a';
+  const a = Math.abs(v);
+  if (a >= 1e12) return `${(v/1e12).toFixed(2)} tn ₽`;
+  if (a >= 1e9) return `${(v/1e9).toFixed(2)} bn ₽`;
+  if (a >= 1e6) return `${(v/1e6).toFixed(2)} mn ₽`;
+  return `${Math.round(v).toLocaleString('en-GB')} ₽`;
+}
+
+function moneySigned(v) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return 'n/a';
+  const sign = v >= 0 ? '+' : '-';
+  return sign + money(Math.abs(v));
+}
+
+function num(v) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return 'n/a';
+  const a = Math.abs(v);
+  if (a >= 1e9) return `${(v/1e9).toFixed(2)} bn`;
+  if (a >= 1e6) return `${(v/1e6).toFixed(2)} mn`;
+  if (a >= 1e3) return `${(v/1e3).toFixed(2)} thousand`;
+  return v.toFixed(2);
+}
+
+function pct(v) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return 'n/a';
+  return `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`;
+}
+
+function tone(v) {
+  if (v > 0) return 'positive';
+  if (v < 0) return 'negative';
+  return 'neutral';
+}
+
+function esc(v) {
+  return String(v ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function periodLabel(p) {
+  const labels = {
+    D: 'D',
+    W: 'N',
+    M: 'M',
+    '3M': '3M',
+    '6M': '6M',
+    YTD: 'YTD',
+    '1Y': '1G',
+    '3Y': '3Y',
+    '5Y': '5Y',
+  };
+  return labels[p] || p;
+}
+
+function marketPeriodPoints(points, period) {
+  const rows = Array.isArray(points) ? points : [];
+  if (rows.length < 2 || period === 'ALL') return rows;
+  if (period === 'YTD') {
+    const year = String(rows[rows.length - 1]?.date || '').slice(0, 4);
+    const filtered = rows.filter(row => String(row.date || '').slice(0, 4) === year);
+    return filtered.length >= 2 ? filtered : rows.slice(-90);
+  }
+  const map = { D: 2, W: 7, M: 31, '3M': 93, '6M': 186, '1Y': 366, '3Y': 1096, '5Y': 1827 };
+  const days = map[period];
+  if (!days) return rows;
+  const last = new Date(`${rows[rows.length - 1].date}T00:00:00`);
+  const start = new Date(last);
+  start.setDate(start.getDate() - days);
+  const filtered = rows.filter(row => new Date(`${row.date}T00:00:00`) >= start);
+  return filtered.length >= 2 ? filtered : rows.slice(-Math.max(2, days));
+}
+
+function marketSpark(points, toneClass) {
+  const rows = Array.isArray(points) ? points : [];
+  const vals = rows.map(p => Number(p.value)).filter(Number.isFinite);
+  if (vals.length < 2) return '';
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const span = Math.max(1e-9, max - min);
+  const width = 180;
+  const height = 34;
+  const d = vals.map((value, index) => {
+    const x = vals.length === 1 ? 0 : index * width / (vals.length - 1);
+    const y = height - ((value - min) / span) * (height - 8) - 4;
+    return `${index === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`;
+  }).join(' ');
+  const area = `${d} L ${width} ${height} L 0 ${height} Z`;
+  return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true"><path class="market-indicator__area" d="${area}" fill="currentColor"/><path class="market-indicator__line" d="${d}"/></svg>`;
+}
+
+function sectorLeaderCard() {
+  const sectors = DATA.meta?.sector_index_cards || [];
+  const available = sectors
+    .map(card => ({ ...card, _delta: card.returns?.[state.period] }))
+    .filter(card => Number.isFinite(card._delta));
+  if (!available.length) return null;
+  available.sort((a, b) => b._delta - a._delta);
+  const leader = available[0];
+  return {
+    ...leader,
+    label: `Sector leader · ${leader.label}`,
+  };
+}
+
+function renderMarketCards() {
+  const baseCards = DATA.meta?.market_cards || [];
+  const preferredCodes = ['IMOEX', 'MCFTR', 'USD_RUB'];
+  const cards = preferredCodes
+    .map(code => baseCards.find(card => card.code === code))
+    .filter(Boolean);
+  if (!marketStripEl || !cards.length) {
+    if (marketStripEl) marketStripEl.style.display = 'none';
+    return;
+  }
+  marketStripEl.style.display = '';
+  marketStripEl.innerHTML = cards.map(card => {
+    const delta = card.returns?.[state.period];
+    const deltaText = delta === null || delta === undefined || !Number.isFinite(delta) ? 'n/a' : pct(delta);
+    const toneClass = tone(delta);
+    const points = marketPeriodPoints(card.history, state.period);
+    return `
+      <a class="header-block header-block--market" href="../asset/index.html?id=${encodeURIComponent(card.code)}" data-state="${toneClass}" aria-label="Open asset profile: ${esc(card.label)}">
+        <div class="market-indicator__head">
+          <p class="market-indicator__title">${esc(card.code === 'USD_RUB' ? 'US dollar' : card.label)}</p>
+          <span class="market-indicator__ticker">${esc(card.code === 'USD_RUB' ? 'USD/RUB' : card.code === 'BRENT_USD' ? 'BRENT' : card.code)}</span>
+        </div>
+        <div class="market-indicator__metric"><b class="market-indicator__value">${esc(card.value_label)}</b></div>
+        <div class="market-indicator__chart ${toneClass}" role="img" aria-label="Dinamika ${esc(card.label)}">${marketSpark(points, toneClass)}</div>
+        <div class="market-indicator__foot">
+          <span class="market-indicator__delta">${esc(deltaText)}</span>
+          <span class="market-indicator__period">for ${periodLabel(state.period)} · <time datetime="${esc(card.date)}">${esc(String(card.date || '').split('-').reverse().join('.'))}</time></span>
+        </div>
+      </a>
+    `;
+  }).join('');
+}
+
+function getPeriodValues() {
+  return DATA.tickers
+    .map(t => t.returns?.[state.period])
+    .filter(v => v !== null && v !== undefined && Number.isFinite(v));
+}
+
+function quantile(sorted, q) {
+  if (!sorted.length) return 0;
+  if (q <= 0) return sorted[0];
+  if (q >= 1) return sorted[sorted.length - 1];
+  const idx = (sorted.length - 1) * q;
+  const lo = Math.floor(idx);
+  const hi = Math.ceil(idx);
+  const h = idx - lo;
+  return sorted[lo] * (1 - h) + sorted[hi] * h;
+}
+
+function periodScale() {
+  const vals = getPeriodValues().slice().sort((a,b)=>a-b);
+  if (!vals.length) return 10;
+  const lo = quantile(vals, 0.03);
+  const hi = quantile(vals, 0.97);
+  return Math.max(1.5, Math.abs(lo), Math.abs(hi));
+}
+
+function mix(c1, c2, t) {
+  const a = c1.match(/\w\w/g).map(x=>parseInt(x,16));
+  const b = c2.match(/\w\w/g).map(x=>parseInt(x,16));
+  const m = a.map((v,i)=>Math.round(v + (b[i]-v)*t));
+  return '#' + m.map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+
+function retColor(ret, cmax) {
+  if (ret === null || ret === undefined || !Number.isFinite(ret)) return '#b3bac2';
+  const x = Math.max(-1, Math.min(1, ret / cmax));
+  const ax = Math.abs(x);
+  if (Math.abs(ret) <= Math.max(0.12, cmax * 0.016)) return '#b3bac2';
+  if (x > 0) {
+    if (ax < 0.4) return mix('9fe1bc', '49c283', ax / 0.4);
+    if (ax < 0.78) return mix('49c283', '0f9f57', (ax - 0.4) / 0.38);
+    return mix('0f9f57', '06733d', (ax - 0.78) / 0.22);
+  }
+  if (ax < 0.4) return mix('efb3b9', 'e77382', ax / 0.4);
+  if (ax < 0.78) return mix('e77382', 'da314a', (ax - 0.4) / 0.38);
+  return mix('da314a', '980f25', (ax - 0.78) / 0.22);
+}
+
+function normalizeByArea(nodes, area) {
+  const total = nodes.reduce((s, n) => s + Math.max(0, n.value || 0), 0);
+  if (!total || area <= 0) return nodes.map(n => ({ ...n, _a: 0 }));
+  return nodes.map(n => ({ ...n, _a: (Math.max(0, n.value || 0) / total) * area }));
+}
+
+// Binary treemap is less prone to degenerate strip layouts on skewed canvases.
+function squarify(nodes, x, y, w, h) {
+  const list = normalizeByArea(nodes.filter(n => (n.value || 0) > 0), w * h)
+    .sort((a, b) => b._a - a._a);
+  const out = [];
+
+  function split(items, rx, ry, rw, rh) {
+    if (!items.length || rw <= 0 || rh <= 0) return;
+    if (items.length === 1) {
+      out.push({ node: items[0], x: rx, y: ry, w: rw, h: rh });
+      return;
+    }
+    if (rw <= 1 || rh <= 1) {
+      out.push({ node: items[0], x: rx, y: ry, w: rw, h: rh });
+      return;
+    }
+
+    const total = items.reduce((s, it) => s + it._a, 0);
+    const half = total / 2;
+    let acc = 0;
+    let cut = 0;
+    for (let i = 0; i < items.length; i += 1) {
+      const next = acc + items[i]._a;
+      if (next >= half) {
+        cut = i + 1;
+        break;
+      }
+      acc = next;
+    }
+    if (cut <= 0 || cut >= items.length) cut = Math.floor(items.length / 2);
+
+    const left = items.slice(0, cut);
+    const right = items.slice(cut);
+    const leftSum = left.reduce((s, it) => s + it._a, 0);
+    const ratio = total > 0 ? leftSum / total : 0.5;
+
+    if (rw >= rh) {
+      let w1 = Math.round(rw * ratio);
+      w1 = Math.max(1, Math.min(rw - 1, w1));
+      split(left, rx, ry, w1, rh);
+      split(right, rx + w1, ry, rw - w1, rh);
+    } else {
+      let h1 = Math.round(rh * ratio);
+      h1 = Math.max(1, Math.min(rh - 1, h1));
+      split(left, rx, ry, rw, h1);
+      split(right, rx, ry + h1, rw, rh - h1);
+    }
+  }
+
+  split(list, Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+  return out;
+}
+
+function groupedBySector() {
+  const m = new Map();
+  for (const t of DATA.tickers) {
+    const key = t.sector_ru || t.sector_en || 'Not specified';
+    if (!m.has(key)) m.set(key, []);
+    m.get(key).push(t);
+  }
+
+  const sectors = [];
+  for (const [name, items] of m.entries()) {
+    const cap = items.reduce((s,t)=>s+(t.marketcap||0),0);
+    const turnover = items.reduce((s,t)=>s+(t.value||0),0);
+    const metricValue = items.reduce((s,t)=>s+sizeValue(t),0);
+    sectors.push({name, items, value: metricValue, cap, turnover});
+  }
+
+  sectors.sort((a,b)=>b.value-a.value);
+  return sectors;
+}
+
+function renderSectorNav(sectors) {
+  if (!sectorNavEl) return;
+  sectorNavEl.replaceChildren();
+  const navLabel = document.createElement('span');
+  navLabel.className = 'sector-nav__label';
+  navLabel.textContent = 'Sectors';
+  sectorNavEl.appendChild(navLabel);
+  if (sectorSelectEl) {
+    sectorSelectEl.replaceChildren();
+    const allOption = document.createElement('option');
+    allOption.value = '';
+    allOption.textContent = `Entire market · ${DATA.tickers.length}`;
+    sectorSelectEl.appendChild(allOption);
+    sectors.forEach(sector => {
+      const option = document.createElement('option');
+      option.value = sector.name;
+      option.textContent = `${sector.name} · ${sector.items.length}`;
+      sectorSelectEl.appendChild(option);
+    });
+    sectorSelectEl.value = state.sectorMap || '';
+  }
+  const total = sectors.reduce((sum, sector) => sum + sector.value, 0);
+  const allButton = document.createElement('button');
+  allButton.type = 'button';
+  allButton.className = 'sector-chip' + (state.sectorMap ? '' : ' active');
+  allButton.textContent = `Entire market · ${DATA.tickers.length}`;
+  allButton.setAttribute('aria-pressed', state.sectorMap ? 'false' : 'true');
+  allButton.addEventListener('click', () => {
+    if (!state.sectorMap) return;
+    state.sectorMap = null;
+    dismissPanelForMap();
+    resetView();
+    renderHeatmap();
+  });
+  sectorNavEl.appendChild(allButton);
+
+  sectors.forEach(sector => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'sector-chip' + (state.sectorMap === sector.name ? ' active' : '');
+    button.textContent = `${sector.name} · ${sector.items.length}`;
+    button.title = `${sector.name}: ${(sector.value / Math.max(total, 1) * 100).toFixed(2)}% ${sizeModeLabel()}`;
+    button.setAttribute('aria-pressed', state.sectorMap === sector.name ? 'true' : 'false');
+    button.addEventListener('click', () => openSectorMap(sector.name));
+    sectorNavEl.appendChild(button);
+  });
+
+}
+
+function clampView() {
+  const scale = state.view.scale;
+  const width = heatmapEl.clientWidth;
+  const height = heatmapEl.clientHeight;
+  state.view.x = Math.min(0, Math.max(width - width * scale, state.view.x));
+  state.view.y = Math.min(0, Math.max(height - height * scale, state.view.y));
+}
+
+function applyViewTransform() {
+  clampView();
+  if (heatmapStageEl) {
+    heatmapStageEl.style.transform = `translate3d(${state.view.x}px, ${state.view.y}px, 0)`;
+  }
+  const percent = `${Math.round(state.view.scale * 100)}%`;
+  if (zoomResetButtonEl) zoomResetButtonEl.textContent = percent;
+  if (zoomOutButtonEl) zoomOutButtonEl.disabled = state.view.scale <= 1.001;
+  if (zoomInButtonEl) zoomInButtonEl.disabled = state.view.scale >= MAX_ZOOM - 0.001;
+  heatmapEl.classList.toggle('is-zoomed', state.view.scale > 1.001);
+}
+
+function resetView() {
+  state.view = {scale: 1, x: 0, y: 0};
+  applyViewTransform();
+}
+
+function zoomAt(nextScale, clientX, clientY) {
+  const rect = heatmapEl.getBoundingClientRect();
+  const px = clientX == null ? rect.width / 2 : clientX - rect.left;
+  const py = clientY == null ? rect.height / 2 : clientY - rect.top;
+  const oldScale = state.view.scale;
+  const scale = Math.max(1, Math.min(MAX_ZOOM, nextScale));
+  const worldX = (px - state.view.x) / oldScale;
+  const worldY = (py - state.view.y) / oldScale;
+  state.view.scale = scale;
+  state.view.x = px - worldX * scale;
+  state.view.y = py - worldY * scale;
+  applyViewTransform();
+  if (semanticRenderFrame) window.cancelAnimationFrame(semanticRenderFrame);
+  semanticRenderFrame = window.requestAnimationFrame(() => {
+    semanticRenderFrame = 0;
+    renderHeatmap(true);
+  });
+}
+
+function tileFont(rect) {
+  const area = rect.w * rect.h;
+  return Math.max(10, Math.min(44, Math.sqrt(area) / 8.0));
+}
+
+function openPanel() {
+  panelEl.classList.add('open');
+  overlayEl.classList.add('show');
+}
+
+function setOpenTicker(ticker) {
+  const nextUrl = new URL(window.location.href);
+  if (ticker) nextUrl.searchParams.set('open', ticker);
+  else nextUrl.searchParams.delete('open');
+  window.history.replaceState(null, '', nextUrl);
+}
+
+function closePanel() {
+  panelEl.classList.remove('open', 'asset-card-mode');
+  overlayEl.classList.remove('show');
+  panelBodyEl.replaceChildren();
+  state.selectedTicker = null;
+  state.sectorMap = null;
+  setOpenTicker('');
+  renderHeatmap();
+}
+
+function dismissPanelForMap() {
+  panelEl.classList.remove('open', 'asset-card-mode');
+  overlayEl.classList.remove('show');
+  panelBodyEl.replaceChildren();
+  state.selectedTicker = null;
+  setOpenTicker('');
+}
+
+function renderLegend(cmax) {
+  const t1 = cmax;
+  const t2 = cmax * (2 / 3);
+  const t3 = cmax * (1 / 3);
+  legendTicksEl.innerHTML = `
+    <span>${(-t1).toFixed(0)}%</span>
+    <span>${(-t2).toFixed(0)}%</span>
+    <span>${(-t3).toFixed(0)}%</span>
+    <span>0%</span>
+    <span>${(t3).toFixed(0)}%</span>
+    <span>${(t2).toFixed(0)}%</span>
+    <span>${(t1).toFixed(0)}%</span>`;
+  legendBarEl.innerHTML = `
+    <span class="legend-seg" style="background:#980f25;"></span>
+    <span class="legend-seg" style="background:#db3048;"></span>
+    <span class="legend-seg" style="background:#e67682;"></span>
+    <span class="legend-seg" style="background:#b3bac2;"></span>
+    <span class="legend-seg" style="background:#69c98c;"></span>
+    <span class="legend-seg" style="background:#16a35f;"></span>
+    <span class="legend-seg" style="background:#06733d;"></span>`;
+}
+
+function drawSparkPlot(el, points, ticker) {
+  if (!el) return;
+  if (!window.Plotly) {
+    el.innerHTML = '<div class="small" style="padding:10px;">Plotly ne zagruzhen</div>';
+    return;
+  }
+  const sourcePoints = Array.isArray(points) ? points.slice() : [];
+  if (sourcePoints.length < 2) {
+    const close = Number(ticker?.close);
+    const asof = String(ticker?.asof || '').slice(0, 10);
+    if (Number.isFinite(close) && asof) {
+      const d1 = new Date(asof + 'T00:00:00');
+      if (!Number.isNaN(d1.getTime())) {
+        const d0 = new Date(d1.getTime() - 86400000);
+        sourcePoints.push([d0.toISOString().slice(0, 10), close], [asof, close]);
+      }
+    }
+  }
+  if (sourcePoints.length < 2) {
+    el.innerHTML = '<div class="small" style="padding:10px;">Net dannykh for grafika</div>';
+    return;
+  }
+
+  const x = sourcePoints.map(p => new Date(p[0] + 'T00:00:00'));
+  const y = sourcePoints.map(p => Number.isFinite(p[1]) ? p[1] : null);
+  const yy = y.filter(v => v !== null);
+  if (yy.length < 2) {
+    el.innerHTML = '<div class="small" style="padding:10px;">Net dannykh for grafika</div>';
+    return;
+  }
+
+  const first = yy[0];
+  const last = yy[yy.length - 1];
+  const up = last >= first;
+  const fromDict = (typeof ticker?.chart_color === 'string') ? ticker.chart_color.trim() : '';
+  const lineColor = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(fromDict)
+    ? fromDict
+    : (up ? '#1a9b60' : '#c23345');
+  const fillColor = (() => {
+    const hex = lineColor.replace('#', '');
+    const full = hex.length === 3 ? hex.split('').map(ch => ch + ch).join('') : hex;
+    const r = parseInt(full.slice(0, 2), 16);
+    const g = parseInt(full.slice(2, 4), 16);
+    const b = parseInt(full.slice(4, 6), 16);
+    if ([r, g, b].some(Number.isNaN)) return up ? 'rgba(26,155,96,0.18)' : 'rgba(194,51,69,0.18)';
+    return `rgba(${r},${g},${b},0.18)`;
+  })();
+
+  const yMin = Math.min(...yy);
+  const yMax = Math.max(...yy);
+  const span = Math.max(1e-8, yMax - yMin);
+  const pad = Math.max(span * 0.15, Math.abs((yMax + yMin) * 0.5) * 0.01, 0.01);
+  const y0 = yMin - pad;
+  const y1 = yMax + pad;
+
+  const baseTrace = {
+    type: 'scatter',
+    mode: 'lines',
+    x,
+    y: x.map(() => y0),
+    line: { width: 0, color: 'rgba(0,0,0,0)' },
+    hoverinfo: 'skip',
+    showlegend: false,
+  };
+  const trace = {
+    type: 'scatter',
+    mode: 'lines',
+    x,
+    y,
+    line: { color: lineColor, width: 2 },
+    fill: 'tonexty',
+    fillcolor: fillColor,
+    hovertemplate: '%{x}<br>Zakrytie: %{y:.4f}<extra></extra>',
+    showlegend: false,
+  };
+  const layout = {
+    autosize: true,
+    margin: { l: 46, r: 12, t: 10, b: 86 },
+    paper_bgcolor: '#ffffff',
+    plot_bgcolor: '#ffffff',
+    showlegend: false,
+    xaxis: {
+      type: 'date',
+      showgrid: true,
+      gridcolor: '#edf1f4',
+      zeroline: false,
+      showline: true,
+      linecolor: '#d9e0e6',
+      showticklabels: true,
+      tickformat: '%d.%m.%y',
+      nticks: 7,
+      ticks: 'outside',
+      ticklen: 5,
+      tickfont: { color: '#64748b', size: 11 },
+      automargin: true,
+      fixedrange: true,
+    },
+    yaxis: {
+      showgrid: true,
+      gridcolor: '#edf1f4',
+      zeroline: false,
+      showline: true,
+      linecolor: '#d9e0e6',
+      tickfont: { color: '#64748b', size: 10 },
+      automargin: true,
+      fixedrange: true,
+      range: [y0, y1],
+    },
+    hovermode: 'x unified',
+    font: { family: 'Graphik, Graphik LCG, Graphik LC, Graphik Web, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial, sans-serif' },
+  };
+  const cfg = {
+    responsive: true,
+    displaylogo: false,
+    modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian'],
+  };
+  Plotly.react(el, [baseTrace, trace], layout, cfg);
+}
+
+function renderCompanyPanel(ticker) {
+  state.selectedTicker = ticker.ticker;
+  setOpenTicker(ticker.ticker);
+  if (ticker.asset_card_url) {
+    panelTitleEl.textContent = "";
+    panelEl.classList.add('asset-card-mode');
+    openPanel();
+    panelBodyEl.innerHTML = `
+      <div class="asset-card-shell">
+        <iframe
+          class="asset-card-frame"
+          src="${esc(ticker.asset_card_url)}"
+          title="${esc(ticker.ticker)} · instrument profile"
+          loading="lazy"></iframe>
+      </div>
+    `;
+    panelBodyEl.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    panelEl.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    renderHeatmap();
+    return;
+  }
+  panelEl.classList.remove('asset-card-mode');
+  panelTitleEl.textContent = `${ticker.ticker} · ${ticker.name}`;
+
+  const p = ticker.returns || {};
+  const chips = (DATA.meta?.periods || Object.keys(p)).map(k => {
+    const v = p[k];
+    const c = (v == null) ? '#cbd5e1' : (v >= 0 ? '#dcfce7' : '#fee2e2');
+    const col = (v == null) ? '#334155' : (v >= 0 ? '#166534' : '#9f1239');
+    return `<span class="ret-chip" style="background:${c};color:${col};">${periodLabel(k)} ${pct(v)}</span>`;
+  }).join('');
+
+  panelBodyEl.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+      ${ticker.logo ? `<img src="${ticker.logo}" style="width:54px;height:54px;border-radius:50%;background:transparent;border:0;padding:0;"/>` : ''}
+      <div style="min-width:0;max-width:100%;">
+        <div style="font-size:19px;font-weight:850;line-height:1.1;white-space:normal;word-break:normal;overflow-wrap:normal;">${esc(ticker.name)}</div>
+        <div class="small" style="white-space:normal;word-break:normal;overflow-wrap:normal;">${esc(ticker.sector_ru || ticker.sector_en)} · ${esc(ticker.boardid || 'TQBR')}</div>
+        <div class="small" style="white-space:normal;word-break:normal;overflow-wrap:normal;">ISIN: ${esc(ticker.isin || 'n/a')} · As-of: ${esc(ticker.asof || 'n/a')}</div>
+      </div>
+    </div>
+
+    <div class="chip-row">${chips}</div>
+
+    <div class="kv-grid">
+      <div class="kv"><div class="k">Market capitalisation</div><div class="v mono">${ticker.marketcap_label}</div></div>
+      <div class="kv"><div class="k">Turnover</div><div class="v mono">${ticker.value_label}</div></div>
+      <div class="kv"><div class="k">Obem</div><div class="v mono">${ticker.volume_label}</div></div>
+      <div class="kv"><div class="k">Sdelok</div><div class="v mono">${ticker.numtrades_label}</div></div>
+      <div class="kv"><div class="k">Zakrytie</div><div class="v mono">${ticker.close_label}</div></div>
+      <div class="kv"><div class="k">VWAP</div><div class="v mono">${ticker.wap_label}</div></div>
+      <div class="kv"><div class="k">Open</div><div class="v mono">${ticker.open_label}</div></div>
+      <div class="kv"><div class="k">High / Low</div><div class="v mono">${ticker.high_label} / ${ticker.low_label}</div></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-head">
+        <div style="font-size:13px;font-weight:700;">Dinamika tseny</div>
+        <select id="rangeSelect" class="range-select">
+          <option value="D">Day</option>
+          <option value="W">Week</option>
+          <option value="M">Month</option>
+          <option value="3M">3 months</option>
+          <option value="6M">Polgoda</option>
+          <option value="YTD">Year to date</option>
+          <option value="1Y" selected>Year</option>
+          <option value="3Y">3 year</option>
+          <option value="5Y">5 years</option>
+          <option value="ALL">All vremya</option>
+        </select>
+      </div>
+      <div id="sparkPlot"></div>
+    </div>
+
+    <div class="list-card">
+      <div class="list-title">Overview</div>
+      <div class="small">${esc(ticker.description || 'Description unavailable')}</div>
+    </div>
+  `;
+
+  panelBodyEl.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  panelEl.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  requestAnimationFrame(() => panelBodyEl.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
+
+  const sparkPlotEl = panelBodyEl.querySelector('#sparkPlot');
+  const rangeSelect = panelBodyEl.querySelector('#rangeSelect');
+
+  function pick(range) {
+    const h = ticker.history || [];
+    if (h.length < 2 || range === 'ALL') return h;
+    const lastDate = new Date(`${h[h.length - 1][0]}T00:00:00`);
+    let startDate;
+    if (range === 'YTD') startDate = new Date(lastDate.getFullYear(), 0, 1);
+    else {
+      const days = {D:1,W:7,M:30,'3M':91,'6M':183,'1Y':365,'3Y':1095,'5Y':1826}[range];
+      if (!days) return h;
+      startDate = new Date(lastDate);
+      startDate.setDate(startDate.getDate() - days);
+    }
+    const filtered = h.filter(point => new Date(`${point[0]}T00:00:00`) >= startDate);
+    return filtered.length >= 2 ? filtered : h.slice(-2);
+  }
+
+  function redraw(range) {
+    const points = pick(range);
+    if (rangeSelect && rangeSelect.value !== range) rangeSelect.value = range;
+    drawSparkPlot(sparkPlotEl, points, ticker);
+    if (window.Plotly) setTimeout(() => {
+      Plotly.Plots.resize(sparkPlotEl);
+      panelBodyEl.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 60);
+  }
+
+  if (rangeSelect) {
+    rangeSelect.addEventListener('change', () => redraw(rangeSelect.value));
+  }
+
+  openPanel();
+  redraw('1Y');
+  requestAnimationFrame(() => {
+    if (window.Plotly) {
+      try { Plotly.Plots.resize(sparkPlotEl); } catch (e) {}
+      setTimeout(() => {
+        try { Plotly.Plots.resize(sparkPlotEl); } catch (e) {}
+      }, 120);
+    }
+    panelBodyEl.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
+  renderHeatmap();
+}
+
+function sectorPreviewHtml(sector) {
+  const items = sector.items || [];
+  const cap = items.reduce((s, t) => s + (t.marketcap || 0), 0);
+  const turnover = items.reduce((s, t) => s + (t.value || 0), 0);
+  const metricTotal = items.reduce((s, t) => s + sizeValue(t), 0);
+  const withRet = items.map(t => {
+    const r = t.returns?.[state.period];
+    const rub = (r == null || !Number.isFinite(r)) ? 0 : (t.marketcap || 0) * r / 100;
+    return { t, rub };
+  });
+  const rub = withRet.reduce((s, x) => s + x.rub, 0);
+  const top = items
+    .slice()
+    .sort((a, b) => sizeValue(b) - sizeValue(a))
+    .slice(0, 3)
+    .map(t => `${t.ticker} ${(sizeValue(t) / Math.max(metricTotal, 1) * 100).toFixed(1)}%`)
+    .join(' · ');
+  return `
+    <div class="title">${esc(sector.name)}</div>
+    <div class="line">Market capitalisation: ${money(cap)}</div>
+    <div class="line">Turnover for ${shortDate(latestTradeDate)}: ${money(turnover)}</div>
+    <div class="line">Tile area: ${esc(sizeModeLabel())}</div>
+    <div class="line">Dinamika (${periodLabel(state.period)}): ${moneySigned(rub)}</div>
+    <div class="line">Companies: ${items.length}</div>
+    <div class="line">${esc(top)}</div>
+  `;
+}
+
+function tickerPreviewHtml(t) {
+  const ret = t.returns?.[state.period];
+  return `
+    <div class="title">${esc(t.ticker)} · ${esc(t.name)}</div>
+    <div class="line">${esc(t.sector_ru || t.sector_en || 'Not specified')} · ${esc(t.boardid || 'TQBR')}</div>
+    <div class="line">Change (${periodLabel(state.period)}): ${pct(ret)}</div>
+    <div class="line">Market capitalisation: ${money(t.marketcap || null)}</div>
+    <div class="line">Turnover for ${shortDate(t.asof || latestTradeDate)}: ${money(t.value || null)}</div>
+    <div class="line">Price: ${esc(t.close_label || 'n/a')}</div>
+  `;
+}
+
+function showSectorPreview(sector, ev) {
+  sectorPreviewEl.innerHTML = sectorPreviewHtml(sector);
+  sectorPreviewEl.style.display = 'block';
+  const rect = heatmapEl.getBoundingClientRect();
+  const x = Math.min(rect.width - sectorPreviewEl.offsetWidth - 8, Math.max(8, ev.clientX - rect.left + 10));
+  const y = Math.min(rect.height - sectorPreviewEl.offsetHeight - 8, Math.max(8, ev.clientY - rect.top + 10));
+  sectorPreviewEl.style.left = `${x}px`;
+  sectorPreviewEl.style.top = `${y}px`;
+}
+
+function showTickerPreview(t, ev) {
+  sectorPreviewEl.innerHTML = tickerPreviewHtml(t);
+  sectorPreviewEl.style.display = 'block';
+  const rect = heatmapEl.getBoundingClientRect();
+  const x = Math.min(rect.width - sectorPreviewEl.offsetWidth - 8, Math.max(8, ev.clientX - rect.left + 10));
+  const y = Math.min(rect.height - sectorPreviewEl.offsetHeight - 8, Math.max(8, ev.clientY - rect.top + 10));
+  sectorPreviewEl.style.left = `${x}px`;
+  sectorPreviewEl.style.top = `${y}px`;
+}
+
+function hideSectorPreview() {
+  sectorPreviewEl.style.display = 'none';
+}
+
+function openSectorMap(sectorName) {
+  if (state.sectorMap === sectorName) state.sectorMap = null;
+  else state.sectorMap = sectorName;
+  resetView();
+  hideSectorPreview();
+  dismissPanelForMap();
+  renderHeatmap();
+}
+
+function snapRect(r) {
+  const x0 = Math.round(r.x);
+  const y0 = Math.round(r.y);
+  const x1 = Math.round(r.x + r.w);
+  const y1 = Math.round(r.y + r.h);
+  return {
+    node: r.node,
+    x: x0,
+    y: y0,
+    w: Math.max(1, x1 - x0),
+    h: Math.max(1, y1 - y0),
+  };
+}
+
+const SECTOR_SHORT_LABELS = {
+  'Energy (oil and gas)': ['Energoresursy', 'Oil and gas', 'Oil'],
+  'Information technology': ['IT'],
+  'Consumer sector': ['Potrebitelskiy', 'Potr.'],
+  'Chemicals and petrochemicals': ['Khimiya', 'Khim.'],
+  'Electric utilities': ['Energy', 'E/en.'],
+  'Industrials': ['Prom.'],
+  'Telecommunications': ['Telekom', 'Tel.'],
+  'Transportation': ['Trans.', 'Tr.'],
+  'Construction': ['Stroyka', 'Str.'],
+  'Diversified holdings': ['Khold.'],
+  'Forestry and paper': ['Les'],
+};
+
+let sectorLabelContext = null;
+function sectorLabelFor(name, width, height, expanded) {
+  const micro = height < 20;
+  const fontSize = micro ? 9 : (width < 120 ? 11 : 12);
+  const suffix = micro ? '' : ' ›';
+  const availableWidth = Math.max(0, width - (micro ? 4 : 16));
+  if (!sectorLabelContext) {
+    sectorLabelContext = document.createElement('canvas').getContext('2d');
+  }
+  if (sectorLabelContext) sectorLabelContext.font = `650 ${fontSize}px Inter, sans-serif`;
+  const candidates = [name, ...(SECTOR_SHORT_LABELS[name] || [])];
+  const selected = candidates.find(candidate => {
+    const label = `${candidate}${suffix}`;
+    return sectorLabelContext
+      ? sectorLabelContext.measureText(label).width <= availableWidth
+      : label.length * fontSize * 0.58 <= availableWidth;
+  });
+  if (selected) return {text: `${selected}${suffix}`, micro, compact: selected !== name};
+  if (expanded) return {text: name, micro: false, compact: false};
+  return {text: '', micro, compact: true};
+}
+
+function renderHeatmap(semanticOnly = false) {
+  heatmapEl.innerHTML = '';
+  const SECTOR_BORDER = 1;
+
+  const cmax = periodScale();
+  if (!semanticOnly) {
+    renderMarketCards();
+    renderLegend(cmax);
+  }
+
+  const viewportW = heatmapEl.clientWidth;
+  const viewportH = heatmapEl.clientHeight;
+  const w = Math.max(1, Math.round(viewportW * state.view.scale));
+  const h = Math.max(1, Math.round(viewportH * state.view.scale));
+
+  const allSectors = groupedBySector();
+  const navKey = `${state.sectorMap || 'all'}|${state.sizeMode}`;
+  if (!semanticOnly || navKey !== lastSectorNavKey) {
+    renderSectorNav(allSectors);
+    lastSectorNavKey = navKey;
+  }
+  const sectors = state.sectorMap
+    ? allSectors.filter(s => s.name === state.sectorMap)
+    : allSectors;
+  const sectorNodes = sectors.map(s => ({
+    name: s.name,
+    value: s.value,
+    data: s,
+  }));
+  const sectorRects = squarify(sectorNodes, 0, 0, w, h);
+
+  heatmapStageEl = document.createElement('div');
+  heatmapStageEl.className = 'heatmap-stage';
+  heatmapStageEl.style.width = `${w}px`;
+  heatmapStageEl.style.height = `${h}px`;
+  heatmapEl.appendChild(heatmapStageEl);
+
+  for (const rawSr of sectorRects) {
+    const sr = snapRect(rawSr);
+    const sec = sr.node.data;
+    const sectorDiv = document.createElement('div');
+    sectorDiv.className = 'sector' + (state.sectorMap === sec.name ? ' active' : '');
+    sectorDiv.style.left = `${sr.x}px`;
+    sectorDiv.style.top = `${sr.y}px`;
+    sectorDiv.style.width = `${Math.max(1, sr.w)}px`;
+    sectorDiv.style.height = `${Math.max(1, sr.h)}px`;
+
+    const expandedSector = state.sectorMap === sec.name;
+    const sectorHeadH = expandedSector ? 30 : (sr.h < 20 ? sr.h : Math.max(18, Math.min(26, Math.floor(sr.h * 0.36))));
+    const head = document.createElement('button');
+    head.type = 'button';
+    head.className = 'sector-header';
+    head.style.height = `${sectorHeadH}px`;
+    const visibleLabel = sectorLabelFor(sec.name, sr.w, sr.h, expandedSector);
+    head.textContent = visibleLabel.text;
+    head.classList.toggle('sector-header--compact', visibleLabel.compact);
+    head.classList.toggle('sector-header--micro', visibleLabel.micro);
+    head.title = `${sec.name} · ${sec.items.length} companies`;
+    head.setAttribute('aria-label', `${sec.name}, ${sec.items.length} companies. Open sector`);
+    head.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      if (Date.now() < state.suppressClickUntil) return;
+      openSectorMap(sec.name);
+    });
+    sectorDiv.appendChild(head);
+
+    const body = document.createElement('div');
+    body.className = 'sector-body';
+    body.style.top = `${sectorHeadH}px`;
+    sectorDiv.appendChild(body);
+
+    const tileNodes = sec.items.map(t => ({
+      value: sizeValue(t),
+      data: t,
+    }));
+    // Layout must be computed by inner content box size, not outer sector size.
+    const innerW = Math.max(0, sr.w - SECTOR_BORDER * 2);
+    const innerH = Math.max(0, sr.h - SECTOR_BORDER * 2 - sectorHeadH);
+    const tileRects = squarify(tileNodes, 0, 0, innerW, innerH);
+
+    for (const rawTr of tileRects) {
+      const tr = snapRect(rawTr);
+      if (tr.w <= 1 || tr.h <= 1) continue;
+      const t = tr.node.data;
+      const ret = t.returns?.[state.period];
+
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'tile' + (state.selectedTicker === t.ticker ? ' active' : '');
+      tile.style.left = `${tr.x}px`;
+      tile.style.top = `${tr.y}px`;
+      tile.style.width = `${Math.max(1, tr.w)}px`;
+      tile.style.height = `${Math.max(1, tr.h)}px`;
+      tile.style.background = retColor(ret, cmax);
+      tile.setAttribute('aria-label', `${t.ticker} · ${t.name}, ${pct(ret)}`);
+
+      // Tiny cells are sensitive to border/padding artifacts in WebKit.
+      const isMicro = tr.w < 8 || tr.h < 8;
+      if (isMicro) tile.style.borderWidth = '0';
+
+      const inner = document.createElement('div');
+      inner.className = 'tile-inner';
+
+      const f = tileFont(tr);
+      const aspect = Math.max(tr.w, tr.h) / Math.max(1, Math.min(tr.w, tr.h));
+      // Keep a compact ticker in small cells: after zoom it becomes readable
+      // without recalculating the financial geometry of the treemap.
+      const showTicker = tr.w >= 16 && tr.h >= 9 && aspect <= 12;
+      const showReturn = tr.w >= 40 && tr.h >= 28 && aspect <= 8;
+      const showLogo = tr.w >= 54 && tr.h >= 48 && aspect <= 6;
+      if (isMicro) inner.style.display = 'none';
+      if (!showReturn) inner.classList.add('tile-inner--compact');
+
+      if (showLogo && t.logo) {
+        const img = document.createElement('img');
+        img.className = 'tile-logo';
+        img.src = t.logo;
+        img.alt = t.ticker;
+        img.style.width = `${Math.max(16, Math.min(54, f * 1.0))}px`;
+        img.style.height = img.style.width;
+        inner.appendChild(img);
+      }
+
+      if (showTicker) {
+        const tk = document.createElement('div');
+        tk.className = 'tile-ticker';
+        tk.style.fontSize = `${Math.max(7, Math.min(42, f))}px`;
+        tk.textContent = t.ticker;
+        inner.appendChild(tk);
+
+        if (showReturn) {
+          const rt = document.createElement('div');
+          rt.className = 'tile-ret';
+          rt.style.fontSize = `${Math.max(9, Math.min(35, f * 0.85))}px`;
+          rt.textContent = pct(ret);
+          inner.appendChild(rt);
+        }
+      }
+
+      tile.appendChild(inner);
+      tile.addEventListener('mouseenter', (ev) => showTickerPreview(t, ev));
+      tile.addEventListener('mousemove', (ev) => showTickerPreview(t, ev));
+      tile.addEventListener('mouseleave', hideSectorPreview);
+      tile.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        if (Date.now() < state.suppressClickUntil) return;
+        hideSectorPreview();
+        renderCompanyPanel(t);
+      });
+
+      body.appendChild(tile);
+    }
+
+    head.addEventListener('mouseenter', (ev) => showSectorPreview(sec, ev));
+    head.addEventListener('mousemove', (ev) => showSectorPreview(sec, ev));
+    head.addEventListener('mouseleave', hideSectorPreview);
+    sectorDiv.addEventListener('click', () => {
+      if (Date.now() < state.suppressClickUntil) return;
+      openSectorMap(sec.name);
+    });
+    heatmapStageEl.appendChild(sectorDiv);
+  }
+  applyViewTransform();
+}
+
+periodEl.addEventListener('change', () => {
+  state.period = periodEl.value;
+  if (state.selectedTicker) {
+    const t = DATA.tickers.find(x => x.ticker === state.selectedTicker);
+    if (t) renderCompanyPanel(t);
+  } else renderHeatmap();
+});
+
+sizeModeButtonEls.forEach(button => {
+  button.addEventListener('click', () => {
+    const nextMode = button.dataset.sizeMode;
+    if (!nextMode || nextMode === state.sizeMode) return;
+    state.sizeMode = nextMode;
+    sizeModeButtonEls.forEach(item => item.setAttribute('aria-pressed', item.dataset.sizeMode === state.sizeMode ? 'true' : 'false'));
+    syncSizeMetricGlider(true);
+    lastSectorNavKey = '';
+    resetView();
+    renderHeatmap();
+  });
+});
+
+sectorSelectEl?.addEventListener('change', () => {
+  state.sectorMap = sectorSelectEl.value || null;
+  hideSectorPreview();
+  dismissPanelForMap();
+  resetView();
+  renderHeatmap();
+});
+
+zoomOutButtonEl?.addEventListener('click', () => zoomAt(state.view.scale / 1.35));
+zoomInButtonEl?.addEventListener('click', () => zoomAt(state.view.scale * 1.35));
+zoomResetButtonEl?.addEventListener('click', () => {
+  resetView();
+  renderHeatmap(true);
+});
+
+function setFocusMode(active) {
+  state.focusMode = active;
+  contentEl.classList.toggle('heatmap-focus-mode', active);
+  focusModeButtonEl?.setAttribute('aria-pressed', active ? 'true' : 'false');
+  if (focusModeButtonEl) {
+    const label = active ? 'Collapse map' : 'Expand map';
+    focusModeButtonEl.setAttribute('aria-label', label);
+    focusModeButtonEl.title = label;
+  }
+  document.body.classList.toggle('heatmap-focus-open', active);
+  window.requestAnimationFrame(() => {
+    resetView();
+    renderHeatmap();
+  });
+}
+
+focusModeButtonEl?.addEventListener('click', () => setFocusMode(!state.focusMode));
+
+heatmapEl.addEventListener('wheel', (event) => {
+  if (!event.ctrlKey && !event.metaKey) return;
+  event.preventDefault();
+  const factor = Math.exp(-event.deltaY * 0.008);
+  zoomAt(state.view.scale * factor, event.clientX, event.clientY);
+}, {passive:false});
+
+const activePointers = new Map();
+let panGesture = null;
+let pinchGesture = null;
+
+heatmapEl.addEventListener('pointerdown', (event) => {
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+  activePointers.set(event.pointerId, {x:event.clientX, y:event.clientY});
+  if (activePointers.size === 1) {
+    panGesture = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      viewX: state.view.x,
+      viewY: state.view.y,
+      moved: false,
+    };
+  } else if (activePointers.size === 2) {
+    const points = Array.from(activePointers.values());
+    const dx = points[1].x - points[0].x;
+    const dy = points[1].y - points[0].y;
+    pinchGesture = {distance: Math.max(1, Math.hypot(dx, dy)), scale: state.view.scale};
+    state.suppressClickUntil = Date.now() + 500;
+    activePointers.forEach((_, id) => {
+      try { heatmapEl.setPointerCapture(id); } catch (error) {}
+    });
+  }
+});
+
+heatmapEl.addEventListener('pointermove', (event) => {
+  if (!activePointers.has(event.pointerId)) return;
+  activePointers.set(event.pointerId, {x:event.clientX, y:event.clientY});
+
+  if (activePointers.size >= 2 && pinchGesture) {
+    const points = Array.from(activePointers.values()).slice(0, 2);
+    const dx = points[1].x - points[0].x;
+    const dy = points[1].y - points[0].y;
+    const midpointX = (points[0].x + points[1].x) / 2;
+    const midpointY = (points[0].y + points[1].y) / 2;
+    zoomAt(pinchGesture.scale * Math.hypot(dx, dy) / pinchGesture.distance, midpointX, midpointY);
+    event.preventDefault();
+    return;
+  }
+
+  if (!panGesture || panGesture.pointerId !== event.pointerId || state.view.scale <= 1.001) return;
+  const dx = event.clientX - panGesture.startX;
+  const dy = event.clientY - panGesture.startY;
+  if (!panGesture.moved && Math.hypot(dx, dy) < 8) return;
+  if (!panGesture.moved) {
+    panGesture.moved = true;
+    try { heatmapEl.setPointerCapture(event.pointerId); } catch (error) {}
+  }
+  state.suppressClickUntil = Date.now() + 250;
+  state.view.x = panGesture.viewX + dx;
+  state.view.y = panGesture.viewY + dy;
+  applyViewTransform();
+  hideSectorPreview();
+  event.preventDefault();
+});
+
+function releaseMapPointer(event) {
+  activePointers.delete(event.pointerId);
+  if (activePointers.size < 2) pinchGesture = null;
+  if (!activePointers.size) panGesture = null;
+}
+heatmapEl.addEventListener('pointerup', releaseMapPointer);
+heatmapEl.addEventListener('pointercancel', releaseMapPointer);
+
+heatmapEl.addEventListener('keydown', (event) => {
+  if (event.key === '+' || event.key === '=') { event.preventDefault(); zoomAt(state.view.scale * 1.35); }
+  if (event.key === '-') { event.preventDefault(); zoomAt(state.view.scale / 1.35); }
+  if (event.key === '0') { event.preventDefault(); resetView(); renderHeatmap(true); }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && state.focusMode) setFocusMode(false);
+});
+
+window.addEventListener('resize', () => {
+  renderHeatmap();
+  syncSizeMetricGlider(false);
+});
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(() => {
+    renderHeatmap();
+    syncSizeMetricGlider(false);
+  });
+  ro.observe(heatmapEl);
+}
+overlayEl.addEventListener('click', closePanel);
+closePanelEl.addEventListener('click', closePanel);
+document.addEventListener('pointerdown', event => {
+  if (panelEl.classList.contains('open') && !panelEl.contains(event.target)) closePanel();
+}, true);
+
+// financial-semantics-v71: sector-aware income and profitability
+const STOCK_COLUMNS = [
+  { key: 'logo', label: 'Logo', type: 'logo', sortable: false },
+  { key: 'issuer', label: 'Name', type: 'text' },
+  { key: 'sector', label: 'Sector', type: 'text' },
+  { key: 'close', label: 'Price, ₽', type: 'number' },
+  { key: 'returnD', label: 'Day, %', type: 'number', tone: true },
+  { key: 'marketcap', label: 'Market capitalisation', type: 'money' },
+  { key: 'turnover', label: 'Turnover', type: 'money' },
+  { key: 'revenue', label: 'Revenue / oper. income', note: 1, type: 'money' },
+  { key: 'revenueGrowth', label: 'Revenue growth, %', note: 1, type: 'number', tone: true },
+  { key: 'ebitda', label: 'EBITDA', note: 2, type: 'money', tone: true },
+  { key: 'net_profit', label: 'Net profit', type: 'money', tone: true },
+  { key: 'profitability', label: 'Profitability, %', note: 9, type: 'number', tone: true },
+  { key: 'profitGrowth', label: 'Net profit growth, %', type: 'number', tone: true },
+  { key: 'cost_of_sales', label: 'Cost of sales', note: 3, type: 'money' },
+  { key: 'assets', label: 'Assets', type: 'money' },
+  { key: 'equity', label: 'Equity', type: 'money' },
+  { key: 'debt', label: 'Debt', note: 4, type: 'money' },
+  { key: 'leverage', label: 'Debt/EBITDA', note: 5, type: 'number' },
+  { key: 'pe', label: 'P/E', note: 10, type: 'number' },
+  { key: 'pbv', label: 'P/BV', note: 11, type: 'number' },
+  { key: 'ps', label: 'P/S', note: 12, type: 'number' },
+  { key: 'ev_ebitda', label: 'EV/EBITDA', note: 8, type: 'number' },
+  { key: 'roe', label: 'ROE, %', note: 13, type: 'number', tone: true },
+  { key: 'roa', label: 'ROA, %', note: 14, type: 'number', tone: true },
+  { key: 'ebitda_margin', label: 'EBITDA margin, %', note: 2, type: 'number', tone: true },
+  { key: 'net_debt', label: 'Chistyy debt', type: 'money', tone: true },
+  { key: 'asset_turnover', label: 'Asset turnover', note: 6, type: 'number' },
+  { key: 'fcf', label: 'FCF', note: 7, type: 'money', tone: true },
+  { key: 'dividend_yield', label: 'Divdokhod, %', type: 'number' },
+  { key: 'standard', label: 'Reporting standard', type: 'text' },
+  { key: 'report_date', label: 'Reporting date', type: 'date' },
+  { key: 'open', label: 'Open', type: 'open', sortable: false },
+];
+const STOCK_METRICS = STOCK_COLUMNS.filter(column => !['logo', 'issuer', 'sector', 'standard', 'report_date', 'open'].includes(column.key));
+const stockState = { year: '2025', query: '', sector: '', standard: '', sortKey: 'marketcap', sortDir: 'desc', page: 1, pageSize: 80, filters: [] };
+const stockBaseFilters = { search: true, year: true, sector: true, standard: true };
+const STOCK_BASE_LABELS = { search: 'Search', year: 'Period', sector: 'Sector', standard: 'Financials' };
+const stockEls = {
+  search: document.getElementById('stockSearch'), year: document.getElementById('stockYear'),
+  sector: document.getElementById('stockSector'), standard: document.getElementById('stockStandard'),
+  head: document.getElementById('stockTableHead'), body: document.getElementById('stockTableBody'),
+  summary: document.getElementById('stockTableSummary'), coverage: document.getElementById('stockCoverage'),
+  pageSize: document.getElementById('stockPageSize'), prev: document.getElementById('stockPagePrev'),
+  next: document.getElementById('stockPageNext'), pageLabel: document.getElementById('stockPageLabel'),
+  panel: document.getElementById('stockSmartPanel'), addFilter: document.getElementById('addStockFilter'),
+  addMenu: document.getElementById('stockAddFilterMenu'),
+  active: document.getElementById('stockActiveFilters'), reset: document.getElementById('resetStockFilters'),
+  toggle: document.getElementById('toggleStockFilters'), grid: document.getElementById('stockFiltersGrid'),
+  meta: document.getElementById('stockTableMeta'),
+};
+
+function stockYearData(ticker, year = stockState.year) {
+  return ticker.fundamentals?.years?.[year] || null;
+}
+const STOCK_PROFILE_TICKERS = {
+  insurer: new Set(['RENI', 'RGSS']),
+};
+function stockProfile(ticker) {
+  const annualRows = Object.values(ticker.fundamentals?.years || {});
+  if (annualRows.some(row => row?.net_interest_income !== null && row?.net_interest_income !== undefined)) return 'bank';
+  if (STOCK_PROFILE_TICKERS.insurer.has(ticker.ticker)) return 'insurer';
+  return 'industrial';
+}
+function stockMetricResolution(ticker, key) {
+  const profile = stockProfile(ticker);
+  if (profile === 'bank') {
+    const bankMap = {
+      revenue: ['operating_income', 'Bank total operating income'],
+      ebitda: ['pre_provision_profit', 'Pre-provision operating profit'],
+      cost_of_sales: ['operating_expenses', 'Operating expenses'],
+      assets: ['bank_assets', 'Bank assets'],
+      equity: ['bank_equity', 'Bank equity'],
+      debt: ['deposits', 'Customer funds / deposits'],
+      leverage: ['capital_adequacy', 'Total capital adequacy ratio'],
+      pbv: ['bank_pb', 'P/B'],
+      ebitda_margin: ['nim', 'Net interest margin (NIM)'],
+      profitability: ['operating_income', 'Net profit / total operating income'],
+      asset_turnover: ['cir', 'Cost-to-Income, CIR'],
+    };
+    const notApplicable = new Set(['ps', 'ev_ebitda', 'net_margin', 'net_debt', 'fcf']);
+    if (notApplicable.has(key)) return { key: null, status: 'not_applicable', label: 'Metric not applicable to banks' };
+    if (bankMap[key]) return { key: bankMap[key][0], status: 'mapped', label: bankMap[key][1] };
+  }
+  if (profile === 'insurer') {
+    const insurerMap = {
+      ebitda: ['operating_profit', 'Operating profit strakhovshchika'],
+    };
+    const notApplicable = new Set(['ev_ebitda', 'net_debt', 'fcf']);
+    if (notApplicable.has(key)) return { key: null, status: 'not_applicable', label: 'Metric not applicable to insurers' };
+    if (insurerMap[key]) return { key: insurerMap[key][0], status: 'mapped', label: insurerMap[key][1] };
+  }
+  return { key, status: 'direct', label: '' };
+}
+function stockGrowth(ticker, key) {
+  const currentRaw = stockYearData(ticker)?.[key];
+  const quarterMatch = String(stockState.year).match(/^(\d{4})Q([1-4])$/);
+  const priorPeriod = quarterMatch
+    ? `${Number(quarterMatch[1]) - 1}Q${quarterMatch[2]}`
+    : String(Number(stockState.year) - 1);
+  const priorRaw = ticker.fundamentals?.years?.[priorPeriod]?.[key];
+  if (currentRaw === null || currentRaw === undefined || priorRaw === null || priorRaw === undefined) return null;
+  const current = Number(currentRaw);
+  const prior = Number(priorRaw);
+  if (!Number.isFinite(current) || !Number.isFinite(prior) || prior === 0) return null;
+  return (current / prior - 1) * 100;
+}
+function stockValue(ticker, key) {
+  const fundamentals = stockYearData(ticker);
+  const revenueKey = stockMetricResolution(ticker, 'revenue').key;
+  const direct = {
+    issuer: ticker.name || ticker.shortname || ticker.ticker,
+    sector: ticker.sector_ru || '', close: ticker.close, returnD: ticker.returns?.D,
+    marketcap: ticker.marketcap, turnover: ticker.value,
+    revenueGrowth: revenueKey ? stockGrowth(ticker, revenueKey) : null,
+    profitGrowth: stockGrowth(ticker, 'net_profit'),
+    profitability: (() => {
+      const profile = stockProfile(ticker);
+      const profit = Number(fundamentals?.net_profit);
+      const income = Number(fundamentals?.[profile === 'bank' ? 'operating_income' : 'revenue']);
+      return Number.isFinite(profit) && Number.isFinite(income) && income !== 0 ? profit / income * 100 : null;
+    })(),
+    standard: fundamentals?.standard || '—', report_date: fundamentals?.report_date || '—',
+  };
+  const resolution = stockMetricResolution(ticker, key);
+  const value = Object.prototype.hasOwnProperty.call(direct, key)
+    ? direct[key]
+    : resolution.key ? fundamentals?.[resolution.key] : null;
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) return value;
+  const numeric = Number(value);
+  if (key === 'net_profit') {
+    const income = Number(fundamentals?.[stockProfile(ticker) === 'bank' ? 'operating_income' : 'revenue']);
+    if (numeric > 0 && Number.isFinite(income) && income > 0 && numeric > income) return null;
+  }
+  if (key === 'profitability' && (numeric > 100 || numeric < -500)) return null;
+  if (['pe', 'pbv', 'ps', 'ev_ebitda'].includes(key) && Math.abs(numeric) > 200) return null;
+  if (['roe', 'roa'].includes(key) && Math.abs(numeric) > 500) return null;
+  return value;
+}
+function stockMoney(value) {
+  if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
+  const number = Number(value), abs = Math.abs(number);
+  if (abs >= 1e12) return `${(number / 1e12).toLocaleString('en-GB', {maximumFractionDigits: 2})} tn ₽`;
+  if (abs >= 1e9) return `${(number / 1e9).toLocaleString('en-GB', {maximumFractionDigits: 1})} bn ₽`;
+  if (abs >= 1e6) return `${(number / 1e6).toLocaleString('en-GB', {maximumFractionDigits: 1})} mn ₽`;
+  return `${number.toLocaleString('en-GB', {maximumFractionDigits: 0})} ₽`;
+}
+function stockNumber(value, signed = false) {
+  if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
+  const number = Number(value);
+  return `${signed && number > 0 ? '+' : ''}${number.toLocaleString('en-GB', {maximumFractionDigits: 2})}`;
+}
+function stockCell(ticker, column) {
+  const value = stockValue(ticker, column.key);
+  const resolution = stockMetricResolution(ticker, column.key);
+  if (column.key === 'logo') return `<span class="stock-logo">${ticker.logo ? `<img src="${ticker.logo}" alt="" loading="lazy" decoding="async">` : esc(ticker.ticker.slice(0, 1))}</span>`;
+  if (column.key === 'issuer') return `<button class="stock-issuer" type="button" data-stock-ticker="${esc(ticker.ticker)}"><span class="stock-name-title">${esc(ticker.ticker)}</span><span class="stock-name-sub">${esc(value)}</span></button>`;
+  if (column.key === 'sector') return `<span class="stock-class-chip">${esc(value || '—')}</span>`;
+  if (column.key === 'standard') {
+    const href = stockYearData(ticker)?.statements_url;
+    return href ? `<a class="stock-class-chip" href="${esc(href)}">${value === 'IFRS' ? 'IFRS' : value}</a>` : '<span class="stock-missing">Net dannykh</span>';
+  }
+  if (column.key === 'open') {
+    const href = stockYearData(ticker)?.statements_url;
+    return href ? `<a class="stock-class-chip" href="${esc(href)}">Open</a>` : '<span class="stock-missing">Net dannykh</span>';
+  }
+  if (resolution.status === 'not_applicable') return `<span class="stock-na" title="${esc(resolution.label)}">n/p</span>`;
+  const display = column.type === 'money' ? stockMoney(value) : stockNumber(value, column.tone);
+  const hasTone = column.tone && value !== null && value !== undefined && Number.isFinite(Number(value));
+  const toneClass = hasTone ? (Number(value) > 0 ? 'good' : Number(value) < 0 ? 'bad' : 'neutral') : '';
+  const title = resolution.status === 'mapped' ? ` title="${esc(resolution.label)}"` : '';
+  return hasTone ? `<span class="stock-metric-chip ${toneClass}"${title}>${display}</span>` : `<span class="stock-value mono"${title}>${display}</span>`;
+}
+function stockColumnLabel(column) {
+  return `<span class="stock-column-label">${esc(column.label)}${column.note ? `<sup class="stock-column-note" aria-label="Snoska ${column.note}">${column.note}</sup>` : ''}</span>`;
+}
+function stockDateKey(value) {
+  const text = String(value || '').trim();
+  let match = text.match(/^(\d{4})[-./](\d{2})[-./](\d{2})$/);
+  if (match) return Number(`${match[1]}${match[2]}${match[3]}`);
+  match = text.match(/^(\d{2})[./-](\d{2})[./-](\d{4})$/);
+  return match ? Number(`${match[3]}${match[2]}${match[1]}`) : null;
+}
+function stockRows() {
+  const query = stockState.query.trim().toLocaleLowerCase('en-GB');
+  return DATA.tickers.filter(ticker => {
+    const fundamentals = stockYearData(ticker);
+    const haystack = [ticker.ticker, ticker.name, ticker.shortname, ticker.sector_ru, ticker.industry_ru, ticker.isin].join(' ').toLocaleLowerCase('en-GB');
+    if (query && !haystack.includes(query)) return false;
+    if (stockState.sector && ticker.sector_ru !== stockState.sector) return false;
+    if (stockState.standard === 'missing' && fundamentals) return false;
+    if (stockState.standard && stockState.standard !== 'missing' && fundamentals?.standard !== stockState.standard) return false;
+    return stockState.filters.every(filter => {
+      const rawValue = stockValue(ticker, filter.key);
+      if (rawValue === null || rawValue === undefined || rawValue === '') return false;
+      const value = Number(rawValue);
+      if (!Number.isFinite(value)) return false;
+      if (filter.min !== null && value < filter.min) return false;
+      if (filter.max !== null && value > filter.max) return false;
+      return true;
+    });
+  }).sort((a, b) => {
+    const av = stockValue(a, stockState.sortKey), bv = stockValue(b, stockState.sortKey);
+    const aMissing = av === null || av === undefined || av === '' || av === '—';
+    const bMissing = bv === null || bv === undefined || bv === '' || bv === '—';
+    if (aMissing && bMissing) return 0;
+    if (aMissing) return 1;
+    if (bMissing) return -1;
+    const sortColumn = STOCK_COLUMNS.find(column => column.key === stockState.sortKey);
+    const aDate = sortColumn?.type === 'date' ? stockDateKey(av) : null;
+    const bDate = sortColumn?.type === 'date' ? stockDateKey(bv) : null;
+    if (sortColumn?.type === 'date' && aDate === null && bDate === null) return 0;
+    if (sortColumn?.type === 'date' && aDate === null) return 1;
+    if (sortColumn?.type === 'date' && bDate === null) return -1;
+    const comparison = sortColumn?.type === 'date'
+      ? aDate - bDate
+      : typeof av === 'number' && typeof bv === 'number'
+        ? av - bv : String(av).localeCompare(String(bv), 'ru');
+    return stockState.sortDir === 'asc' ? comparison : -comparison;
+  });
+}
+function renderStockFilters() {
+  document.querySelectorAll('[data-base-filter]').forEach(card => { card.hidden = !stockBaseFilters[card.dataset.baseFilter]; });
+  stockEls.active.innerHTML = stockState.filters.map((filter, index) => {
+    const column = STOCK_COLUMNS.find(item => item.key === filter.key);
+    const scale = column?.type === 'money' ? 1e9 : 1;
+    const min = filter.min === null ? '' : filter.min / scale;
+    const max = filter.max === null ? '' : filter.max / scale;
+    return `<div class="stock-filter-card stock-filter-card-range" data-stock-filter-key="${esc(filter.key)}"><div class="stock-filter-card-head"><span class="stock-filter-label">${esc(column?.label || filter.key)}${column?.type === 'money' ? ', bn ₽' : ''}</span><button type="button" class="stock-filter-remove" data-remove-filter="${index}" aria-label="Remove filter">×</button></div><div class="stock-filter-range"><input type="number" inputmode="decimal" data-active-filter="${index}" data-role="min" value="${min}" placeholder="from"><input type="number" inputmode="decimal" data-active-filter="${index}" data-role="max" value="${max}" placeholder="until"></div></div>`;
+  }).join('');
+  const baseOptions = Object.entries(stockBaseFilters).filter(([, visible]) => !visible).map(([key]) => `<button type="button" data-add-base="${key}">${STOCK_BASE_LABELS[key]}</button>`);
+  const metricOptions = STOCK_METRICS.filter(metric => !stockState.filters.some(filter => filter.key === metric.key)).map(metric => `<button type="button" data-add-stock-metric="${metric.key}">${esc(metric.label)}${metric.type === 'money' ? ', bn ₽' : ''}</button>`);
+  stockEls.panel.innerHTML = [...baseOptions, ...metricOptions].join('');
+}
+function renderStockTable() {
+  const rows = stockRows();
+  const pageCount = Math.max(1, Math.ceil(rows.length / stockState.pageSize));
+  stockState.page = Math.min(stockState.page, pageCount);
+  const start = (stockState.page - 1) * stockState.pageSize;
+  const pageRows = rows.slice(start, start + stockState.pageSize);
+  stockEls.head.innerHTML = `<tr>${STOCK_COLUMNS.map(column => column.sortable === false ? `<th scope="col">${stockColumnLabel(column)}</th>` : `<th scope="col"><button type="button" data-stock-sort="${column.key}" aria-sort="${stockState.sortKey === column.key ? (stockState.sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}">${stockColumnLabel(column)}<span class="stock-sort-icon" aria-hidden="true">${stockState.sortKey === column.key ? (stockState.sortDir === 'asc' ? '↑' : '↓') : '↕'}</span></button></th>`).join('')}</tr>`;
+  stockEls.body.innerHTML = pageRows.length ? pageRows.map(ticker => `<tr>${STOCK_COLUMNS.map(column => `<td>${stockCell(ticker, column)}</td>`).join('')}</tr>`).join('') : `<tr><td class="stock-empty" colspan="${STOCK_COLUMNS.length}">No equities match the selected filters.</td></tr>`;
+  const reported = DATA.tickers.filter(ticker => stockYearData(ticker)).length;
+  stockEls.coverage.textContent = `${reported} from ${DATA.tickers.length} bumag · ${stockState.year}`;
+  const finish = Math.min(start + pageRows.length, rows.length);
+  stockEls.summary.innerHTML = rows.length ? `Showing <b>${start + 1}</b>–<b>${finish}</b> of <b>${rows.length}</b>` : 'Results: <b>0</b>';
+  stockEls.pageLabel.innerHTML = `Page <b>${stockState.page}</b> / <b>${pageCount}</b>`;
+  const sortColumn = STOCK_COLUMNS.find(column => column.key === stockState.sortKey);
+  stockEls.meta.innerHTML = `<span>Results: <b>${rows.length}</b></span><span>Sorted by: <b>${esc(sortColumn?.label || '')}</b></span>`;
+  stockEls.prev.disabled = stockState.page <= 1;
+  stockEls.next.disabled = stockState.page >= pageCount;
+  renderStockFilters();
+}
+function resetStockPage() { stockState.page = 1; renderStockTable(); }
+
+if (stockEls.sector) {
+  const sectors = [...new Set(DATA.tickers.map(ticker => ticker.sector_ru).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ru'));
+  stockEls.sector.insertAdjacentHTML('beforeend', sectors.map(sector => `<option value="${esc(sector)}">${esc(sector)}</option>`).join(''));
+  stockEls.search.addEventListener('input', () => { stockState.query = stockEls.search.value; resetStockPage(); });
+  stockEls.year.addEventListener('change', () => { stockState.year = stockEls.year.value; resetStockPage(); });
+  stockEls.sector.addEventListener('change', () => { stockState.sector = stockEls.sector.value; resetStockPage(); });
+  stockEls.standard.addEventListener('change', () => { stockState.standard = stockEls.standard.value; resetStockPage(); });
+  stockEls.pageSize.addEventListener('change', () => { stockState.pageSize = Number(stockEls.pageSize.value); resetStockPage(); });
+  stockEls.prev.addEventListener('click', () => { stockState.page = Math.max(1, stockState.page - 1); renderStockTable(); });
+  stockEls.next.addEventListener('click', () => { stockState.page += 1; renderStockTable(); });
+  stockEls.head.addEventListener('click', event => {
+    const button = event.target.closest('[data-stock-sort]'); if (!button) return;
+    const key = button.dataset.stockSort;
+    if (stockState.sortKey === key) stockState.sortDir = stockState.sortDir === 'asc' ? 'desc' : 'asc';
+    else { stockState.sortKey = key; stockState.sortDir = ['issuer', 'sector', 'standard', 'report_date'].includes(key) ? 'asc' : 'desc'; }
+    resetStockPage();
+  });
+  stockEls.body.addEventListener('click', event => {
+    const button = event.target.closest('[data-stock-ticker]'); if (!button) return;
+    const ticker = DATA.tickers.find(item => item.ticker === button.dataset.stockTicker);
+    if (ticker) renderCompanyPanel(ticker);
+  });
+  stockEls.panel.addEventListener('click', event => {
+    const baseButton = event.target.closest('[data-add-base]');
+    if (baseButton) stockBaseFilters[baseButton.dataset.addBase] = true;
+    const metricButton = event.target.closest('[data-add-stock-metric]');
+    if (metricButton && !stockState.filters.some(filter => filter.key === metricButton.dataset.addStockMetric)) stockState.filters.push({ key: metricButton.dataset.addStockMetric, min: null, max: null });
+    if (!baseButton && !metricButton) return;
+    stockEls.addMenu.open = false; resetStockPage();
+  });
+  stockEls.active.addEventListener('click', event => {
+    const button = event.target.closest('[data-remove-filter]'); if (!button) return;
+    stockState.filters.splice(Number(button.dataset.removeFilter), 1); resetStockPage();
+  });
+  stockEls.active.addEventListener('change', event => {
+    const input = event.target.closest('[data-active-filter]'); if (!input) return;
+    const filter = stockState.filters[Number(input.dataset.activeFilter)]; if (!filter) return;
+    const column = STOCK_COLUMNS.find(item => item.key === filter.key);
+    const scale = column?.type === 'money' ? 1e9 : 1;
+    filter[input.dataset.role] = input.value === '' ? null : Number(input.value) * scale;
+    stockState.page = 1; renderStockTable();
+  });
+  stockEls.grid.addEventListener('click', event => {
+    const button = event.target.closest('[data-remove-base]'); if (!button) return;
+    event.preventDefault();
+    const key = button.dataset.removeBase;
+    stockBaseFilters[key] = false;
+    if (key === 'search') { stockState.query = ''; stockEls.search.value = ''; }
+    if (key === 'year') { stockState.year = '2025'; stockEls.year.value = '2025'; }
+    if (key === 'sector') { stockState.sector = ''; stockEls.sector.value = ''; }
+    if (key === 'standard') { stockState.standard = ''; stockEls.standard.value = ''; }
+    resetStockPage();
+  });
+  stockEls.toggle.addEventListener('click', () => {
+    const hidden = !stockEls.grid.hidden;
+    stockEls.grid.hidden = hidden;
+    stockEls.toggle.textContent = hidden ? 'Show filters' : 'Hide filters';
+    stockEls.toggle.setAttribute('aria-expanded', String(!hidden));
+  });
+  stockEls.reset.addEventListener('click', () => {
+    Object.assign(stockState, { year: '2025', query: '', sector: '', standard: '', sortKey: 'marketcap', sortDir: 'desc', page: 1, pageSize: 80, filters: [] });
+    Object.keys(stockBaseFilters).forEach(key => { stockBaseFilters[key] = true; });
+    stockEls.search.value = ''; stockEls.year.value = '2025'; stockEls.sector.value = ''; stockEls.standard.value = ''; stockEls.pageSize.value = '80';
+    renderStockTable();
+  });
+  renderStockTable();
+}
+
+syncSizeMetricGlider(false);
+renderHeatmap();
+const initialOpenTicker = new URLSearchParams(window.location.search).get('open');
+if (initialOpenTicker) {
+  const initialTicker = DATA.tickers.find(item => item.ticker === initialOpenTicker.toUpperCase());
+  if (initialTicker) window.requestAnimationFrame(() => renderCompanyPanel(initialTicker));
+}
+</script>
+</body>
+</html>

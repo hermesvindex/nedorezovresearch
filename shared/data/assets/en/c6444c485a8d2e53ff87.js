@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0JW1P8"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","GTLK BO-07"],"9":["v","State transport leasing company"]},42]},1]},2]},[]];

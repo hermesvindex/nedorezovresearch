@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A102A15"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Saint-Petersburg 35003"],"3":["v","Saint-Petersburg 35003"],"6":["v","Municipal bonds"],"7":["v","Fixed rate"],"9":["v","Komitet Finance Sankt-Peterburga"]},49]},1]},2]},[]];

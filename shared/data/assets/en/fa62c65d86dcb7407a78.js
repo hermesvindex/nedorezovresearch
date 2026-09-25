@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:KG000A3LSJ06"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Kyrgyz. 02"],"3":["v","Respublika Kyrgyzstan 02"],"6":["v","Bond"],"7":["v","Fixed rate"],"9":["v","Issuer"],"42":["v","Corporate bond KG000A3LSJ06 maturing on 2025-12-26."]},50]},1]},2]},[]];

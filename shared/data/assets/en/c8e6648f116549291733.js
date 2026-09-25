@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:SU26237RMFS6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","OFZ-PD 26237"],"3":["v","OFZ-PD 26237"],"6":["v","OFZ"],"7":["v","Fixed rate"],"9":["v","Ministry of Finance of the Russian Federation"]},49]},1]},2]},[]];

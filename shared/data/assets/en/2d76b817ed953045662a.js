@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CPB0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ElAp BO-03"],"3":["v","ElAp BO-03"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Elektroapparat\""]},49]},1]},2]},[]];

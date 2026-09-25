@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0JXQQ9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ARAGON ob."],"3":["v","ARAGON ob."],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Limited Liability Company \"ARAGON\""],"50":["v","Bonds 01 issue 00350R, Reg№ 4-01-00350-R"]},54]},1]},2]},[]];

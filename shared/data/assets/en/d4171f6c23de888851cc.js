@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A103943"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Aerofl BO1"],"9":["v","Aeroflot – Russian avialinii"]},42]},1]},2]},[]];

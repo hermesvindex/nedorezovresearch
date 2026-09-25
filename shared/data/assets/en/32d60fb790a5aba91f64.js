@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DEQ0"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Poliplast AO P02-BO-12"],"3":["v","Poliplast AO P02-BO-12"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Joint-Stock Company \"Poliplast\""]},53]},1]},2]},[]];

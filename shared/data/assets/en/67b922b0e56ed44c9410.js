@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RTKM"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rostelecom"],"3":["v","Rostelecom"],"6":["v","Rostelecom"]},27]},1]},2]},[]];

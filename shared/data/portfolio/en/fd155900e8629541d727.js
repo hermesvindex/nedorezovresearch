@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AMRH"]=["o",{"name":["v","BPIF ATON Vysokodokh. ros. obl."],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","Aton-menedzhment"],"public_fields":["o",{"full_name":["v","AMRH ETF ATON Rub Bonds"]},[]]},[]];

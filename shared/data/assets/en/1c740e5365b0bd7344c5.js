@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DYZ9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ASG TRANSFORMATOREN BO-01"],"3":["v","ASG TRANSFORMATOREN BO-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"ASG TRANSFORMATOREN\""]},53]},1]},2]},[]];

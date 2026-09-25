@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Карточка актива · Nedorezov Research</title>
-  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260820-runtime-79-tilda">
-  <script src="../assets/vendor/plotly-2.35.2.min.js"></script>
+  <link rel="stylesheet" href="../assets/integration-shell.css?v=20260924-interface-quality-3">
+  <script src="../shared/vendor/plotly-2.35.2.min.js"></script>
   <style>
     :root {
       color-scheme: light;
@@ -422,8 +422,10 @@
   </style>
   <script>try{if(new URLSearchParams(location.search).get("drawer")==="1"){document.documentElement.classList.add("drawer-mode");}}catch(error){}</script>
   <link rel="stylesheet" href="../assets/liquid-glass.css">
-  <link rel="stylesheet" href="../assets/asset-card.css?v=20260820-runtime-79-tilda">
+  <link rel="stylesheet" href="../assets/asset-card.css?v=20260820-runtime-79">
   <script src="../assets/liquid-glass.js" defer></script>
+  <link rel="stylesheet" href="../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
+  <script src="../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="ru" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
 </head>
 <body class="lg-root">
   <main class="shell">
@@ -522,15 +524,20 @@
         location.replace(target.href);
         return;
       }
-      const dataUrl = new URL("../data/assets/" + key + ".js", location.href);
+      const compact = window.NED_ASSET_COMPACT[id];
+      const runtimeUrl = new URL("../shared/compact-data.js", location.href);
+      const baseUrl = new URL("../shared/data/assets/base/" + compact[0] + ".js", location.href);
+      const patchUrl = compact[1] ? new URL("../shared/data/assets/en/" + compact[1] + ".js", location.href) : null;
       const appUrl = new URL("card-" + actualVariant + ".js", location.href);
-      if (dataUrl.protocol !== "file:") dataUrl.searchParams.set("v", key);
-      if (appUrl.protocol !== "file:") appUrl.searchParams.set("v", "20260820-runtime-79");
-      document.write('<script src="' + dataUrl.href + '"><\/script>');
+      if (appUrl.protocol !== "file:") appUrl.searchParams.set("v", "compact-v1");
+      document.write('<script src="' + runtimeUrl.href + '"><\/script>');
+      document.write('<script src="' + baseUrl.href + '"><\/script>');
+      if (patchUrl && document.documentElement.lang === "en") document.write('<script src="' + patchUrl.href + '"><\/script>');
+      document.write('<script>window.NED_ASSET_DATA=window.NRCompact.materialize(' + JSON.stringify("assets:" + id) + ');<\/script>');
       document.write('<script src="' + appUrl.href + '"><\/script>');
     }());
   </script>
 
-  <script src="../assets/integration-shell.js?v=20260820-runtime-79-tilda" defer></script>
+  <script src="../assets/integration-shell.js?v=20260924-interface-quality-3" defer></script>
 </body>
 </html>

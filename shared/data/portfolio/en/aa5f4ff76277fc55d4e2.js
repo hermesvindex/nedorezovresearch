@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKFN"]=["o",{"name":["v","AKFN ETF finance index"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["v","AKFN ETF finance index"]},[]]},[]];

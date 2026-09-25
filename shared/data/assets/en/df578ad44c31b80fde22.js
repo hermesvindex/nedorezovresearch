@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10F6Z2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SKBBIO17"],"3":["v","SKBBIO17"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Sovcombank\""],"42":["v","Corporate bond SKBBIO17 maturing on 2028-05-21."]},60]},1]},2]},[]];

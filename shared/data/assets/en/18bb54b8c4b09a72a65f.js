@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:VSYD"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Viborgskii sudostr. Zavod ao"],"3":["v","Viborgskii sudostr. Zavod ao"],"6":["v","Vyborgskiy sudostroitelnyy plant"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TOFZ"]=["o",{"name":["v","TOFZ ETF T-Capital OFZ"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["v","TOFZ ETF T-Capital OFZ"]},[]]},[]];

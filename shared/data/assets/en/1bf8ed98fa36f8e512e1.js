@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:AQUA"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","INARCTIKA"],"3":["v","INARCTIKA"],"6":["v","INARCTIKA"]},27]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TTLK"]=["o",{"name":["v","\"Tattelekom\" PJSC ao"],"bucket":["v","Equities"],"sector_ru":["v","Telecommunications"],"public_fields":["o",{"full_name":["v","\"Tattelekom\" PJSC ao"]},[]]},[]];

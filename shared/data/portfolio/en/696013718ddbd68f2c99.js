@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:KAZT"]=["o",{"name":["v","Kuib.Azot ao"],"bucket":["v","Equities"],"sector_ru":["v","Chemicals and petrochemicals"],"public_fields":["o",{"full_name":["v","Kuib.Azot ao"]},[]]},[]];

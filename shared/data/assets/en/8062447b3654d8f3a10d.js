@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FEB7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","IPJSC YANDEX 001P-05"],"3":["v","IPJSC YANDEX 001P-05"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","International Public Joint-Stock Company \"YANDEX\""]},53]},1]},2]},[]];

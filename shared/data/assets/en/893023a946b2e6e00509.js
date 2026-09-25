@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:SU52004RMFS7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","OFZ-IN 52004"],"3":["v","OFZ-IN 52004"],"6":["v","OFZ"],"7":["v","Fixed rate"],"9":["v","Ministry of Finance of the Russian Federation"]},49]},1]},2]},[]];

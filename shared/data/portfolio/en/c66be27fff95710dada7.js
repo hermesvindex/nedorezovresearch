@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BAZA"]=["o",{"name":["v","GC BASIS"],"bucket":["v","Equities"],"public_fields":["o",{"full_name":["v","GC BASIS"]},[]]},[]];

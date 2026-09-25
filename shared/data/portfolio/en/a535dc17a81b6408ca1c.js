@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AVAN"]=["o",{"name":["v","AKB \"AVANGARD\" PJSC ao"],"bucket":["v","Equities"],"sector_ru":["v","Financials"],"public_fields":["o",{"full_name":["v","AKB \"AVANGARD\" PJSC ao"]},[]]},[]];

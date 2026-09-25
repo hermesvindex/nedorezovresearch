@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EMS7"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SELO ZELENOE 001P-03"],"3":["v","SELO ZELENOE 001P-03"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Limited Liability Company \"Selo Zelenoe Holding\""],"22":["v","Ozhidanie"]},51]},1]},2]},[]];

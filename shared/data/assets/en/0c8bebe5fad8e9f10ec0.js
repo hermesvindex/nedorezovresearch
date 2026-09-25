@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10C8K3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","VOXYS-04"],"3":["v","VOXYS-04"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Voksis\""],"42":["v","Corporate bond VOXYS-04 maturing on 2026-10-25."]},59]},1]},2]},[]];

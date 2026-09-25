@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0JTYJ6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","FGC ROSSETI 23"],"3":["v","FGC ROSSETI 23"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Public Joint-Stock Company \"Federal grid company - Rosseti\""],"22":["v","Ozhidanie"]},48]},1]},2]},[]];

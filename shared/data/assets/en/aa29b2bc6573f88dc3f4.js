@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:MAGN"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MMK"],"3":["v","MMK"],"6":["v","Magnitogorsk.met.komb PJSC ao"]},27]},1]},2]},[]];

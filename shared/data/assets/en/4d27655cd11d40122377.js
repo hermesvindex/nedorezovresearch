@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EAQ6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","KRONOS BO-01"],"3":["v","KRONOS BO-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Kronos\""],"42":["v","Corporate bond KRONOS BO-01 maturing on 2029-02-01."]},59]},1]},2]},[]];

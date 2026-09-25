@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A1057S2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Rosneft 002P-12"],"3":["v","Rosneft 002P-12"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","public joint-stock company \"Oil company \"Rosneft\""]},54]},1]},2]},[]];

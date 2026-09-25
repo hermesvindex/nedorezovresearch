@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10EX35"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","INTERFOOD-BO-01"],"3":["v","INTERFOOD-BO-01"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"InterFudGrupp\""]},53]},1]},2]},[]];
