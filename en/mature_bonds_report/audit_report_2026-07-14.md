@@ -34,7 +34,7 @@ Polnyy mashinnyy zhurnal sokhranen in `transaction_ledger.json`.
 
 ## Izmeneniya otcheta
 
-- In grafik and sravnitelnuyu tablitsu dobavlen BPIF «Alfa-Equity Upravlyaemye bonds» — `AKMB`.
+- In grafik and sravnitelnuyu tablitsu dobavlen BPIF «Alfa Capital Managed Bonds Fund» — `AKMB`.
 - Tsvet strategii izmenen on Lifebuoy Orange `#FF6A00`.
 - Tsvet RGBI TR izmenen on Atlantic Navy `#0F2233`.
 - Tsvet RUCB TRNS izmenen on North Sea `#274C63`.
