@@ -354,7 +354,7 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
       document.getElementById("chips").innerHTML = [
         asset.isin,
         asset.board,
-        asset.isCurrencyBond ? "Valyutnaya" : "",
+        asset.isCurrencyBond ? "FX-denominated" : "",
         asset.couponType,
         asset.class,
         asset.currency
