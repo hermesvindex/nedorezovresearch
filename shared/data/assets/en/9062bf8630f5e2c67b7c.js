@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:GAZC"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Gazkon ao"],"3":["v","Gazkon ao"],"6":["v","Gazkon ao"]},27]},1]},2]},[]];

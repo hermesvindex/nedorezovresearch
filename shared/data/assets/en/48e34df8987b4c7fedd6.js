@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RENI"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Renaissance Insurance"],"3":["v","Renaissance Insurance"],"6":["v","Group Renaissance Insurance Strakhovanie"]},28]},1]},2]},[]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:ALRS"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ALROSA ao"],"3":["v","ALROSA ao"],"6":["v","Aktsionernaya company ALROSA (public joint-stock company)"]},28]},1]},2]},[]];

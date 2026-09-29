@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:XS1843437036"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","RZD Capital PLC 2.2 23/05/27"],"6":["v","Corporate"],"7":["v","Fixed rate"],"42":["v","Corporate bond RZD Capital PLC 2.2 23/05/27 maturing on 2027-05-23."]},66]},1]},2]},[]];

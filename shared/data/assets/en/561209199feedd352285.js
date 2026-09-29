@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:NFAZ"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","NEFAZ PAO ao"],"3":["v","NEFAZ PAO ao"],"6":["v","NEFAZ PAO ao"]},27]},1]},2]},[]];

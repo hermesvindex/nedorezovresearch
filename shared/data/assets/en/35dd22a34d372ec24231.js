@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:LSRG"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","LSR"],"3":["v","LSR"],"6":["v","Group LSR"]},27]},1]},2]},[]];

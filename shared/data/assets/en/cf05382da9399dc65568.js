@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A1061K1"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","EvroTrans o.to.b. serii 001P-03"],"3":["v","EvroTrans3 EvroTrans BO-001P-03"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"EvroTrans\""]},55]},1]},2]},[]];

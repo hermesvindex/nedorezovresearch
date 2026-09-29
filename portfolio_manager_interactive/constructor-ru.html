@@ -7,7 +7,7 @@
   <title>Конструктор портфеля</title>
   <script src="../shared/vendor/plotly-2.35.2.min.js"></script>
   <script src="../shared/compact-data.js"></script>
-  <script src="../shared/data/portfolio/base/8a48548181f4284cbc73.js"></script>
+  <script src="../shared/data/portfolio/base/7ea6c0e4db47add67eb4.js"></script>
   <script>window.__PMI_BOOTSTRAP__=window.NRCompact.materialize("portfolio:bootstrap");</script>
   <style>
     :root {
@@ -689,6 +689,7 @@
       highlightedIndex: 0,
       selectedSecid: null,
       selectedHorizonInput: betaPortfolio?.horizonDate || savedConstructorState.horizonDate || meta.horizon_date,
+      horizonCustomized: betaPortfolio !== null || savedConstructorState.horizonCustomized,
       addMode: 'lots',
       addLots: 1,
       addBudget: '',
@@ -722,26 +723,32 @@
     function loadPortfolio() {
       try {
         const raw = localStorage.getItem(storageKey);
-        if (!raw) return { portfolio: defaultPortfolio.map(row => ({ ...row })), horizonDate: meta.horizon_date, currencyView: 'RUB' };
+        if (!raw) return { portfolio: defaultPortfolio.map(row => ({ ...row })), horizonDate: meta.horizon_date, horizonCustomized: false, currencyView: 'RUB' };
         const parsed = JSON.parse(raw);
         const rows = Array.isArray(parsed) ? parsed : parsed?.portfolio;
-        if (!Array.isArray(rows)) return { portfolio: defaultPortfolio.map(row => ({ ...row })), horizonDate: meta.horizon_date, currencyView: 'RUB' };
+        if (!Array.isArray(rows)) return { portfolio: defaultPortfolio.map(row => ({ ...row })), horizonDate: meta.horizon_date, horizonCustomized: false, currencyView: 'RUB' };
         const portfolio = rows.filter(row => row && catalogMap[row.secid] && Number(row.lots) > 0).map(row => {
           return {
             secid: row.secid,
             lots: Math.max(0, Number(row.lots) || 0)
           };
         });
-        const migratedPortfolio = portfolioSignature(portfolio) === legacyDefaultSignature
+        const savedSignature = portfolioSignature(portfolio);
+        const isStandardPortfolio = savedSignature === legacyDefaultSignature || savedSignature === portfolioSignature(defaultPortfolio);
+        const migratedPortfolio = savedSignature === legacyDefaultSignature
           ? defaultPortfolio.map(row => ({ ...row }))
           : portfolio;
+        const horizonCustomized = !Array.isArray(parsed) && parsed.horizonCustomized === true;
         return {
           portfolio: migratedPortfolio,
-          horizonDate: !Array.isArray(parsed) && parsed.horizonDate ? parsed.horizonDate : meta.horizon_date,
+          horizonDate: isStandardPortfolio && !horizonCustomized
+            ? meta.horizon_date
+            : (!Array.isArray(parsed) && parsed.horizonDate ? parsed.horizonDate : meta.horizon_date),
+          horizonCustomized,
           currencyView: !Array.isArray(parsed) && parsed.currencyView === 'USD' ? 'USD' : 'RUB'
         };
       } catch (err) {
-        return { portfolio: defaultPortfolio.map(row => ({ ...row })), horizonDate: meta.horizon_date, currencyView: 'RUB' };
+        return { portfolio: defaultPortfolio.map(row => ({ ...row })), horizonDate: meta.horizon_date, horizonCustomized: false, currencyView: 'RUB' };
       }
     }
 
@@ -749,6 +756,7 @@
       localStorage.setItem(storageKey, JSON.stringify({
         portfolio: state.portfolio,
         horizonDate: state.selectedHorizonInput,
+        horizonCustomized: state.horizonCustomized,
         currencyView: state.currencyView
       }));
     }
@@ -2000,12 +2008,14 @@
 
     els.horizonInput.addEventListener('change', () => {
       state.selectedHorizonInput = els.horizonInput.value || meta.horizon_date;
+      state.horizonCustomized = true;
       savePortfolio();
       renderAll();
     });
 
     els.horizonInput.addEventListener('input', () => {
       state.selectedHorizonInput = els.horizonInput.value || meta.horizon_date;
+      state.horizonCustomized = true;
       savePortfolio();
       renderAll();
     });

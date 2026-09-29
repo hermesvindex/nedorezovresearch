@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:SNGS"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Surgut"],"3":["v","Surgut"],"6":["v","Surgutneftegas"]},27]},1]},2]},[]];

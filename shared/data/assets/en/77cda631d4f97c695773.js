@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A108TV3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","ALROSA ZO27-D"],"3":["v","ALROSA ZO27-D"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","ALROSA PJSC"],"50":["v","Bonds 24 issue Alrosa, Reg№ 4-24-40046-N"]},53]},1]},2]},[]];

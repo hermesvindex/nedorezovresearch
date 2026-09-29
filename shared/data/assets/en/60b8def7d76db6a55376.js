@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10A3Q3"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Anterra, BO-03"],"3":["v","ANTERRA-03"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"ANTERRA\""],"42":["v","Corporate bond RU000A10A3Q3 maturing on 2027-11-16."]},65]},1]},2]},[]];

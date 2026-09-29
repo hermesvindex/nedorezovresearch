@@ -26,7 +26,7 @@ Sostav model portfolio, istoriya sdelok, krivaya kapitala and ryady benchmarkov 
 | Unitel BO-P01 | RU000A107F07 | BB- | 154 | 95,22 | 9,69 | 16.12.2026 |
 | DrktLiz1R7 | RU000A103S30 | BB | 133 | 97,23 | 3,51 | 23.09.2026 |
 | ELRESh 1R1 | RU000A106HF5 | BBB | 52 | 99,39 | 3,50 | 06.07.2026 |
-| Samolet Group BO-P20 | RU000A10CZA1 | A- | 52 | 99,61 | 3,46 | 28.09.2026 |
+| Samolet GroupP20 | RU000A10CZA1 | A- | 52 | 99,61 | 3,46 | 28.09.2026 |
 
 ## Poryadok obnovleniya
 
