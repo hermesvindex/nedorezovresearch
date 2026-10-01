@@ -28,7 +28,7 @@ Proverka vypolnena posle sverki iskhodnogo kataloga `smart` with bibliotekoy otc
 
 ## Prichiny prezhnego sokrashcheniya vyborki
 
-1. Sopostavlenie ispolzovalo polnoe normalizovannoe naimenovanie from spravochnika torgovykh instrumentov. Sostavnye nazvaniya istochnikov, vklyuchaya `X5 | IKS 5`, `OZON | OZON` and `VK | VK`, ne prokhodili tochnoe sopostavlenie.
+1. Sopostavlenie ispolzovalo polnoe normalizovannoe naimenovanie from spravochnika torgovykh instrumentov. Compositionnye nazvaniya istochnikov, vklyuchaya `X5 | IKS 5`, `OZON | OZON` and `VK | VK`, ne prokhodili tochnoe sopostavlenie.
 2. Korotkie naimenovaniya mogli oshibochno uchastvovat in nechetkom poiske. In chastnosti, `En+` sozdavalo risk sopostavleniya with Arenadata.
 3. Neskolko istoricheskikh and nepublichnykh sushchnostey otsutstvovali in tekushchem spravochnike torgovykh instrumentov and trebovali yavnogo reestra metadannykh.
 4. Povtorno vygruzhennye fayly with suffiksom versii uchityvalis kak samostoyatelnye istochniki.

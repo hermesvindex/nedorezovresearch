@@ -6,7 +6,7 @@ Proekt formiruet avtonomnuyu HTML-vitrinu finansovoy otchetnosti issuers aktsiy 
 
 Osnovnoy rezultat: `statements.html`. Detalnaya otchetnost razmeshchaetsya in `company_pages/<TICKER>.html`.
 
-## Sostav dannykh
+## Composition dannykh
 
 - 217 issuers;
 - 546 589 normalizovannykh nablyudeniy;

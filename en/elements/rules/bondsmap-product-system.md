@@ -81,11 +81,11 @@ Tablitsa ispolzuet spokoynuyu svetluyu poverkhnost. Chisla vyravnivayutsya vprav
 
 ## Priemka novogo produkta
 
-1. Proverit desktop `1440px`, tablet `900px`, mobile `390px`.
+1. Review desktop `1440px`, tablet `900px`, mobile `390px`.
 2. Sverit computed width/height/radius/font vsekh controls.
-3. Proverit open/close dropdown, add/remove/reset/collapse filtrov.
-4. Proverit pustoy poisk and vvedennyy tekst.
-5. Proverit selected/unselected/focus sostoyaniya krugovykh indikatorov.
-6. Proverit otsutstvie viewport horizontal overflow.
-7. Proverit fon `html`, `body`, `body::before`, `body::after`.
+3. Review open/close dropdown, add/remove/reset/collapse filtrov.
+4. Review pustoy poisk and vvedennyy tekst.
+5. Review selected/unselected/focus sostoyaniya krugovykh indikatorov.
+6. Review otsutstvie viewport horizontal overflow.
+7. Review fon `html`, `body`, `body::before`, `body::after`.
 8. Zafiksirovat screenshot and `design-qa.md`.

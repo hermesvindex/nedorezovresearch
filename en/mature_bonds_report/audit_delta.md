@@ -4,11 +4,11 @@ Date provedeniya: 11 iyunya 2026 year.
 
 ## Osnovanie
 
-Proveden polnyy audit otcheta by obligatsiyam with pogasheniem until kontsa 2026 year. Tselyu yavlyalos privedenie interfeysa to deystvuyushchey dizayn-sisteme investitsionnykh proektov, proverka raschetnoy logiki and povyshenie effektivnosti model portfolio under kontroliruemom riske.
+Proveden polnyy audit otcheta by obligatsiyam with pogasheniem until kontsa 2026 year. Objectiveyu yavlyalos privedenie interfeysa to deystvuyushchey dizayn-sisteme investitsionnykh proektov, proverka raschetnoy logiki and povyshenie effektivnosti model portfolio under kontroliruemom riske.
 
 ## Izmenenie rezultatov
 
-| Metric | Iskhodnoe znachenie | Itogovoe znachenie | Absolyutnoe izmenenie | Otnositelnoe izmenenie |
+| Metric | Iskhodnoe znachenie | Totalvoe znachenie | Absolyutnoe izmenenie | Otnositelnoe izmenenie |
 |---|---:|---:|---:|---:|
 | Konechnyy kapital, RUB. | 1 375 630,29 | 1 431 662,48 | +56 032,19 | +4,07% |
 | Cumulative return | 37,563% | 43,166% | +5,603 pp | +14,92% |
@@ -29,7 +29,7 @@ Period sravneniya: with 3 yanvarya 2025 year by 5 iyunya 2026 year. Rost return 
 
 ## Dizayn
 
-Interfeys priveden to palitre and geometrii karty bonds: neytralnyy fon, grafitovyy zagolovochnyy blok, bordovyy aktsent `#7A1027`, belye poluprozrachnye poverkhnosti, uvelichennye radiusy and unifitsirovannye elementy upravleniya. Kartochki bonds and otobrazhenie kreditnykh reytingov sformirovany cherez generator karty bonds.
+Interfeys priveden to palitre and geometrii karty bonds: neytralnyy fon, grafitovyy zagolovochnyy blok, bordovyy aktsent `#7A1027`, belye poluprozrachnye poverkhnosti, uvelichennye radiusy and unifitsirovannye elementy upravleniya. Kartochki bonds and otobrazhenie kreditnykh ratingov sformirovany cherez generator karty bonds.
 
 Tsveta diagramm struktury portfolio, resheniy and issuers prodolzhayut formirovatsya on osnove logotipov. Neytralnaya palitra primenyaetsya to sluzhebnym grafikam, setkam, podpisyam and elementam interfeysa.
 
@@ -43,4 +43,4 @@ Tsveta diagramm struktury portfolio, resheniy and issuers prodolzhayut formirova
 
 ## Kontrol kachestva
 
-Provedena proverka on razresheniyakh 1280 × 720 and 390 × 844. Horizonalnoe perepolnenie otsutstvuet. Provereny 16 interaktivnykh diagramm, polnoekrannaya kartochka bonds, sootvetstvie reytinga in tablitse and kartochke, summa vesov, chislo issuers and itogovye metricsand.
+Provedena proverka on razresheniyakh 1280 × 720 and 390 × 844. Horizonalnoe perepolnenie otsutstvuet. Provereny 16 interaktivnykh diagramm, polnoekrannaya kartochka bonds, sootvetstvie ratinga in tablitse and kartochke, summa vesov, chislo issuers and itogovye metricsand.

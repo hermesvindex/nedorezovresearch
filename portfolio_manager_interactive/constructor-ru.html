@@ -7,7 +7,7 @@
   <title>Конструктор портфеля</title>
   <script src="../shared/vendor/plotly-2.35.2.min.js"></script>
   <script src="../shared/compact-data.js"></script>
-  <script src="../shared/data/portfolio/base/6da4c5a41a267c38aebf.js"></script>
+  <script src="../shared/data/portfolio/base/493e5bb88be2d6e6e603.js"></script>
   <script>window.__PMI_BOOTSTRAP__=window.NRCompact.materialize("portfolio:bootstrap");</script>
   <style>
     :root {
@@ -410,6 +410,18 @@
   <link rel="stylesheet" href="constructor.css?v=20260915-prod7">
   <script src="../elements/assets/header-system.js" defer></script>
   <script src="../assets/asset-drawer.js" defer></script>
+<style data-localized-horizon>
+.localized-date-control { display:grid; min-width:0; }
+.localized-date-control > * { grid-area:1/1; }
+.localized-date-control .date-field { color:transparent !important; caret-color:transparent; width:100% !important; min-width:0 !important; max-width:100%; }
+.localized-date-control .date-field::-webkit-datetime-edit { opacity:0; }
+#horizonDateDisplay { align-self:center; pointer-events:none; padding-right:24px; white-space:nowrap; font-size:12px; }
+@media (max-width:560px) {
+.product-header .date-field-wrap:has(.localized-date-control) { display:grid !important; gap:0 !important; align-content:center; }
+.localized-date-control .date-field { height:20px; padding:0; }
+#horizonDateDisplay { font-size:11px; }
+}
+</style>
   <link rel="stylesheet" href="../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
   <script src="../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="ru" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
   <script src="../shared/data/portfolio/manifest.js"></script>
@@ -431,7 +443,7 @@
           </div>
           <label class="date-field-wrap">
             <span class="field-label">Горизонт</span>
-            <input class="date-field" id="horizonInput" type="date" />
+            <span class="localized-date-control"><input class="date-field" id="horizonInput" type="date" /><output id="horizonDateDisplay" aria-hidden="true"></output></span>
           </label>
         </div>
       </div>
@@ -1966,6 +1978,10 @@
         els.horizonInput.value = state.selectedHorizonInput || meta.horizon_date;
       }
       document.getElementById('badgeResolvedHorizon').textContent = formatDateRu(resolvedHorizonDate());
+      const displayLocale = document.documentElement.lang === 'en' ? 'en-GB' : 'ru-RU';
+      document.getElementById('horizonDateDisplay').textContent = new Intl.DateTimeFormat(displayLocale, {
+        day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC'
+      }).format(new Date(`${els.horizonInput.value}T00:00:00Z`));
       if (els.currencyNote) {
         const ccy = state.currencyView || 'RUB';
         const spot = rubRate(ccy, meta.last_date);

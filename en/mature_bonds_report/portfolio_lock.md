@@ -4,18 +4,18 @@ Date fiksatsii: 18 iyunya 2026 year.
 
 ## Osnovanie
 
-Sostav model portfolio, istoriya sdelok, krivaya kapitala and ryady benchmarkov by 18 iyunya 2026 year priznany kanonicheskimi. Ikh povtornyy calculation under ezhednevnoy generatsii isklyuchen.
+Composition model portfolio, istoriya sdelok, krivaya kapitala and ryady benchmarkov by 18 iyunya 2026 year priznany kanonicheskimi. Ikh povtornyy calculation under ezhednevnoy generatsii isklyuchen.
 
 ## Kontrolnye pokazateli
 
 - Iskhodnyy kapital: 1 000 000,00 RUB.
-- Stoimost on datu fiksatsii: 1 514 156,62 RUB.
+- Value on datu fiksatsii: 1 514 156,62 RUB.
 - Ostatok denezhnykh sredstv: 150,99 RUB.
 - Chislo sobytiy: 13.
 - Chislo tochek krivoy kapitala: 369.
 - SHA-256 kanonicheskoy nagruzki: `8a30a734c253fe4f2d9432d13989175e5506fe654815b513d802c3c68218540a`.
 
-## Sostav on datu fiksatsii
+## Composition on datu fiksatsii
 
 | Issue | ISIN | Credit rating | Lots | Price pokupki, % | Weight, % | Maturity |
 |---|---|---:|---:|---:|---:|---|

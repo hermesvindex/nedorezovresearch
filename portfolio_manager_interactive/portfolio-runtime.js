@@ -68,6 +68,21 @@
       defaultLiquidityCheck: "Минимальный резерв не задан: пройдите анкету для проверки достаточности ликвидной доли", defaultIssuerCheck: "Доля одного прямого эмитента, включая отдельный выпуск ОФЗ, не превышает 15%", defaultIssuerAttention: "Доля одного прямого эмитента, включая отдельный выпуск ОФЗ, превышает 15%", defaultCurrencyCheck: "В составе портфеля есть прямые валютные облигации", defaultCurrencyMissing: "Прямые валютные облигации в составе портфеля отсутствуют"
     },
     en: {
+      q6k: "STEP 6 \u00b7 DRAWDOWN",
+      q6t: "What temporary decline is acceptable?",
+      q6h: "Assess the loss in rubles as well as percentages.",
+      q7k: "STEP 7 \u00b7 BEHAVIOUR",
+      q7t: "What would you do if the portfolio declined?",
+      q7h: "This answer assesses your willingness to retain the selected strategy under stress.",
+      q8k: "STEP 8 \u00b7 EXPERIENCE",
+      q8t: "What is your investment experience?",
+      q8h: "Instrument complexity is limited by experience and monitoring frequency.",
+      q9k: "STEP 9 \u00b7 ACCOUNT",
+      q9t: "Which broker do you use?",
+      q9h: "The broker affects instrument availability and actual costs. Check tariffs before trading.",
+      q10k: "STEP 10 \u00b7 ALLOCATION",
+      q10t: "Which constraints should be considered?",
+      q10h: "These parameters determine the allocation of model scenarios.",
       skip: "Skip to content", languageLabel: "Interface language", eyebrow: "PORTFOLIO BUILDER · BETA",
       introTitle: "Allocate capital in line with your objective", introCopy: "The builder separates capital by horizon, liquidity and risk, then presents three explainable scenarios using bonds, equities, exchange-traded funds and gold.",
       start: "Start", method: "How the model works", timeEstimate: "5 short stages · about 3 minutes · answers can be changed",
@@ -745,7 +760,7 @@
     const scenario = state.scenarios[state.selectedScenario];
     const constructorName = "constructor-ru.html";
     if (!scenario) {
-      const emptyUrl = `${constructorName}?v=20260915-prod7`;
+      const emptyUrl = `${constructorName}?v=20260930-locale-2`;
       if ($("#constructorFrame").getAttribute("src") !== emptyUrl) $("#constructorFrame").src = emptyUrl;
       return;
     }
@@ -759,7 +774,7 @@
       }))
     };
     const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
-    const url = `${constructorName}?v=20260915-prod7&g=${payloadToken(encoded)}#nr-beta=${encoded}`;
+    const url = `${constructorName}?v=20260930-locale-2&g=${payloadToken(encoded)}#nr-beta=${encoded}`;
     if ($("#constructorFrame").getAttribute("src") === url) return;
     $("#constructorFrame").src = url;
   }

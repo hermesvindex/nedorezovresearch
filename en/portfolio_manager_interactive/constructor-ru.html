@@ -7,8 +7,8 @@
   <title>Portfolio builder</title>
   <script src="../../shared/vendor/plotly-2.35.2.min.js"></script>
   <script src="../../shared/compact-data.js"></script>
-  <script src="../../shared/data/portfolio/base/6da4c5a41a267c38aebf.js"></script>
-  <script src="../../shared/data/portfolio/en/6af1543251cf731bae99.js"></script>
+  <script src="../../shared/data/portfolio/base/493e5bb88be2d6e6e603.js"></script>
+  <script src="../../shared/data/portfolio/en/d080cb8abdb469528f6d.js"></script>
   <script>window.__PMI_BOOTSTRAP__=window.NRCompact.materialize("portfolio:bootstrap");</script>
   <style>
     :root {
@@ -411,6 +411,18 @@
   <link rel="stylesheet" href="constructor.css?v=20260915-prod7">
   <script src="../elements/assets/header-system.js" defer></script>
   <script src="../assets/asset-drawer.js" defer></script>
+<style data-localized-horizon>
+.localized-date-control { display:grid; min-width:0; }
+.localized-date-control > * { grid-area:1/1; }
+.localized-date-control .date-field { color:transparent !important; caret-color:transparent; width:100% !important; min-width:0 !important; max-width:100%; }
+.localized-date-control .date-field::-webkit-datetime-edit { opacity:0; }
+#horizonDateDisplay { align-self:center; pointer-events:none; padding-right:24px; white-space:nowrap; font-size:12px; }
+@media (max-width:560px) {
+.product-header .date-field-wrap:has(.localized-date-control) { display:grid !important; gap:0 !important; align-content:center; }
+.localized-date-control .date-field { height:20px; padding:0; }
+#horizonDateDisplay { font-size:11px; }
+}
+</style>
   <link rel="stylesheet" href="../../shared/bilingual-switcher.css?v=20260925-public-layout-2" data-nr-bilingual-switcher>
   <script src="../../shared/bilingual-switcher.js?v=20260925-public-layout-2" data-nr-locale="en" data-nr-bilingual-switcher data-nr-public-root="true" defer></script>
   <script src="../../shared/data/portfolio/manifest.js"></script>
@@ -432,13 +444,13 @@
           </div>
           <label class="date-field-wrap">
             <span class="field-label">Horizon</span>
-            <input class="date-field" id="horizonInput" type="date" />
+            <span class="localized-date-control"><input class="date-field" id="horizonInput" type="date" /><output id="horizonDateDisplay" aria-hidden="true"></output></span>
           </label>
         </div>
       </div>
       <div class="header-blocks" aria-label="Portfolio summary">
         <article class="header-block"><p class="header-block__label" id="kpiNowLabel">Current value</p><b class="header-block__value" id="kpiNowValue">0 ₽</b><span class="header-block__note">current valuation</span></article>
-        <article class="header-block"><p class="header-block__label" id="kpiFutureLabel">Ozhidaemaya stoimost</p><b class="header-block__value" id="kpiFutureValue">0 ₽</b><span class="header-block__note">at the selected horizon</span></article>
+        <article class="header-block"><p class="header-block__label" id="kpiFutureLabel">Projected value</p><b class="header-block__value" id="kpiFutureValue">0 ₽</b><span class="header-block__note">at the selected horizon</span></article>
         <article class="header-block"><p class="header-block__label" id="kpiRetLabel">Expected return</p><b class="header-block__value" id="kpiRetValue">0%</b><span class="header-block__note">model scenario</span></article>
       </div>
       <div class="header-compat" aria-hidden="true">
@@ -449,14 +461,14 @@
 
     <main class="analytics">
       <section class="grid-main">
-        <div class="chart-card card donut-card" id="portfolioOverviewCard"><div class="portfolio-empty" id="portfolioEmptyState" hidden><div class="portfolio-empty__inner"><h2>Portfel poka pust</h2><p>Dobavte instrumenty vruchnuyu or sformiruyte portfel by vashim tselyam and dopustimomu risku.</p><div class="portfolio-empty__actions"><button class="generate-launch" id="emptyGenerateBtn"><span class="action-label action-label--full">Generate portfolio</span><span class="action-label action-label--short">Sgenerirovat</span></button><button class="search-launch" id="emptyAddBtn"><span class="action-label action-label--full">Add assets</span><span class="action-label action-label--short">Add</span></button></div></div></div><div class="donut-layout" id="portfolioOverviewContent"><div class="donut-chart-wrap"><div id="plotDonut" style="height:460px;"></div><div class="donut-center" id="donutCenter"><div class="donut-center__label">Expected return</div><div class="donut-center__return" id="donutReturn">0%</div><div class="donut-center__date" id="donutDate"></div><div class="donut-center__risk-label">Risk estimate</div><div class="donut-center__risk" id="donutRisk">0%</div></div></div><div id="classCards" class="class-grid"></div></div></div>
+        <div class="chart-card card donut-card" id="portfolioOverviewCard"><div class="portfolio-empty" id="portfolioEmptyState" hidden><div class="portfolio-empty__inner"><h2>Your portfolio is empty</h2><p>Add assets manually or generate a portfolio based on your goals and risk tolerance.</p><div class="portfolio-empty__actions"><button class="generate-launch" id="emptyGenerateBtn"><span class="action-label action-label--full">Generate portfolio</span><span class="action-label action-label--short">Generate</span></button><button class="search-launch" id="emptyAddBtn"><span class="action-label action-label--full">Add assets</span><span class="action-label action-label--short">Add</span></button></div></div></div><div class="donut-layout" id="portfolioOverviewContent"><div class="donut-chart-wrap"><div id="plotDonut" style="height:460px;"></div><div class="donut-center" id="donutCenter"><div class="donut-center__label">Expected return</div><div class="donut-center__return" id="donutReturn">0%</div><div class="donut-center__date" id="donutDate"></div><div class="donut-center__risk-label">Risk estimate</div><div class="donut-center__risk" id="donutRisk">0%</div></div></div><div id="classCards" class="class-grid"></div></div></div>
       </section>
 
       <section class="editor-card">
         <div class="editor-head">
           <h2>Portfolio holdings</h2>
           <div class="editor-actions">
-            <button class="generate-launch" id="generatePortfolioBtn"><span class="action-label action-label--full">Generate portfolio</span><span class="action-label action-label--short">Sgenerirovat</span></button>
+            <button class="generate-launch" id="generatePortfolioBtn"><span class="action-label action-label--full">Generate portfolio</span><span class="action-label action-label--short">Generate</span></button>
             <button class="search-launch" id="openComposerBtn"><span class="action-label action-label--full">Add assets</span><span class="action-label action-label--short">Add</span></button>
           </div>
         </div>
@@ -487,8 +499,8 @@
     <div class="search-drawer-panel">
       <div class="drawer-header" style="margin-bottom:12px;">
         <div>
-          <h2 class="drawer-title" style="margin-bottom:4px;">Sobrat portfel</h2>
-        <div class="drawer-sub">Search instrumenta, vybor sposoba dobavleniya and calculation pozitsii.</div>
+          <h2 class="drawer-title" style="margin-bottom:4px;">Build portfolio</h2>
+        <div class="drawer-sub">Search for an asset, choose how to add it and calculate the position.</div>
         </div>
         <button class="asset-unified-close" id="closeComposerBtn" type="button" aria-label="Close the portfolio-construction panel">
           <span class="asset-unified-close__icon" aria-hidden="true"></span>
@@ -507,7 +519,7 @@
 
         <div class="recommendations">
           <div class="reco-block">
-            <div class="reco-head"><h3>Podskazki</h3><span>bystryy start</span></div>
+            <div class="reco-head"><h3>Suggestions</h3><span>quick start</span></div>
             <div class="pill-row" id="quickFilters"></div>
           </div>
           <div class="reco-block">
@@ -515,7 +527,7 @@
             <div class="pill-row" id="recoOfz"></div>
           </div>
           <div class="reco-block">
-          <div class="reco-head compact"><h3>Corporate RUBlevye bonds</h3></div>
+          <div class="reco-head compact"><h3>RUB corporate bonds</h3></div>
             <div class="pill-row" id="recoCorpRub"></div>
           </div>
           <div class="reco-block">
@@ -523,11 +535,11 @@
             <div class="pill-row" id="recoCorpFx"></div>
           </div>
           <div class="reco-block">
-          <div class="reco-head compact"><h3>Top-shares</h3></div>
+          <div class="reco-head compact"><h3>Top equities</h3></div>
             <div class="pill-row" id="recoStocks"></div>
           </div>
           <div class="reco-block">
-          <div class="reco-head compact"><h3>BPIF Alfa-Equity</h3></div>
+          <div class="reco-head compact"><h3>Alfa Capital Funds</h3></div>
             <div class="pill-row" id="recoEtf"></div>
           </div>
         </div>
@@ -1074,7 +1086,7 @@
       const lotCostNative = Number(item.entry_lot_cost_native || 0);
       const spotNative = Number((meta.spot_rates || {})[item.currency] || 1);
       if (!(lotCostNative > 0)) {
-        return { lots: 0, units: 0, usedNative: 0, usedRub: 0, restNative: 0, restRub: 0, disabled: true, text: 'Unable to determine the lot value.' };
+        return { lots: 0, units: 0, usedNative: 0, usedRub: 0, restNative: 0, restRub: 0, disabled: true, text: 'Unable to determine the lot cost.' };
       }
       if (state.addMode === 'lots') {
         const lots = Math.max(0, Math.floor(Number(state.addLots) || 0));
@@ -1087,7 +1099,7 @@
           restRub: 0,
           disabled: lots <= 0,
           text: lots > 0
-            ? `Budet dobavleno ${fmtQty(lots)} lot(ov) / ${fmtQty(units)} sht. Calculation pokupki provoditsya by tsene without Accrued interest, droblenie lota ne primenyaetsya.`
+            ? `To be added: ${fmtQty(lots)} lots / ${fmtQty(units)} units. The purchase uses the clean price and whole lots.`
             : 'Enter the number of lots.'
         };
       }
@@ -1107,8 +1119,8 @@
         restRub: restNative * spotNative,
         disabled: lots <= 0,
         text: lots > 0
-          ? `From byudzheta ${fmtNum(budget, 2)} ${state.addBudgetCurrency} poluchitsya ${fmtQty(lots)} lot(ov) / ${fmtQty(units)} sht. Budet ispolzovano ${fmtNum(usedNative, 2)} ${item.currency}, ostatok ${fmtNum(restNative, 2)} ${item.currency}.`
-          : `Budgeta nedostatochno dazhe on 1 lot. Lot value: ${fmtNum(lotCostNative, 2)} ${item.currency}.`
+          ? `With a budget of ${fmtNum(budget, 2)} ${state.addBudgetCurrency} you can buy ${fmtQty(lots)} lots / ${fmtQty(units)} units. Amount used: ${fmtNum(usedNative, 2)} ${item.currency}, remaining balance ${fmtNum(restNative, 2)} ${item.currency}.`
+          : `The budget is insufficient for one lot. Lot cost: ${fmtNum(lotCostNative, 2)} ${item.currency}.`
       };
     }
 
@@ -1187,7 +1199,7 @@
           item.secid,
           item.isin || '',
           item.category,
-          item.currency ? `valyuta ${item.currency}` : '',
+          item.currency ? `currency ${item.currency}` : '',
           item.sector_ru || item.etf_company || '',
           item.available ? 'calculation available' : 'reference profile only'
         ].filter(Boolean).join(' · ');
@@ -1224,7 +1236,7 @@
       const metrics = [
         ['Category', item.category],
         [priceLabel(item), item.is_real_bond ? `${fmtTrim(item.price)}%` : `${fmtTrim(item.price)} ₽`],
-        ['Lot', `${fmtQty(item.lotsize)} sht.`],
+        ['Lot', `${fmtQty(item.lotsize)} units.`],
         ['Lot value', `${fmtNum(item.entry_lot_cost_native, 2)} ${item.currency}`],
         ['Sector / composition', item.sector_ru || item.etf_structure || '—'],
         ['Manager / currency', item.etf_company || item.currency || '—'],
@@ -1241,8 +1253,8 @@
           ${metrics.map(([k, v]) => `<div class="mini"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`).join('')}
         </div>
         <div class="mode-row">
-          <button class="mode-btn ${state.addMode === 'lots' ? 'active' : ''}" data-mode="lots">By lotam</button>
-          <button class="mode-btn ${state.addMode === 'budget' ? 'active' : ''}" data-mode="budget">By summe</button>
+          <button class="mode-btn ${state.addMode === 'lots' ? 'active' : ''}" data-mode="lots">By lots</button>
+          <button class="mode-btn ${state.addMode === 'budget' ? 'active' : ''}" data-mode="budget">By budget</button>
         </div>
         <div class="add-grid">
           <div class="field">
@@ -1257,7 +1269,7 @@
           </div>
           <button id="addPositionBtn" class="add-btn" ${canAdd ? '' : 'disabled'}>Add</button>
         </div>
-        <div class="preview-note">${escapeHtml(preview.text)}${item.is_real_bond ? ' For bonds, a budget-based purchase is calculated using the clean price and whole lots.' : ''}</div>
+        <div class="preview-note">${escapeHtml(preview.text)}${item.is_real_bond ? ' Bond purchases by budget use the clean price and whole lots.' : ''}</div>
       `;
       els.selectedCard.querySelectorAll('.mode-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1292,7 +1304,7 @@
       const noteEl = els.selectedCard.querySelector('.preview-note');
       if (addBtn) addBtn.disabled = !!preview.disabled;
       if (noteEl) {
-        noteEl.textContent = preview.text + (item.is_real_bond ? ' For bonds, a budget-based purchase is calculated using the clean price and whole lots.' : '');
+        noteEl.textContent = preview.text + (item.is_real_bond ? ' Bond purchases by budget use the clean price and whole lots.' : '');
       }
     }
 
@@ -1339,7 +1351,7 @@
         return acc;
       }, {});
       if (!holdings.length) {
-        els.editorTableWrap.innerHTML = '<div class="editor-empty">Dobavlennye instrumenty and ikh raschetnye pokazateli poyavyatsya zdes.</div>';
+        els.editorTableWrap.innerHTML = '<div class="editor-empty">Added assets and their calculated metrics will appear here.</div>';
         return;
       }
       els.editorTableWrap.innerHTML = `
@@ -1616,7 +1628,7 @@
           <span class="portfolio-chart-tooltip__category">${escapeHtml(row.category)} · ${escapeHtml(row.secid)}</span>
           <span class="portfolio-chart-tooltip__asset"><i style="--tooltip-color:${color}"></i><span>${escapeHtml(row.title)}</span></span>
           <span class="portfolio-chart-tooltip__meta">
-            <span>Stoimost</span><strong>${fmtMoneyView(row.currentValue, 'current')}</strong>
+            <span>Value</span><strong>${fmtMoneyView(row.currentValue, 'current')}</strong>
             <span>Share portfolio</span><strong>${fmtPct(share, 2)}</strong>
           </span>`;
         tooltip.classList.add('is-visible');
@@ -1967,13 +1979,17 @@
         els.horizonInput.value = state.selectedHorizonInput || meta.horizon_date;
       }
       document.getElementById('badgeResolvedHorizon').textContent = formatDateRu(resolvedHorizonDate());
+      const displayLocale = document.documentElement.lang === 'en' ? 'en-GB' : 'ru-RU';
+      document.getElementById('horizonDateDisplay').textContent = new Intl.DateTimeFormat(displayLocale, {
+        day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC'
+      }).format(new Date(`${els.horizonInput.value}T00:00:00Z`));
       if (els.currencyNote) {
         const ccy = state.currencyView || 'RUB';
         const spot = rubRate(ccy, meta.last_date);
         const future = rubRate(ccy, resolvedHorizonDate());
         els.currencyNote.textContent = ccy === 'RUB'
           ? 'Valuation in roubles. The FX forecast is applied to projected value.'
-          : `Otsenka in ${ccy}: tekushchiy kurs ${fmtNum(spot, 4)} ₽, forecast on gorizont ${fmtNum(future, 4)} ₽. Currency risk is estimated from the joint covariance of the instrument and its currency drivers.`;
+          : `Valuation in ${ccy}: current exchange rate ${fmtNum(spot, 4)} RUB, projected rate at the horizon ${fmtNum(future, 4)} RUB. Currency risk is estimated from the joint covariance of the instrument and its currency drivers.`;
       }
       renderSearch();
       renderSelectedCard();

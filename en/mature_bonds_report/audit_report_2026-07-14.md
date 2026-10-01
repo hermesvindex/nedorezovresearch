@@ -4,7 +4,7 @@ Date provedeniya: 14 iyulya 2026 year.
 
 ## Osnovanie
 
-Provereny vosproizvodimost dizayna from Python-generatora, polnota zhurnala operatsiy, sopostavlenie with benchmarkami, sortirovka kreditnykh reytingov and vizualnaya tselostnost istorii model portfolio.
+Provereny vosproizvodimost dizayna from Python-generatora, polnota zhurnala operatsiy, sopostavlenie with benchmarkami, sortirovka kreditnykh ratingov and vizualnaya tselostnost istorii model portfolio.
 
 ## Vyyavlennaya oshibka zhurnala operatsiy
 
@@ -20,7 +20,7 @@ In generator dobavlen obyazatelnyy raschetnyy gate. For kazhdoy kontrolnoy daty 
 
 `predydushchiy sostav − zakrytye pozitsii + pokupki = sostav posle operatsii`.
 
-Dopolnitelno sveryayutsya kolichestvo and summa kazhdoy pokupki, summa investirovaniya, chislo positions, cash ostatok, stoimost aktivov and itogovyy kapital.
+Dopolnitelno sveryayutsya kolichestvo and summa kazhdoy pokupki, summa investirovaniya, chislo positions, cash remaining balance, stoimost aktivov and itogovyy kapital.
 
 By itogam proverki:
 
@@ -43,12 +43,12 @@ Polnyy mashinnyy zhurnal sokhranen in `transaction_ledger.json`.
 - Blok valyutnoy struktury udalen from DOM, JavaScript and generatora.
 - Parametry strategii, metodika otbora and rasshifrovka Discount–Annualised return obedineny in odin kompaktnyy razdel.
 - Mezhdu kartochkami sobytiy ustanovlen vertikalnyy interval 24 px.
-- For reytingov vveden predmetnyy poryadok `AAA → AA+ → AA → AA- → A+ → … → BB-`.
+- For ratingov vveden predmetnyy poryadok `AAA → AA+ → AA → AA- → A+ → … → BB-`.
 - Deystvuyushchiy header, lokalnyy Plotly and obshchaya biblioteka kartochek aktivov pereneseny in Python-generator.
 
 ## Kontrol vosproizvodimosti and interfeysa
 
-Generator povtorno zapushchen from kataloga Design Lab. Itogovyy HTML sformirovan without obrashcheniya to CDN and without sozdaniya lokalnykh dubley kartochek aktivov.
+Generator povtorno zapushchen from kataloga Design Lab. Totalvyy HTML sformirovan without obrashcheniya to CDN and without sozdaniya lokalnykh dubley kartochek aktivov.
 
 Proverka in brauzere vypolnena on razresheniyakh 1280 × 720 and 390 × 844:
 

@@ -634,7 +634,7 @@
     const heroSearch = document.createElement('button');
     heroSearch.type = 'button';
     heroSearch.className = 'quantis-hero-search';
-    heroSearch.innerHTML = '<span><strong>Find an instrument</strong><small>Equity, bond, currency, macro indicator, ticker or ISIN</small></span>';
+    heroSearch.innerHTML = '<span><strong>Find an instrument</strong><small>Equity, obligatsiya, currency, makroindikator, tiker or ISIN</small></span>';
     heroSearch.addEventListener('click', event => openSearch(event.currentTarget));
     heroCopy.append(heroSearch);
   }

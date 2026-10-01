@@ -60,7 +60,7 @@ window.NR_BETA_DATA = {
 
     GOLD: { kind: "gold", manager: "VIM Investitsii", ru: "BPIF VIM Gold", en: "VIM Gold fund", risk: 19.66, return: 8.0, liquidity: "high" },
     SBGD: { kind: "gold", manager: "Pervaya", ru: "SBGD ETF Fund Affordable gold", en: "Pervaya Accessible Gold fund", risk: 19.32, return: 8.02, liquidity: "high" },
-    AKGD: { kind: "gold", manager: "Alfa-Equity", ru: "BPIF Alfa-Equity Gold", en: "Alfa-Capital Gold fund", risk: 20.16, return: 7.35, liquidity: "high" },
+    AKGD: { kind: "gold", manager: "Alfa-Equity", ru: "Alfa Capital Funds Gold", en: "Alfa-Capital Gold fund", risk: 20.16, return: 7.35, liquidity: "high" },
     TGLD: { kind: "gold", manager: "T-Equity", ru: "BPIF T-Equity Gold", en: "T-Capital Gold fund", risk: 19.66, return: 8.49, liquidity: "medium" },
     AMGL: { kind: "gold", manager: "Aton-menedzhment", ru: "ATON — Nakopitelnyy in zolote", en: "ATON Gold Accumulation fund", risk: 19.56, return: 7.64, liquidity: "medium" },
     BCSG: { kind: "gold", manager: "BKS", ru: "BCSG ETF Gold", en: "BCS Gold fund", risk: 19.89, return: 9.32, liquidity: "medium" }

@@ -963,7 +963,7 @@
         <label class="stock-filter-card stock-search-card" data-base-filter="search"><span class="stock-filter-card-head"><span class="stock-filter-label">Search</span><button class="stock-filter-remove" type="button" data-remove-base="search" aria-label="Remove filter">×</button></span><input id="stockSearch" type="search" autocomplete="off"></label>
         <label class="stock-filter-card" data-base-filter="year"><span class="stock-filter-card-head"><span class="stock-filter-label">Period</span><button class="stock-filter-remove" type="button" data-remove-base="year" aria-label="Remove filter">×</button></span><select id="stockYear"><option value="2026Q1">Q1 2026</option><option value="2025Q4">Q4 2025</option><option value="2025Q3">Q3 2025</option><option value="2025Q2">Q2 2025</option><option value="2025Q1">Q1 2025</option><option value="2024Q4">Q4 2024</option><option value="2024Q3">Q3 2024</option><option value="2024Q2">Q2 2024</option><option value="2024Q1">Q1 2024</option><option value="2023Q4">Q4 2023</option><option value="2023Q3">Q3 2023</option><option value="2023Q2">Q2 2023</option><option value="2023Q1">Q1 2023</option><option value="2022Q4">Q4 2022</option><option value="2022Q3">Q3 2022</option><option value="2022Q2">Q2 2022</option><option value="2022Q1">Q1 2022</option><option value="2025" selected>2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option><option value="2018">2018</option><option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option></select></label>
         <label class="stock-filter-card" data-base-filter="sector"><span class="stock-filter-card-head"><span class="stock-filter-label">Sector</span><button class="stock-filter-remove" type="button" data-remove-base="sector" aria-label="Remove filter">×</button></span><select id="stockSector"><option value="">All sectors</option></select></label>
-        <label class="stock-filter-card" data-base-filter="standard"><span class="stock-filter-card-head"><span class="stock-filter-label">Financials</span><button class="stock-filter-remove" type="button" data-remove-base="standard" aria-label="Remove filter">×</button></span><select id="stockStandard"><option value="">All reporting standards</option><option value="IFRS">IFRS</option><option value="RAS">RAS</option><option value="missing">Net dannykh</option></select></label>
+        <label class="stock-filter-card" data-base-filter="standard"><span class="stock-filter-card-head"><span class="stock-filter-label">Financials</span><button class="stock-filter-remove" type="button" data-remove-base="standard" aria-label="Remove filter">×</button></span><select id="stockStandard"><option value="">All reporting standards</option><option value="IFRS">IFRS</option><option value="RAS">RAS</option><option value="missing">None dannykh</option></select></label>
         <div class="stock-active-filters" id="stockActiveFilters" aria-live="polite"></div>
       </div>
     </section>
@@ -1011,8 +1011,8 @@
 </div>
 
 <script src="../../shared/compact-data.js"></script>
-  <script src="../../shared/data/heatmap/base/333e66a58e8a5fcbe7fa.js"></script>
-  <script src="../../shared/data/heatmap/en/a8b4847c5a93a1fb8cdc.js"></script>
+  <script src="../../shared/data/heatmap/base/f12b7817668b271e6fc9.js"></script>
+  <script src="../../shared/data/heatmap/en/169f3cf46d70f05fe5e1.js"></script>
   <script>window.__NED_HEATMAP_DATA__=window.NRCompact.materialize("heatmap:bootstrap");</script>
 <script>
 const DATA = window.__NED_HEATMAP_DATA__;
@@ -1531,7 +1531,7 @@ function drawSparkPlot(el, points, ticker) {
     }
   }
   if (sourcePoints.length < 2) {
-    el.innerHTML = '<div class="small" style="padding:10px;">Net dannykh for grafika</div>';
+    el.innerHTML = '<div class="small" style="padding:10px;">None dannykh for grafika</div>';
     return;
   }
 
@@ -1539,7 +1539,7 @@ function drawSparkPlot(el, points, ticker) {
   const y = sourcePoints.map(p => Number.isFinite(p[1]) ? p[1] : null);
   const yy = y.filter(v => v !== null);
   if (yy.length < 2) {
-    el.innerHTML = '<div class="small" style="padding:10px;">Net dannykh for grafika</div>';
+    el.innerHTML = '<div class="small" style="padding:10px;">None dannykh for grafika</div>';
     return;
   }
 
@@ -2366,11 +2366,11 @@ function stockCell(ticker, column) {
   if (column.key === 'sector') return `<span class="stock-class-chip">${esc(value || '—')}</span>`;
   if (column.key === 'standard') {
     const href = stockYearData(ticker)?.statements_url;
-    return href ? `<a class="stock-class-chip" href="${esc(href)}">${value === 'IFRS' ? 'IFRS' : value}</a>` : '<span class="stock-missing">Net dannykh</span>';
+    return href ? `<a class="stock-class-chip" href="${esc(href)}">${value === 'IFRS' ? 'IFRS' : value}</a>` : '<span class="stock-missing">None dannykh</span>';
   }
   if (column.key === 'open') {
     const href = stockYearData(ticker)?.statements_url;
-    return href ? `<a class="stock-class-chip" href="${esc(href)}">Open</a>` : '<span class="stock-missing">Net dannykh</span>';
+    return href ? `<a class="stock-class-chip" href="${esc(href)}">Open</a>` : '<span class="stock-missing">None dannykh</span>';
   }
   if (resolution.status === 'not_applicable') return `<span class="stock-na" title="${esc(resolution.label)}">n/p</span>`;
   const display = column.type === 'money' ? stockMoney(value) : stockNumber(value, column.tone);
