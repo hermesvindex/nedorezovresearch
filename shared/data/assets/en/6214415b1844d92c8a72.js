@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FGE6"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","IEK HOLDING 001P-05"],"3":["v","IEK HOLDING 001P-05"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"IEK Holding\""]},59]},1]},2]},[]];

@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10CTG1"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","MIRRICO BO-P05"],"3":["v","MIRRICO BO-P05"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"MIRRIKO\""]},55]},1]},2]},[]];

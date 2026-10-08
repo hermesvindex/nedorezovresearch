@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FHT2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Stellar Group Rus 001P-02"],"3":["v","Stellar Group Rus 001P-02"],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Stellar Grup Rus\""]},55]},1]},2]},[]];

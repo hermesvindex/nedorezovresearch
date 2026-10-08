@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:XS1634369224"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","Republic of Belarus 29/6/27"],"3":["v","Republic of Belarus 29/6/27"],"6":["v","Other"],"7":["v","Fixed rate"],"9":["v","Respublika Belarus in litse Ministerstva Finance Respubliki Belarus"]},54]},1]},2]},[]];

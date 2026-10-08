@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A0ZYYN4"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"3":["v","RUS-29"],"6":["v","OFZ"],"7":["v","Fixed rate"],"9":["v","Ministry of Finance of the Russian Federation"],"56":["v","Government bonds Russian Federatsiya with pogasheniem 21.03.29, Reg.№ 12840080V"]},59]},1]},2]},[]];

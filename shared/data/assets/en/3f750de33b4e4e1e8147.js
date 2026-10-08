@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10F5H2"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SFO Kaspij class A"],"3":["v","SFO Kaspij class A"],"6":["v","Corporate"],"7":["v","Structured notes"],"9":["v","Limited Liability Company \"Special-Purpose Finance Company Kaspiy\""]},52]},1]},2]},[]];

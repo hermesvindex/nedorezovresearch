@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10D4G9"]=["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["v","SovcmL P16"],"3":["v","SovcmL P16"],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Limited Liability Company \"Sovcombank Lizing\""],"22":["v","Ozhidanie"]},56]},1]},2]},[]];
