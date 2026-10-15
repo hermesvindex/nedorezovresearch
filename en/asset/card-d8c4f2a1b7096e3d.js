@@ -370,7 +370,7 @@ const state = {
               value: asset.monthlyChange,
               unit: "% for mesyats",
               label: `Monthly inflation · ${asset.periodLabel || dateRu(asset.asof)}`,
-              delta: "izmenenie potrebitelskikh tsen for mesyats",
+              delta: "consumer price change over the month",
             },
             monthlyAnnual: {
               value: asset.price,
@@ -403,7 +403,7 @@ const state = {
           const recentYears = annualInflationRows(asset.history).slice(-6).reverse();
           document.getElementById("tiles").innerHTML = renderTiles(recentYears.map(row => [
             `${num(row.annualValue, 2)}%`,
-            row.complete ? `${row.year} year` : `${row.year} · on ${dateRu(row.date)}`,
+            row.complete ? `${row.year}` : `${row.year} · on ${dateRu(row.date)}`,
           ]));
           const source = asset.sourceUrl
             ? `<a href="${htmlEsc(asset.sourceUrl)}" target="_blank" rel="noopener noreferrer">${htmlEsc(asset.sourceLabel || "Source")}</a>`
@@ -596,14 +596,14 @@ const state = {
 
     function renderCashflow(asset) {
       if (asset.assetType === "macro") {
-        document.getElementById("cashflowTitle").textContent = "Annual inflation";
+        document.getElementById("cashflowTitle").textContent = "Inflation by year";
         const rows = annualInflationRows(asset.history).slice(-12).reverse();
         document.getElementById("cashflow").innerHTML = rows.map(item => `<div class="flow-row">
           <div class="flow-date">${item.year}</div>
           <div class="flow-main">
             <div class="flow-title">${item.complete
-              ? `In ${item.year} year inflation was ${num(item.annualValue, 2)}%`
-              : `In ${item.year} year to ${dateRu(item.date)} inflation was ${num(item.annualValue, 2)}%`}</div>
+              ? `Inflation in ${item.year} was ${num(item.annualValue, 2)}%`
+              : `Inflation in ${item.year} through ${dateRu(item.date)} was ${num(item.annualValue, 2)}%`}</div>
             <div class="flow-note">${item.complete
               ? "January–December total"
               : `partial year · latest month ${num(item.monthly, 2)}% · year on year ${num(item.price, 2)}%`}</div>
