@@ -12,7 +12,7 @@
   const periods = {
     '1D': 'on the day',
     W: 'for nedelyu',
-    M: 'for mesyats',
+    M: 'over the month',
     '3M': 'for 3 months',
     '6M': 'for 6 months',
     YTD: 'year to date',
