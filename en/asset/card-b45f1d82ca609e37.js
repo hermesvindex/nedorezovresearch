@@ -368,7 +368,7 @@ const state = {
             },
             monthly: {
               value: asset.monthlyChange,
-              unit: "% for mesyats",
+              unit: "% over the month",
               label: `Monthly inflation · ${asset.periodLabel || dateRu(asset.asof)}`,
               delta: "consumer price change over the month",
             },
@@ -393,7 +393,7 @@ const state = {
           document.getElementById("dirtyPrice").textContent = macroSummary.label;
           setDelta(0, macroSummary.delta);
           const metrics = [
-            ["Monthly inflation", `${num(asset.monthlyChange, 2)}%`, asset.periodLabel || "for mesyats", false],
+            ["Monthly inflation", `${num(asset.monthlyChange, 2)}%`, asset.periodLabel || "over the month", false],
             ["Cumulative inflation", `${num(asset.ytdChange, 2)}%`, "year to date", false],
             ["Annual inflation", `${num(asset.price, 2)}%`, "over the preceding 12 months", false],
           ];
