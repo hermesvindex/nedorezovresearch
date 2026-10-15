@@ -14,7 +14,7 @@
     W: 'for nedelyu',
     M: 'for mesyats',
     '3M': 'for 3 months',
-    '6M': 'for 6 mesyatsev',
+    '6M': 'for 6 months',
     YTD: 'year to date',
     '1Y': 'for year',
     '3Y': 'for 3 year',

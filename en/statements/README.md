@@ -15,7 +15,7 @@ Osnovnoy rezultat: `statements.html`. Detalnaya otchetnost razmeshchaetsya in `c
 - standarty: IFRS and RAS;
 - tipy periodov: annual and quarterly.
 
-Data pereneseny from proizvodnogo sloya `library/reports`. Iskhodnye CSV from kataloga `smart` in proekt ne vklyucheny.
+Data pereneseny of proizvodnogo sloya `library/reports`. Iskhodnye CSV of kataloga `smart` in proekt ne vklyucheny.
 
 ## Sborka
 
@@ -59,4 +59,4 @@ For bankov primenyaetsya otdelnaya model: chistyy operatsionnyy income, chistyy 
 
 ## Ogranicheniya dannykh
 
-Date versii proizvodnogo sloya: 15 iyulya 2026 year. Kachestvo and polnota otdelnykh pokazateley zavisyat from iskhodnoy otchetnosti and pravil normalizatsii. Denezhnye pokazateli for otraslevogo sravneniya ispolzuyut `normalized_value` in RUBlyakh. Vitrina ne vypolnyaet konvertatsiyu pokazateley, predstavlennykh in inoy valyute. Pervichnye formy otchetnosti sokhranyayutsya kak kontrolnyy source.
+Date versii proizvodnogo sloya: 15 iyulya 2026 year. Kachestvo and polnota otdelnykh pokazateley zavisyat from iskhodnoy otchetnosti and pravil normalizatsii. Denezhnye pokazateli for otraslevogo sravneniya ispolzuyut `normalized_value` in rublyakh. Vitrina ne vypolnyaet konvertatsiyu pokazateley, predstavlennykh in inoy valyute. Pervichnye formy otchetnosti sokhranyayutsya kak kontrolnyy source.

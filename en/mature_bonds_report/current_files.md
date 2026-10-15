@@ -14,7 +14,7 @@ Date aktualizatsii: 14 iyulya 2026 year.
 - `portfolio_lock_2026-06-18.json` — kanonicheskiy neizmenyaemyy srez sostava, istorii sdelok, krivoy kapitala and benchmarkov by 18 iyunya 2026 year.
 - `freeze_portfolio.py` — odnorazovyy sluzhebnyy scenario pervichnoy fiksatsii; povtornaya zapis sushchestvuyushchego lock-fayla zapreshchena.
 - `../asset_cards/` — obshchaya biblioteka kartochek aktivov Design Lab; lokalnye dubli in kataloge otcheta ne formiruyutsya.
-- `assets/background-water.png` — fonovaya tekstura from deystvuyushchey dizayn-sistemy.
+- `assets/background-water.png` — fonovaya tekstura of deystvuyushchey dizayn-sistemy.
 
 ## Kontrolnaya date
 
@@ -23,4 +23,4 @@ Date aktualizatsii: 14 iyulya 2026 year.
 - Chislo zafiksirovannykh sobytiy: 13.
 - Iskhodnyy kapital: 1 000 000 RUB.
 
-Istoriya by 18 iyunya 2026 year chitaetsya from lock-fayla and proveryaetsya by SHA-256. Novye sobytiya dobavlyayutsya tolko posle daty fiksatsii. Pered zapisyu otcheta generator sveryaet vse izmeneniya sostava with zhurnalom operatsiy. Povrezhdenie lock-fayla or nesvodimost tranzaktsiy privodit to ostanovke generatsii.
+Istoriya by 18 iyunya 2026 year chitaetsya of lock-fayla and proveryaetsya by SHA-256. Novye sobytiya dobavlyayutsya tolko posle daty fiksatsii. Pered zapisyu otcheta generator sveryaet vse izmeneniya sostava with zhurnalom operatsiy. Povrezhdenie lock-fayla or nesvodimost tranzaktsiy privodit to ostanovke generatsii.

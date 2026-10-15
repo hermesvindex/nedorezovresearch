@@ -1,16 +1,16 @@
 # Audit dannykh karty bonds
 
-Osnovanie: proverka zapolneniya YTM and kreditnykh ratingov in `bonds.html` posle zhaloby on pustye znacheniya in kartochkakh and tablitse.
+Osnovanie: proverka zapolneniya YTM and kreditnykh reytingov in `bonds.html` posle zhaloby on pustye znacheniya in kartochkakh and tablitse.
 
 Date proverki: 2026-06-08.
 
 ## YTM
 
-Allgo issues in karte: 3 045.
+Vsego issues in karte: 3 045.
 
-Fixed rateirovannykh issues: 1 450.
+Fiksirovannykh issues: 1 450.
 
-Fixed rateirovannykh issues, gde odnovremenno est tsena, kupon and current yield, no otsutstvuet YTM: 26.
+Fiksirovannykh issues, gde odnovremenno est tsena, kupon and current yield, no otsutstvuet YTM: 26.
 
 Dekompozitsiya prichiny:
 
@@ -36,11 +36,11 @@ Primery issues:
 
 Corporate issues: 2 879.
 
-Corporate issues without kreditnogo ratinga: 610, or 21,2% from korporativnoy vyborki.
+Corporate issues without kreditnogo reytinga: 610, or 21,2% from korporativnoy vyborki.
 
-Corporate issues without ratinga so srednednevnym oborotom from 50 RUB mn.: 31.
+Corporate issues without reytinga so srednednevnym oborotom from 50 RUB mn.: 31.
 
-Krupneyshie by oborotu vypuski without ratinga:
+Krupneyshie by oborotu vypuski without reytinga:
 
 | SECID | Name | Average daily turnover | YTM |
 |---|---|---:|---:|
@@ -55,4 +55,4 @@ Krupneyshie by oborotu vypuski without ratinga:
 | RU000A10EW44 | Polyus PBO-05 | 167,3 RUB mn. | 6,90% |
 | RU000A10F6U3 | RusHydro BO-002P-13 | 157,4 RUB mn. | 14,66% |
 
-Vyvod by ratingam: pokrytie ratingov nedostatochno for krupnykh issuers and likvidnykh issues. Trebuetsya otdelnyy sloy normalizatsii ratingov on urovne issuer with kontrolem istochnika, daty ratinga and razlichiya mezhdu ratingom issuer and ratingom konkretnogo issue.
+Vyvod by reytingam: pokrytie reytingov nedostatochno for krupnykh issuers and likvidnykh issues. Trebuetsya otdelnyy sloy normalizatsii reytingov on urovne issuer with kontrolem istochnika, daty reytinga and razlichiya mezhdu reytingom issuer and reytingom konkretnogo issue.

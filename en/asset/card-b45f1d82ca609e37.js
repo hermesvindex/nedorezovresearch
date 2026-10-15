@@ -27,7 +27,7 @@ const state = {
       if (value === null || value === undefined || Number.isNaN(value)) return "—";
       let out = Number(value).toFixed(digits);
       if (out.includes(".")) out = out.replace(/0+$/g, "").replace(/\.$/g, "");
-      return out.replace(".", ",");
+      return out;
     };
     const pct = (value, digits = 2) => value === null || value === undefined || Number.isNaN(value) ? "—" : `${trimFixed(value, digits)}%`;
     const num = (value, digits = 2) => trimFixed(value, digits);
@@ -363,7 +363,7 @@ const state = {
             annual: {
               value: asset.ytdChange,
               unit: "% year to date",
-              label: `Nakoplennaya inflyatsiya · ${asset.periodLabel || dateRu(asset.asof)}`,
+              label: `Cumulative inflation · ${asset.periodLabel || dateRu(asset.asof)}`,
               delta: "izmenenie tsen year to date",
             },
             monthly: {
@@ -374,15 +374,15 @@ const state = {
             },
             monthlyAnnual: {
               value: asset.price,
-              unit: "% for 12 mesyatsev",
-              label: `Yearovaya inflyatsiya · ${asset.periodLabel || dateRu(asset.asof)}`,
-              delta: `${signedPoints(asset.deltaPoints)} to predydushchemu mesyatsu`,
+              unit: "% over 12 months",
+              label: `Annual inflation · ${asset.periodLabel || dateRu(asset.asof)}`,
+              delta: `${signedPoints(asset.deltaPoints)} from the previous month`,
             },
           }[state.mode] || {
             value: asset.price,
-            unit: "% for 12 mesyatsev",
-            label: `Yearovaya inflyatsiya · ${asset.periodLabel || dateRu(asset.asof)}`,
-            delta: `${signedPoints(asset.deltaPoints)} to predydushchemu mesyatsu`,
+            unit: "% over 12 months",
+            label: `Annual inflation · ${asset.periodLabel || dateRu(asset.asof)}`,
+            delta: `${signedPoints(asset.deltaPoints)} from the previous month`,
           };
           document.getElementById("chips").innerHTML = [
             asset.publisher,
@@ -394,8 +394,8 @@ const state = {
           setDelta(0, macroSummary.delta);
           const metrics = [
             ["Monthly inflation", `${num(asset.monthlyChange, 2)}%`, asset.periodLabel || "for mesyats", false],
-            ["Nakoplennaya inflyatsiya", `${num(asset.ytdChange, 2)}%`, "year to date", false],
-            ["Yearovaya inflyatsiya", `${num(asset.price, 2)}%`, "for poslednie 12 mesyatsev", false],
+            ["Cumulative inflation", `${num(asset.ytdChange, 2)}%`, "year to date", false],
+            ["Annual inflation", `${num(asset.price, 2)}%`, "over the preceding 12 months", false],
           ];
           document.getElementById("metrics").innerHTML = metrics.map(([label, value, note, hot]) => {
             return `<div class="metric ${hot ? "hot" : ""}"><div class="${metricValueClass(value)}">${value}</div><div class="metric-label">${label}</div>${note ? `<div class="metric-note">${note}</div>` : ""}</div>`;
@@ -607,10 +607,10 @@ const state = {
           <div class="flow-date">${item.year}</div>
           <div class="flow-main">
             <div class="flow-title">${item.complete
-              ? `In ${item.year} godu inflation was ${num(item.annualValue, 2)}%`
-              : `In ${item.year} godu to ${dateRu(item.date)} inflation was ${num(item.annualValue, 2)}%`}</div>
+              ? `In ${item.year} year inflation was ${num(item.annualValue, 2)}%`
+              : `In ${item.year} year to ${dateRu(item.date)} inflation was ${num(item.annualValue, 2)}%`}</div>
             <div class="flow-note">${item.complete
-              ? "itog for yanvar–dekabr"
+              ? "January–December total"
               : `partial year · latest month ${num(item.monthly, 2)}% · annual inflation ${num(item.price, 2)}%`}</div>
           </div>
           <div class="flow-value">${num(item.annualValue, 2)}%</div>
@@ -798,9 +798,9 @@ const state = {
     function renderChart(asset) {
       const allRows = filteredHistory(asset);
       const macroSeries = {
-        annual: { key: "ytd", label: "Nakoplennaya inflyatsiya, %" },
+        annual: { key: "ytd", label: "Cumulative inflation, %" },
         monthly: { key: "monthly", label: "Monthly inflation, %" },
-        monthlyAnnual: { key: "price", label: "Yearovaya inflyatsiya, %" },
+        monthlyAnnual: { key: "price", label: "Annual inflation, %" },
       };
       const selectedMacroSeries = asset.assetType === "macro"
         ? (macroSeries[state.mode] || macroSeries.monthlyAnnual)

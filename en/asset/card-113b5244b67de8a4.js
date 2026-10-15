@@ -23,7 +23,7 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
       if (value === null || value === undefined || Number.isNaN(value)) return "—";
       let out = Number(value).toFixed(digits);
       if (out.includes(".")) out = out.replace(/0+$/g, "").replace(/\.$/g, "");
-      return out.replace(".", ",");
+      return out;
     };
     const pct = (value, digits = 2) => value === null || value === undefined || Number.isNaN(value) ? "—" : `${trimFixed(value, digits)}%`;
     const num = (value, digits = 2) => trimFixed(value, digits);

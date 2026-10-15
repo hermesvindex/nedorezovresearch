@@ -2,7 +2,7 @@
 
 ## Osnovanie
 
-Sistema vydelena from prinyatoy versii `bondsmap_beta/bondsmap.html` posle iteratsiy 14 iyulya 2026 year. Sourceom geometrii header ostaetsya `elements/headers/bonds-map.html`. Ostalnye kontrakty razmeshcheny in `elements/assets/product-system.css`.
+Sistema vydelena of prinyatoy versii `bondsmap_beta/bondsmap.html` posle iteratsiy 14 iyulya 2026 year. Istochnikom geometrii header ostaetsya `elements/headers/bonds-map.html`. Ostalnye kontrakty razmeshcheny in `elements/assets/product-system.css`.
 
 ## Brend-palitra
 
@@ -38,7 +38,7 @@ Obshchie stili header ne dolzhny pereopredelyat nesvyazannye globalnye tokeny pr
 - tablet: dve ravnye kolonki;
 - mobile: odna kolonka.
 
-## Typeografika
+## Tipografika
 
 Osnovnoy stek: `Graphik`, `Graphik LCG`, `Graphik LC`, `Graphik Web`, sistemnye fallback. Tekst in polyakh and nadpis `Select` dolzhny imet odinakovye computed styles. Pustoe pole poiska ne soderzhit placeholder. Vvedennoe polzovatelem znachenie ispolzuet tsvet `#111111`.
 
@@ -52,7 +52,7 @@ Ispolzovat gotovyy `elements/headers/bonds-map.html` and obshchie `header-system
 
 ### Panel deystviy
 
-`Add filter`, `Reset vse` and `Hide filters` ispolzuyut razmer 98 × 44 px. Osnovnoe deystvie ispolzuet North Sea, vtorichnye – svetluyu poverkhnost. On mobile knopki vyravnivayutsya by levomu krayu and razdelyayutsya intervalom 8 px; wrapper and klikabelnaya poverkhnost imeyut odinakovye granitsy, under nedostatke shiriny group perenositsya on sleduyushchuyu stroku.
+`Add filter`, `Reset all` and `Hide filters` ispolzuyut razmer 98 × 44 px. Osnovnoe deystvie ispolzuet North Sea, vtorichnye – svetluyu poverkhnost. On mobile knopki vyravnivayutsya by levomu krayu and razdelyayutsya intervalom 8 px; wrapper and klikabelnaya poverkhnost imeyut odinakovye granitsy, under nedostatke shiriny group perenositsya on sleduyushchuyu stroku.
 
 ### Filters
 

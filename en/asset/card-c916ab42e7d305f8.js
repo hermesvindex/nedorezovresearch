@@ -27,7 +27,7 @@ const state = {
       if (value === null || value === undefined || Number.isNaN(value)) return "—";
       let out = Number(value).toFixed(digits);
       if (out.includes(".")) out = out.replace(/0+$/g, "").replace(/\.$/g, "");
-      return out.replace(".", ",");
+      return out;
     };
     const pct = (value, digits = 2) => value === null || value === undefined || Number.isNaN(value) ? "—" : `${trimFixed(value, digits)}%`;
     const num = (value, digits = 2) => trimFixed(value, digits);
@@ -363,7 +363,7 @@ const state = {
             annual: {
               value: asset.ytdChange,
               unit: "% year to date",
-              label: `Yearovaya inflyatsiya · on ${dateRu(asset.asof)}`,
+              label: `Annual inflation · on ${dateRu(asset.asof)}`,
               delta: "nakoplennym itogom · partial year",
             },
             monthly: {
@@ -376,13 +376,13 @@ const state = {
               value: asset.price,
               unit: "% year on year",
               label: `Monthly inflation at an annualised rate · ${asset.periodLabel || dateRu(asset.asof)}`,
-              delta: `${signedPoints(asset.deltaPoints)} to predydushchemu mesyatsu`,
+              delta: `${signedPoints(asset.deltaPoints)} from the previous month`,
             },
           }[state.mode] || {
             value: asset.price,
             unit: "% year on year",
             label: `Monthly inflation at an annualised rate · ${asset.periodLabel || dateRu(asset.asof)}`,
-            delta: `${signedPoints(asset.deltaPoints)} to predydushchemu mesyatsu`,
+            delta: `${signedPoints(asset.deltaPoints)} from the previous month`,
           };
           document.getElementById("chips").innerHTML = [
             asset.publisher,
@@ -602,10 +602,10 @@ const state = {
           <div class="flow-date">${item.year}</div>
           <div class="flow-main">
             <div class="flow-title">${item.complete
-              ? `In ${item.year} godu inflation was ${num(item.annualValue, 2)}%`
-              : `In ${item.year} godu to ${dateRu(item.date)} inflation was ${num(item.annualValue, 2)}%`}</div>
+              ? `In ${item.year} year inflation was ${num(item.annualValue, 2)}%`
+              : `In ${item.year} year to ${dateRu(item.date)} inflation was ${num(item.annualValue, 2)}%`}</div>
             <div class="flow-note">${item.complete
-              ? "itog for yanvar–dekabr"
+              ? "January–December total"
               : `partial year · latest month ${num(item.monthly, 2)}% · year on year ${num(item.price, 2)}%`}</div>
           </div>
           <div class="flow-value">${num(item.annualValue, 2)}%</div>
@@ -793,7 +793,7 @@ const state = {
     function renderChart(asset) {
       const allRows = filteredHistory(asset);
       const macroSeries = {
-        annual: { key: "ytd", label: "Yearovaya inflyatsiya year to date, %" },
+        annual: { key: "ytd", label: "Annual inflation year to date, %" },
         monthly: { key: "monthly", label: "Monthly inflation, %" },
         monthlyAnnual: { key: "price", label: "Monthly inflation at an annualised rate, %" },
       };

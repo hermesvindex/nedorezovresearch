@@ -182,7 +182,7 @@
   assetModal.setAttribute('aria-label', 'Asset profile');
   assetModal.setAttribute('aria-hidden', 'true');
   assetModal.inert = true;
-  assetModal.innerHTML = `<button class="quantis-asset-modal__backdrop" type="button" aria-label="Close card by clicking the backdrop"></button>
+  assetModal.innerHTML = `<button class="quantis-asset-modal__backdrop" type="button" aria-label="Close the card by clicking the backdrop"></button>
     <div class="quantis-asset-modal__panel">
       <button class="quantis-asset-modal__close" type="button" aria-label="Close card"><span aria-hidden="true"></span></button>
       <iframe class="quantis-asset-modal__frame" title="Asset profile"></iframe>

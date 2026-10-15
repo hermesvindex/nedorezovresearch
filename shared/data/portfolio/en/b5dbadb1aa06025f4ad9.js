@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:EELT"]=["o",{"name":["v","\"EuropElektrotekhnika\" PJSC ao"],"bucket":["v","Equities"],"sector_ru":["v","Industrials"],"public_fields":["o",{"full_name":["v","\"EuropElektrotekhnika\" PJSC ao"]},[]]},[]];

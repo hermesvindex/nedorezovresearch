@@ -35,7 +35,7 @@ Papka soderzhit edinuyu kollektsiyu khederov and produktovykh UI-komponentov Qua
 - `components/information-strip.html` — informatsionnye plashki;
 - `components/market-indicator-card.html` — indeksnaya kartochka with grafikom;
 - `components/metric-card.html` — kompaktnaya KPI-kartochka.
-- `components/product-action-bar.html` — group from trekh produktovykh deystviy;
+- `components/product-action-bar.html` — group of trekh produktovykh deystviy;
 - `components/search-filter-card.html` — edinyy udalyaemyy poisk;
 - `components/enum-filter-card.html` — kategorialnyy filtr;
 - `components/brand-choice-list.html` — brendovye krugovye selected/unselected states;
@@ -53,7 +53,7 @@ In tselevoy HTML podklyuchit:
 <script src="assets/header-system.js" defer></script>
 ```
 
-Posle podklyucheniya mozhno kopirovat nuzhnye fragmenty from `components/` or gotovyy kheder from `headers/`. Znacheniya, identifikatory and `data-points` zamenyayutsya dannymi konkretnogo proekta.
+Posle podklyucheniya mozhno kopirovat nuzhnye fragmenty of `components/` or gotovyy kheder of `headers/`. Znacheniya, identifikatory and `data-points` zamenyayutsya dannymi konkretnogo proekta.
 
 For produktovykh komponentov podklyuchit:
 
