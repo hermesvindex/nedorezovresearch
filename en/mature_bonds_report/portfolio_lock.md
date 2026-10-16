@@ -1,4 +1,4 @@
-# Inception date model portfolio
+# Portfolio lock date model portfolio
 
 Date fiksatsii: 18 iyunya 2026 year.
 

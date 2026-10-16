@@ -359,14 +359,14 @@
     if (window.location.protocol === 'file:') {
       loading = new Promise(resolve => {
         const source = document.createElement('script');
-        source.src = new URL('search-index.js?v=20261016-mature-interface-80', scriptUrl).href;
+        source.src = new URL('search-index.js?v=20261016-mature-interface-82', scriptUrl).href;
         source.onload = () => resolve(prepare(window.QUANTIS_SEARCH_INDEX));
         source.onerror = () => resolve([]);
         document.head.append(source);
       });
       return loading;
     }
-    loading = fetch(new URL('search-index.json?v=20261016-mature-interface-80', scriptUrl))
+    loading = fetch(new URL('search-index.json?v=20261016-mature-interface-82', scriptUrl))
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();

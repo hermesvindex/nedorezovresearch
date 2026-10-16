@@ -256,6 +256,45 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
       }).join("");
     }
 
+
+/* mature-card-lifecycle-v1 */
+function reportMaturityReached(asset, valuationDate) {
+  return asset.assetType === 'bond' && /^\d{4}-\d{2}-\d{2}$/.test(valuationDate || '')
+    && /^\d{4}-\d{2}-\d{2}/.test(asset.maturityDate || '')
+    && asset.maturityDate.slice(0,10) <= valuationDate;
+}
+function renderMatureReportContext(asset) {
+  const valuationDate = new URLSearchParams(location.search).get('valuation');
+  if (!reportMaturityReached(asset, valuationDate)) return;
+  const maturity = dateRu(asset.maturityDate);
+  const quoteDate = dateRu(asset.asof);
+  const rows = [
+    ['Status', 'Maturity date reached', maturity],
+    ['Last quote', pct(asset.price, 2), quoteDate],
+    ['Maturity date', maturity, 'under the bond terms'],
+    ['Credit rating', asset.rating || '—', '']
+  ];
+  document.getElementById('metrics').innerHTML = rows.map(([label,value,note]) =>
+    `<div class="metric"><div class="${metricValueClass(value)}">${value}</div><div class="metric-label">${label}</div>${note ? `<div class="metric-note">${note}</div>` : ''}</div>`
+  ).join('');
+  setDelta(null, `Last quote as of ${quoteDate}`);
+  document.getElementById('tiles').innerHTML = renderTiles([
+    [money(asset.faceValue, asset.currency), 'Face value'],
+    [dateRu(asset.issueDate), 'First trading date'],
+    [maturity, 'Maturity date']
+  ]);
+  const historyRows = (asset.allCoupons || []).filter(item => String(item.date) <= valuationDate)
+    .slice().sort((a,b) => String(b.date).localeCompare(String(a.date)));
+  const history = historyRows.map(item => `<div class="flow-row past">
+    <div class="flow-date">${dateRu(item.date)}</div>
+    <div class="flow-main"><div class="flow-title">Coupon</div><div class="flow-note">scheduled payment</div></div>
+    <div class="flow-value">${money(item.value, item.currency || asset.currency, 2)}</div>
+  </div>`).join('');
+  document.getElementById('cashflow').innerHTML =
+    '<div class="desc">The maturity date has passed. Forward returns are not calculated. A payment schedule does not confirm that the issuer has met its obligations.</div>'
+    + (history ? `<details class="coupon-history"><summary><span>Historical coupon schedule</span><span>${historyRows.length}</span></summary><div class="coupon-table">${history}</div></details>` : '');
+}
+
     function renderSummary(asset) {
       const hasYieldSeries = (asset.history || []).some(row => Number(row.yield || 0) > 0);
       const marketOnlyMode = ["currency", "index", "commodity", "rate"].includes(asset.assetType);
@@ -688,6 +727,7 @@ const state = { assetIndex: 0, range: "ALL", mode: "price" };
       renderSummary(asset);
       renderDetailCta(asset);
       renderCashflow(asset);
+      renderMatureReportContext(asset);
       renderChart(asset);
       setActiveButtons("assetButtons", "asset", String(state.assetIndex));
       setActiveButtons("rangeButtons", "range", state.range);
