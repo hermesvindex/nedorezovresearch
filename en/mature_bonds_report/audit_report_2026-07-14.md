@@ -41,7 +41,7 @@ Polnyy mashinnyy zhurnal sokhranen in `transaction_ledger.json`.
 - Tsvet AKMB ustanovlen by krasnoy palitre Alfa-Banka — `#EF3124`.
 - Podpis osi sravnitelnogo grafika izmenena on «Rebased to 1.0».
 - Blok valyutnoy struktury udalen of DOM, JavaScript and generatora.
-- Parametry strategii, metodika otbora and rasshifrovka Discount–Annualised return obedineny in odin kompaktnyy razdel.
+- Parametry strategii, metodika otbora and rasshifrovka C1–C4 obedineny in odin kompaktnyy razdel.
 - Mezhdu kartochkami sobytiy ustanovlen vertikalnyy interval 24 px.
 - For reytingov vveden predmetnyy poryadok `AAA → AA+ → AA → AA- → A+ → … → BB-`.
 - Deystvuyushchiy header, lokalnyy Plotly and obshchaya biblioteka kartochek aktivov pereneseny in Python-generator.

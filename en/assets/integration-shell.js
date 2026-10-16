@@ -93,7 +93,7 @@
         ${routes.map(([key, label, href]) => `<a href="${publicHref(href)}" target="_top"${key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
       </nav>`;
     shell.append(searchButton, mobileMenuButton);
-    document.body.append(shell);
+    document.body.prepend(shell);
   }
 
   const drawerRoots = [...document.querySelectorAll('.drawer, .sidepanel')];
@@ -359,14 +359,14 @@
     if (window.location.protocol === 'file:') {
       loading = new Promise(resolve => {
         const source = document.createElement('script');
-        source.src = new URL('search-index.js?v=20260924-interface-quality-3', scriptUrl).href;
+        source.src = new URL('search-index.js?v=20261016-mature-interface-80', scriptUrl).href;
         source.onload = () => resolve(prepare(window.QUANTIS_SEARCH_INDEX));
         source.onerror = () => resolve([]);
         document.head.append(source);
       });
       return loading;
     }
-    loading = fetch(new URL('search-index.json?v=20260924-interface-quality-3', scriptUrl))
+    loading = fetch(new URL('search-index.json?v=20261016-mature-interface-80', scriptUrl))
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
