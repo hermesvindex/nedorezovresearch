@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKMB"]=["d",[["v","ETF AKMB Alfa Managed Bonds"]],["o",{"name":["r",0],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

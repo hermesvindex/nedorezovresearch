@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BNDA"]=["d",[["v","DOHOD Bonds Dec 2025/2028/2031"]],["o",{"name":["r",0],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","DOKhOD"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

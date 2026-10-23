@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MFGS"]=["d",[["v","ao \"Slavneft-Megionneftegaz\""]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Energy (oil and gas)"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

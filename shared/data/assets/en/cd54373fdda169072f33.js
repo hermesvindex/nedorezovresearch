@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10FJA8"]=["d",[["v","ILLC Sodrugestvo Rus 001P-02"]],["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["r",0],"3":["r",0],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","International company company with limited liability \"Sodruzhestvo Rus\""]},58]},1]},2]},[]]];

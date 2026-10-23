@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BOND"]=["o",{"name":["v","BOND ETF DOHOD Cbonds corp. RU"],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","DOKhOD"],"public_fields":["o",{"full_name":["v","BOND ETF DOHOD Cbonds corp. RU"]},[]]},[]];

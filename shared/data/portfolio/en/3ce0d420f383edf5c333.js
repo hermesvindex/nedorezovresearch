@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:APTK"]=["d",[["v","PJSC \"Aptechnaya set 36,6\" ao"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

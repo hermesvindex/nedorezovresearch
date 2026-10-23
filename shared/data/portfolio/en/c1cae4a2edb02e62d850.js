@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:EQMX"]=["o",{"name":["v","BPIF MOEX Russia Index Asset Manager VIM"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","VIM Investitsii"],"public_fields":["o",{"full_name":["v","BPIF MOEX Russia Index Asset Manager VIM"]},[]]},[]];

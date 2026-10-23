@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:KROT"]=["d",[["v","\"KrasnyyOktyabr\" PJSC - ao"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Consumer sector"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10BU23"]=["d",[["v","MMC NORILSK NICKEL BO-001P-11"]],["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["r",0],"3":["r",0],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Public Joint-Stock Company \"Gorno-metallurgicheskaya company \"Nornickel\""]},61]},1]},2]},[]]];

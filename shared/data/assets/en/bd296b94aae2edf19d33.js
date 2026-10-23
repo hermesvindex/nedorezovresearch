@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A100ZB9"]=["d",[["v","DOM.RF Mortgage agent 10-002P"]],["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["r",0],"3":["r",0],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Limited Liability Company \"DOM.RF Ipotechnyy agent\""]},60]},1]},2]},[]]];

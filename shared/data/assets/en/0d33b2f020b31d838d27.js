@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:CHGZ"]=["d",[["v","RN-Western Siberia ao"]],["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["r",0],"3":["r",0],"6":["r",0]},27]},1]},2]},[]]];

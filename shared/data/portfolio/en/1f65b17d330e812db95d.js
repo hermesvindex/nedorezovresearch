@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:TDIV"]=["d",[["v","TDIV T-Capital DIVIDEND STOCKS"]],["o",{"name":["r",0],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","T-Equity"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

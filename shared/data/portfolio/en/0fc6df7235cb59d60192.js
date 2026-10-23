@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:BCSB"]=["d",[["v","BCSB ETF High Yield Bonds"]],["o",{"name":["r",0],"bucket":["v","Rouble-denominated bonds"],"etf_structure":["v","Bonds"],"etf_company":["v","BKS"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

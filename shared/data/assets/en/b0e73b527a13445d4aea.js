@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A10DJM8"]=["d",[["v","Aquilon-Leasing BO-04-001P"]],["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["r",0],"3":["r",0],"6":["v","Corporate"],"7":["v","Fixed rate"],"9":["v","Limited Liability Company \"Akvilon-Lizing\""]},59]},1]},2]},[]]];

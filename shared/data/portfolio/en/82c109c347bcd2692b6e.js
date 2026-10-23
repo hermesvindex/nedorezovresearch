@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:VGSB"]=["d",[["v","\"Volgograd.energosbytkomp\" PJSC"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

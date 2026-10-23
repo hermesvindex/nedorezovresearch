@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SBBY"]=["d",[["v","SBBY ETF Instrum Fund in CNY"]],["o",{"name":["r",0],"bucket":["v","Foreign-currency bonds"],"etf_structure":["v","Foreign-currency bonds"],"etf_company":["v","Pervaya"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

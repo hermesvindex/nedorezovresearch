@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:VKCO"]=["o",{"name":["v","VK International Public JS Com"],"bucket":["v","Equities"],"sector_ru":["v","Information technology"],"public_fields":["o",{"full_name":["v","VK International Public JS Com"]},[]]},[]];

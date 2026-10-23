@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:INFL"]=["o",{"name":["v","INFL ETF Ingosstrakh Inflation"],"bucket":["v","Other"],"etf_structure":["v","Smeshannyy"],"etf_company":["v","Ingosstrakh Investitsii"],"public_fields":["o",{"full_name":["v","INFL ETF Ingosstrakh Inflation"]},[]]},[]];

@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SBHI"]=["o",{"name":["v","SBHI ETF Halal investments"],"bucket":["v","Other"],"etf_structure":["v","Other"],"etf_company":["v","Pervaya"],"public_fields":["o",{"full_name":["v","SBHI ETF Halal investments"]},[]]},[]];

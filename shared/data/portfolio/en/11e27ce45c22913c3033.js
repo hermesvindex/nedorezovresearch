@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:URKZ"]=["d",[["v","PJSC \"Uralskaya kuznitsa\" ao"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Metals and mining"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

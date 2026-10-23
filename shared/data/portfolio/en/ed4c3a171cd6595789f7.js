@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:VSYDP"]=["d",[["v","Viborgskii sudostr. Zavod ap"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Industrials"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

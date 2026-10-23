@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:BNDB"]=["d",[["v","DOHOD Bonds Dec 2026/2029/2032"]],["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["r",0],"3":["r",0],"6":["v","Limited Liability Company Asset manager DOKhOD"]},27]},1]},2]},[]]];

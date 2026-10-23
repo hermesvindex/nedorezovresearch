@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:WTCMP"]=["d",[["v","\"Centre mezhdun. torgovli\"PJSC ap"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Construction"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

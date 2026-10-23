@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:MAGEP"]=["o",{"name":["v","\"Magadanenergo\" PJSC ap"],"bucket":["v","Equities"],"sector_ru":["v","Electric utilities"],"public_fields":["o",{"full_name":["v","\"Magadanenergo\" PJSC ap"]},[]]},[]];

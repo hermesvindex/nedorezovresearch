@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:RTGZ"]=["d",[["v","Gazprom gazorasp. Rostov ao"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Industrials"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

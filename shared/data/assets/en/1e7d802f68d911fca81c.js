@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["assets:RU000A108MZ9"]=["d",[["v","Gazprom capital BO-003P-03"]],["o",{"$t":["a",{"1":["a",{"0":["a",{"2":["r",0],"3":["r",0],"6":["v","Corporate"],"7":["v","Floating rate"],"9":["v","Gazprom Capital LLC"],"23":["v","KEY_RATE + raschetnyy spred"]},58]},1]},2]},[]]];

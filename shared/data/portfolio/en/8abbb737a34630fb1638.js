@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:ESGE"]=["d",[["v","BPIF UstoychRazvRossKomp Asset Manager VIM"]],["o",{"name":["r",0],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","VIM Investitsii"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

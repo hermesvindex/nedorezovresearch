@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:UTAR"]=["d",[["v","Aviakompaniya \"YuTeyr\" (PJSC) ao"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Transportation"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];

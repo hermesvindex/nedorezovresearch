@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:SBGD"]=["o",{"name":["v","SBGD ETF Fund Affordable gold"],"bucket":["v","Precious metals"],"etf_structure":["v","Precious metals"],"etf_company":["v","Pervaya"],"public_fields":["o",{"full_name":["v","SBGD ETF Fund Affordable gold"]},[]]},[]];

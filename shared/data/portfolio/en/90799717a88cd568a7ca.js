@@ -1,1 +1,0 @@
-window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:AKQU"]=["o",{"name":["v","AKQU ETF Alfa Capital Quant"],"bucket":["v","Equities"],"etf_structure":["v","Equities"],"etf_company":["v","Alfa-Equity"],"public_fields":["o",{"full_name":["v","AKQU ETF Alfa Capital Quant"]},[]]},[]];

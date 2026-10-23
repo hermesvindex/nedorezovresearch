@@ -1,0 +1,1 @@
+window.__NR_COMPACT_PATCHES__=window.__NR_COMPACT_PATCHES__||{};window.__NR_COMPACT_PATCHES__["portfolio:KZOS"]=["d",[["v","PJSC \"Organicheskiy sintez\" ao"]],["o",{"name":["r",0],"bucket":["v","Equities"],"sector_ru":["v","Chemicals and petrochemicals"],"public_fields":["o",{"full_name":["r",0]},[]]},[]]];
