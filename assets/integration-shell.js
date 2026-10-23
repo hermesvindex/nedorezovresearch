@@ -356,26 +356,19 @@
       loading = Promise.resolve(prepare(window.QUANTIS_SEARCH_INDEX));
       return loading;
     }
-    if (window.location.protocol === 'file:') {
-      loading = new Promise(resolve => {
-        const source = document.createElement('script');
-        source.src = new URL('search-index.js?v=20261016-mature-interface-82', scriptUrl).href;
-        source.onload = () => resolve(prepare(window.QUANTIS_SEARCH_INDEX));
-        source.onerror = () => resolve([]);
-        document.head.append(source);
-      });
-      return loading;
-    }
-    loading = fetch(new URL('search-index.json?v=20261016-mature-interface-82', scriptUrl))
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      })
-      .then(prepare)
-      .catch(() => {
-        meta.textContent = 'Индекс временно недоступен. Обновите страницу.';
-        return [];
-      });
+    loading = new Promise(resolve => {
+      const source = document.createElement('script');
+      source.src = new URL('search-index.js?v=818871a51eb698189e0f', scriptUrl).href;
+      source.onload = () => resolve(prepare(window.QUANTIS_SEARCH_INDEX));
+      source.onerror = () => {
+        loading = null;
+        meta.textContent = document.documentElement.lang === 'en'
+          ? 'Search index unavailable. Reload the page.'
+          : 'Индекс временно недоступен. Обновите страницу.';
+        resolve([]);
+      };
+      document.head.append(source);
+    });
     return loading;
   }
 
