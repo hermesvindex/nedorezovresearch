@@ -358,7 +358,7 @@
     }
     loading = new Promise(resolve => {
       const source = document.createElement('script');
-      source.src = new URL('search-index.js?v=2bd08c567c1c0abcb7d5', scriptUrl).href;
+      source.src = new URL('search-index.js?v=f76f1f708a5d745c96c1', scriptUrl).href;
       source.onload = () => resolve(prepare(window.QUANTIS_SEARCH_INDEX));
       source.onerror = () => {
         loading = null;
